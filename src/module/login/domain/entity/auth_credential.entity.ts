@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 
-export default class AuthCredentialsModel {
+export default class AuthCredentialsEntity {
 
     @Expose()
     public userId: string;

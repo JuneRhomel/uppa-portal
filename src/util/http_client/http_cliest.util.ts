@@ -1,28 +1,31 @@
 import HttpCliestUtilParams from "./interface/http_cliest_util.params";
+import ApiConstant from "../../application/constant/api.constant";
+import Failure from "../../application/failure/failure";
 
 export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
     const { url, method, body } = params;
 
-    const headers = {
+    const headers: { [key: string]: string } = {
         'Content-Type': 'application/json'
-    } as any;
+    };
 
     if (url !== '/auth') {
         headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-    } else {
-        const response = await fetch(url, {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined,
-        });
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
     }
 
-    return fetch(url, {
+    const response = await fetch(`${ApiConstant.BASE_URL}${url}`, {
         method,
         headers,
         body: body ? JSON.stringify(body) : undefined,
-    }).then(response => response.json());
-}
+    });
+    const data = await response.json();
 
+    if (url === '/auth' && data.token) {
+        localStorage.setItem('token', data.token);
+    }
+
+    if (!response.ok) {
+        return new Failure({ code: data.code, message: data.message });
+    }
+    return data;
+}

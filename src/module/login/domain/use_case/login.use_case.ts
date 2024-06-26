@@ -1,5 +1,4 @@
 import { validate } from "class-validator";
-import LoginDataSource from "../../data/data_source/login.data_source";
 import LoginUseCaseParams from "./interface/login_use_case.params";
 import LoginFailure from "../failure/login.failure";
 import LoginRepository from "../../data/repository/login.repository";

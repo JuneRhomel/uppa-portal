@@ -8,8 +8,10 @@ export default class ValidationFailure extends Failure {
   }[];
 
   constructor(errors: { property: string; value: any; constraints: object }[]) {
-    super();
-
+    super({
+      code: 400,
+      message: "Validation Failure",
+    })
     this.errors = errors;
   }
 }
