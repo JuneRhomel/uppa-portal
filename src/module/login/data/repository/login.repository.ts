@@ -1,6 +1,5 @@
 import Failure from "../../../../application/failure/failure";
 import AuthCredentialsEntity from "../../domain/entity/auth_credential.entity";
-import LoginFailure from "../../domain/failure/login.failure";
 import LoginDataSource from "../data_source/login.data_source";
 import LoginFailureMapper from "../mapper/login_failure/login_failure.mapper";
 import LoginModel from "../model/login.model";

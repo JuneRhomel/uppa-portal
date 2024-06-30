@@ -1,4 +1,6 @@
-import { Button, IconButton, InputAdornment, OutlinedInput, TextField } from "@mui/material";
+import {  IconButton, InputAdornment, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import React from "react";
 import LoginContainerStyle from "../style/login_container.style";
 import LoginFormStyle from "../style/login_form.style";
 import Visibility from '@mui/icons-material/Visibility';
@@ -7,20 +9,24 @@ import { useState } from "react";
 import LoginInputContainerStyle from "../style/login_input_container.style";
 import LoginHeaderStyle from "../style/login_header.style";
 import LoginUseCase from "../../domain/use_case/login.use_case";
-import LoginFailure from "../../domain/failure/login.failure";
-import UnhandledFailure from "../../../../application/failure/unhandled.failure";
+// import LoginFailure from "../../domain/failure/login.failure";
+// import UnhandledFailure from "../../../../application/failure/unhandled.failure";
 import { plainToInstance } from "class-transformer";
 import LoginEntity from "../../domain/entity/login.entity";
+import ButtonComponent from "../../../../components/button/button,component";
 
 export default function LoginFormComponent() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [accountCode, setAccountCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handelFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     event.preventDefault();
-
+    
     const loginEntity = plainToInstance(LoginEntity, {
       accountCode,
       email,
@@ -31,12 +37,15 @@ export default function LoginFormComponent() {
       loginEntity
     })
 
-    if (response instanceof LoginFailure) {
-      alert("Login Failure")
-    }
-    if (response instanceof UnhandledFailure) {
-      alert("Unhandled Failure")
-    }
+    console.log(response)
+    // if (response instanceof LoginFailure) {
+    //   alert("Login Failure")
+    // }
+    // if (response instanceof UnhandledFailure) {
+    //   alert("Unhandled Failure")
+    // }
+    setIsLoading(false);
+    navigate("/");
   };
   const handelPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -101,7 +110,7 @@ export default function LoginFormComponent() {
             variant="outlined"
             onChange={handleAccountCodeChange}
           />
-          <Button fullWidth variant="contained" type="submit">Login</Button>
+          <ButtonComponent size="large" variant="contained" type="submit" isLoading={isLoading}> Login</ButtonComponent>
         </LoginInputContainerStyle>
       </LoginFormStyle>
     </LoginContainerStyle>
