@@ -7,9 +7,7 @@ export default function HeaderSidebarComponent() {
   return (
     <HeaderSidebarContainerStyle>
       <HeaderSidebarLogoStyle />
-      <HeaderSidebarTitleStyle>
-       Uppa
-      </HeaderSidebarTitleStyle>
+      <HeaderSidebarTitleStyle>Uppa</HeaderSidebarTitleStyle>
     </HeaderSidebarContainerStyle>
   );
 }

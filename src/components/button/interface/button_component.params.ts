@@ -5,5 +5,6 @@ export default interface ButtonComponentParams {
     type: "button" | "submit" | "reset";
     disabled?: boolean;
     isLoading?: boolean;
+    sx?: any;
     onClick?: () => void;
 }

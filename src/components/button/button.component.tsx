@@ -4,11 +4,12 @@ import ButtonComponentParams from "./interface/button_component.params";
 
 export default function ButtonComponent({
   children,
-  type,
-  size,
+  type = "button",
+  size = "small",
   variant = "contained",
-  isLoading,
+  isLoading = false,
   onClick,
+  sx
 }: ButtonComponentParams) {
   return (
     <Button
@@ -18,6 +19,7 @@ export default function ButtonComponent({
       onClick={onClick}
       size={size}
       disabled={isLoading}
+      sx={sx}
     >
       {isLoading ? <CircularProgress color="inherit" size={24} /> : children}
     </Button>
