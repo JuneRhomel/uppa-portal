@@ -7,6 +7,8 @@ const ThStyle = styled.th`
     font-size: 13px;
     color: #757B81;
     position: relative;
+    cursor: pointer;
+    user-select: none;
 `;
 
 export default ThStyle;

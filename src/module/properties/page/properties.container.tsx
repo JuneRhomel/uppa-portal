@@ -8,19 +8,36 @@ import {
 } from "../../../components/table/table.component";
 import TitleContainer from "../../../components/title/title.container";
 import ContainerStyle from "../../../components/container/style/container.style";
-
+import PaginationComponent from "../../../components/pagination/pagination.component";
+import TableHeaderComponent from "../../../components/table_header/table_header.component";
+import ButtonComponent from "../../../components/button/button.component";
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 export default function PropertiesContainer() {
   return (
-    <ContainerStyle>
+    <>
       <TitleContainer> Properties </TitleContainer>
-
+    <ContainerStyle>
+      <TableHeaderComponent>
+        <ButtonComponent
+          variant="contained"
+          size="medium"
+          style={{ textTransform: "none" }}
+          isLoading={false}
+          type={"button"}
+        >
+          <AddRoundedIcon fontSize="small" style={{ marginRight: "5px" }} />
+          Add Property
+        </ButtonComponent>
+      </TableHeaderComponent>
       <TableComponent>
         <TheadComponent>
-          <TableHeadData>First Name</TableHeadData>
-          <TableHeadData>Last Name</TableHeadData>
-          <TableHeadData>Email</TableHeadData>
-          <TableHeadData>Status</TableHeadData>
-          <TableHeadData isSortTable={false}>Action</TableHeadData>
+          <TableHeadData columnName="firstName">First Name</TableHeadData>
+          <TableHeadData columnName="lastName">Last Name</TableHeadData>
+          <TableHeadData columnName="email">Email</TableHeadData>
+          <TableHeadData columnName="status">Status</TableHeadData>
+          <TableHeadData columnName="action" isSortTable={false}>
+            Action
+          </TableHeadData>
         </TheadComponent>
 
         <TbodyComponent>
@@ -47,6 +64,8 @@ export default function PropertiesContainer() {
           <TableData>Test</TableData>
         </TbodyComponent>
       </TableComponent>
+      <PaginationComponent numberOfRows={10} totalRows={100} />
     </ContainerStyle>
+    </>
   );
 }

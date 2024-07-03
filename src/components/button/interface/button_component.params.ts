@@ -6,5 +6,6 @@ export default interface ButtonComponentParams {
     disabled?: boolean;
     isLoading?: boolean;
     sx?: any;
+    style?: any;
     onClick?: () => void;
 }

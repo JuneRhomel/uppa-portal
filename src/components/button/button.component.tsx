@@ -9,7 +9,8 @@ export default function ButtonComponent({
   variant = "contained",
   isLoading = false,
   onClick,
-  sx
+  sx,
+  style
 }: ButtonComponentParams) {
   return (
     <Button
@@ -20,6 +21,7 @@ export default function ButtonComponent({
       size={size}
       disabled={isLoading}
       sx={sx}
+      style={style}
     >
       {isLoading ? <CircularProgress color="inherit" size={24} /> : children}
     </Button>
