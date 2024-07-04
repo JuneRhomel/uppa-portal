@@ -13,11 +13,12 @@ export default function TableHeaderComponent({ children }: TableHeaderParams) {
   const queryPathParameters = new URLSearchParams(location.search);
   const columns = queryPathParameters.get("columns") ?? "";
   const sortBy = queryPathParameters.get("sortBy") ?? "";
+  const sortOrder = queryPathParameters.get("sortOrder") ?? "";
   const page = queryPathParameters.get("page") ?? "1";
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = event.target.value;
     navigate(
-      `/properties?page=${page}&sortBy=${sortBy}&columns=${columns}&search=${search}`
+      `/properties?page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}&columns=${columns}&search=${search}`
     );
   };
 

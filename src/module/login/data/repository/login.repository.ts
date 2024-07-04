@@ -24,6 +24,7 @@ export default async function LoginRepository({ loginEntity }: LoginRepositoryPa
             response.token
         );
     } catch (error) {
+        
         return LoginFailureMapper(error);
     }
 }

@@ -38,16 +38,16 @@ export function TableHeadData({
   const queryPathParameters = new URLSearchParams(location.search);
   const sortBy = queryPathParameters.get("sortBy") ?? "";
   const page = queryPathParameters.get("page") ?? "1";
-  const columns = queryPathParameters.get("columns") ?? "";
   const search = queryPathParameters.get("search") ?? "";
+  const sortOrder = queryPathParameters.get("sortOrder") ?? "";
 
   const handleSortBy = (columnName: string) => {
-    const newSortOrder = sortBy === "DESC" ? "ASC" : "DESC";
-    navigate(`/properties?page=${page}&sortBy=${newSortOrder}&columns=${columnName}&search=${search}`);
+    const newSortOrder = sortOrder === "DESC" ? "ASC" : "DESC";
+    navigate(`/properties?page=${page}&sortBy=${columnName}&sortOrder=${newSortOrder}&search=${search}`);
   };
 
   const renderIcon = () => {
-    if (columns === columnName) {
+    if (sortBy === columnName) {
       if (sortBy === "DESC") {
         return <ArrowDropUpRoundedIcon fontSize="small"/>;
       } else if (sortBy === "ASC") {

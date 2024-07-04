@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const ThStyle = styled.th`
+const ThStyle = styled.td`
     padding: 8px 10px;
     text-align: left;
     font-weight: 300;

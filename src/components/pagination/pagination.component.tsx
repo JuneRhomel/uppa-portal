@@ -18,25 +18,25 @@ export default function PaginationComponent({
   const totalPages = Math.ceil(totalRows / numberOfRows);
 
   const queryPathParameters = new URLSearchParams(location.search);
-  const columns =  queryPathParameters.get("columns") ?? "";
-  const sortBy = queryPathParameters.get("sortBy") ?? "";
+  const sortOrder = queryPathParameters.get("sortOrder") ?? "";
   const page = queryPathParameters.get("page") ?? "1";
   const search = queryPathParameters.get("search") ?? "";
+  const sortBy = queryPathParameters.get("sortBy") ?? "";
 
   const handleDropdownChange = (event: SelectChangeEvent) => {
     const tagetPage = Number(event.target.value) || 1;
-    navigate(`/properties?page=${tagetPage}&sortBy=${sortBy}&columns=${columns}&search=${search}`);
+    navigate(`/properties?page=${tagetPage}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
   };
 
   const nextPage = () => {
     if (Number(page) < totalPages) {
-      navigate(`/properties?page=${Number(page) + 1}&sortBy=${sortBy}&columns=${columns}&search=${search}`);
+      navigate(`/properties?page=${Number(page) + 1}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
     }
   };
 
   const previousPage = () => {
     if (Number(page) > 1) {
-      navigate(`/properties?page=${Number(page) - 1}`);
+      navigate(`/properties?page=${Number(page) - 1}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
     }
   };
   return (
