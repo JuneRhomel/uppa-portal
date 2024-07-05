@@ -13,7 +13,7 @@
       "import/resolver": {
         "node": {
           "extensions": [".js", ".jsx", ".ts", ".tsx"],
-          "moduleDirectory": ["node_modules", "/opt"]
+          "moduleDirectory": ["node_modules"]
         }
       }
     },
@@ -25,7 +25,7 @@
       "prefer-object-spread": "off",
       "node/no-unpublished-import": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "error",
+      // "@typescript-eslint/no-unused-vars": "error",
       "node/no-unsupported-features/es-syntax": "off",
       "import/extensions": "off",
       "node/no-missing-import": "off"

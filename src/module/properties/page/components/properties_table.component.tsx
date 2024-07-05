@@ -8,11 +8,15 @@ import {
   TheadComponent,
   TableHeadData,
   TbodyComponent,
-  TableData,
 } from "../../../../components/table/table.component";
 import PropertiesTableHeader from "./properties_table_header";
 import { plainToInstance } from "class-transformer";
 import PaginationEntity from "../../../../application/entity/pagination.entity";
+import PropertiesTableDataMapper from "./properties_table_data_mapper";
+import Failure from "../../../../application/failure/failure";
+import PropertiesEntity from "../../domain/entity/properties.entity";
+import ListPropertiesEntity from "../../domain/entity/list_properties.entity";
+import PropertiesTableDataSkeleton from "./properties_table_data_skeleton";
 
 export default function PropertiesTableComponent() {
   const location = useLocation();
@@ -21,36 +25,38 @@ export default function PropertiesTableComponent() {
   const sortBy = queryPathParameters.get("sortBy") ?? "id";
   const page = queryPathParameters.get("page") ?? "1";
   const search = queryPathParameters.get("search") ?? "";
-  const filters = queryPathParameters.get("filters") ?? "";
   const sortOrder = queryPathParameters.get("sortOrder") ?? "ASC";
 
   const columns = "unit_name,unit_type_name,unit_status_name";
   const fetchProperties = async () => {
-    const paginationEntity = plainToInstance(PaginationEntity, {
+      const paginationEntity = plainToInstance(PaginationEntity, {
       numberOfRows: 10,
       page: parseInt(page, 10),
       columns,
       sortBy,
       sortOrder,
       search,
-      filters,
     });
 
     const response = await PropertiesUseCase({
       paginationEntity,
     });
 
-    return response;
+    if (response instanceof Failure) {
+      alert(response.message);
+    }
+    return response as ListPropertiesEntity;
   };
 
   const propertiesQuery = useQuery({
-    queryKey: ["properties", search, page, columns, sortBy, filters],
+    queryKey: ["properties", search, page, columns, sortBy, sortOrder],
     queryFn: fetchProperties,
     retry: false,
     refetchOnWindowFocus: false,
   });
 
-  console.log(propertiesQuery.isLoading);
+  const numberOfRows =  propertiesQuery.data?.totalRows ?? 0;
+  const properties = propertiesQuery.data?.properties ?? [];
 
   return (
     <>
@@ -67,27 +73,10 @@ export default function PropertiesTableComponent() {
             </TableHeadData>
           </tr>
         </TheadComponent>
-
-        <TbodyComponent>
-          <tr>
-            <TableData>June Rhomel</TableData>
-            <TableData>Mandigma</TableData>
-            <TableData>junemandigma@gmail.com</TableData>
-            <TableData>Active</TableData>
-            <TableData>Test</TableData>
-          </tr>
-        </TbodyComponent>
-        <TbodyComponent>
-          <tr>
-            <TableData>June Rhomel</TableData>
-            <TableData>Mandigma</TableData>
-            <TableData>junemandigma@gmail.com</TableData>
-            <TableData>Active</TableData>
-            <TableData>Test</TableData>
-          </tr>
-        </TbodyComponent>
+        {propertiesQuery.isLoading && <PropertiesTableDataSkeleton />}
+            <PropertiesTableDataMapper  property={properties} />
       </TableComponent>
-      <PaginationComponent numberOfRows={10} totalRows={100} />
+      <PaginationComponent numberOfRows={10} totalRows={numberOfRows} />
     </>
   );
 }

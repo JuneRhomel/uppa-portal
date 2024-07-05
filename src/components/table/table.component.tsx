@@ -11,6 +11,7 @@ import SortIconStyle from "./style/sort_icon.style";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import TrStyle from "./style/tr.style";
 
 export function TableComponent({ children }: TableComponentParams) {
   return <TableStyle>{children}</TableStyle>;
@@ -22,6 +23,9 @@ export function TheadComponent({ children }: TableComponentParams) {
 
 export function TbodyComponent({ children }: TableComponentParams) {
   return <TbodyStyle>{children}</TbodyStyle>;
+}
+export function TableRowComponent({ children }: TableComponentParams) {
+  return <TrStyle>{children}</TrStyle>;
 }
 
 export function TableData({ children }: TableComponentParams) {
@@ -48,9 +52,9 @@ export function TableHeadData({
 
   const renderIcon = () => {
     if (sortBy === columnName) {
-      if (sortBy === "DESC") {
+      if (sortOrder === "DESC") {
         return <ArrowDropUpRoundedIcon fontSize="small"/>;
-      } else if (sortBy === "ASC") {
+      } else if (sortOrder === "ASC") {
         return <ArrowDropDownRoundedIcon fontSize="small"/>;
       }
     }

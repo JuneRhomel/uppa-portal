@@ -9,8 +9,6 @@ import { useState } from "react";
 import LoginInputContainerStyle from "../style/login_input_container.style";
 import LoginHeaderStyle from "../style/login_header.style";
 import LoginUseCase from "../../domain/use_case/login.use_case";
-// import LoginFailure from "../../domain/failure/login.failure";
-// import UnhandledFailure from "../../../../application/failure/unhandled.failure";
 import { plainToInstance } from "class-transformer";
 import LoginEntity from "../../domain/entity/login.entity";
 import ButtonComponent from "../../../../components/button/button.component";

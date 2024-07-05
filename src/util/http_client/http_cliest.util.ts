@@ -22,6 +22,9 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
 
     if (url === '/auth' && data.token) {
         localStorage.setItem('token', data.token);
+    }   
+    if(response.status === 403) { 
+        localStorage.removeItem('token');
     }
 
     if (!response.ok) {
