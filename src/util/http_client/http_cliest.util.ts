@@ -1,6 +1,7 @@
 import HttpCliestUtilParams from "./interface/http_cliest_util.params";
 import ApiConstant from "../../application/constant/api.constant";
 import Failure from "../../application/failure/failure";
+import TimeoutFailure from "../../application/failure/timeout.failure";
 
 export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
     const { url, method, body } = params;
@@ -18,15 +19,17 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
         headers,
         body: body ? JSON.stringify(body) : undefined,
     });
+    
+    if(response.status === 403) { 
+        localStorage.removeItem('token');
+        return new TimeoutFailure()
+    }
+    
     const data = await response.json();
-
+    
     if (url === '/auth' && data.token) {
         localStorage.setItem('token', data.token);
     }   
-    if(response.status === 403) { 
-        localStorage.removeItem('token');
-    }
-
     if (!response.ok) {
         return new Failure({ code: data.code, message: data.message });
     }

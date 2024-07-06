@@ -16,11 +16,9 @@ export default async function PropertiesDataSource({
       method: "GET",
       url: `${ApiConstant.PROPERTIES}?search=${search}&page=${page}&numberOfRows=${numberOfRows}&columns=${columns}&sortBy=${sortBy}&sortOrder=${sortOrder}&filters=${filters}`,
     });
-
     if (response instanceof Failure) {
       return response;
     }
-    console.log(response);
 
     const ss = plainToInstance(ListPropertiesModel, response as object, {
       excludeExtraneousValues: true,

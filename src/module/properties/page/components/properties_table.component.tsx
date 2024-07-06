@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import PaginationComponent from "../../../../components/pagination/pagination.component";
 import { useQuery } from "@tanstack/react-query";
 import PropertiesUseCase from "../../domain/use_case/properties.use_case";
@@ -9,27 +9,25 @@ import {
   TableHeadData,
   TbodyComponent,
 } from "../../../../components/table/table.component";
-import PropertiesTableHeader from "./properties_table_header";
 import { plainToInstance } from "class-transformer";
 import PaginationEntity from "../../../../application/entity/pagination.entity";
-import PropertiesTableDataMapper from "./properties_table_data_mapper";
+import PropertiesTableDataMapper from "./properties_table_data_mapper.component";
 import Failure from "../../../../application/failure/failure";
-import PropertiesEntity from "../../domain/entity/properties.entity";
 import ListPropertiesEntity from "../../domain/entity/list_properties.entity";
-import PropertiesTableDataSkeleton from "./properties_table_data_skeleton";
+import PropertiesTableDataSkeleton from "./properties_table_data_skeleton.compnent";
+import TimeoutFailure from "../../../../application/failure/timeout.failure";
 
 export default function PropertiesTableComponent() {
-  const location = useLocation();
-
+  const navigate = useNavigate();
   const queryPathParameters = new URLSearchParams(location.search);
   const sortBy = queryPathParameters.get("sortBy") ?? "id";
   const page = queryPathParameters.get("page") ?? "1";
   const search = queryPathParameters.get("search") ?? "";
-  const sortOrder = queryPathParameters.get("sortOrder") ?? "ASC";
+  const sortOrder = queryPathParameters.get("sortOrder") ?? "DESC";
 
   const columns = "unit_name,unit_type_name,unit_status_name";
   const fetchProperties = async () => {
-      const paginationEntity = plainToInstance(PaginationEntity, {
+    const paginationEntity = plainToInstance(PaginationEntity, {
       numberOfRows: 10,
       page: parseInt(page, 10),
       columns,
@@ -42,6 +40,10 @@ export default function PropertiesTableComponent() {
       paginationEntity,
     });
 
+    if (response instanceof TimeoutFailure) {
+      alert("Your session has expired. Please login again.");
+      return navigate("/login");
+    }
     if (response instanceof Failure) {
       alert(response.message);
     }
@@ -55,12 +57,11 @@ export default function PropertiesTableComponent() {
     refetchOnWindowFocus: false,
   });
 
-  const numberOfRows =  propertiesQuery.data?.totalRows ?? 0;
+  const numberOfRows = propertiesQuery.data?.totalRows ?? 0;
   const properties = propertiesQuery.data?.properties ?? [];
 
   return (
     <>
-      <PropertiesTableHeader />
       <TableComponent>
         <TheadComponent>
           <tr>
@@ -73,8 +74,8 @@ export default function PropertiesTableComponent() {
             </TableHeadData>
           </tr>
         </TheadComponent>
-            {propertiesQuery.isLoading && <PropertiesTableDataSkeleton />}
-            <PropertiesTableDataMapper  property={properties} />
+        {propertiesQuery.isLoading && <PropertiesTableDataSkeleton />}
+        <PropertiesTableDataMapper property={properties} />
       </TableComponent>
       <PaginationComponent numberOfRows={10} totalRows={numberOfRows} />
     </>

@@ -7,6 +7,7 @@ import UnhandledFailure from "../../application/failure/unhandled.failure";
 import commonHttpClientFailureMapperHelper from "./helper/common_http_client_failure_mapper.helper";
 
 export default function FailureMapperUtil(exception: any) {
+  console.log(exception);
   if (exception instanceof HttpClientException) {
     return commonHttpClientFailureMapperHelper(exception);
   }
@@ -17,6 +18,10 @@ export default function FailureMapperUtil(exception: any) {
 
   if (exception instanceof AuthException) {
     return new AuthFailure();
+  }
+
+  if (exception instanceof TimeoutFailure) {
+    return new TimeoutFailure();
   }
 
   return new UnhandledFailure();

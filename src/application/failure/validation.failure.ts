@@ -1,17 +1,12 @@
 import Failure from "./failure";
 
 export default class ValidationFailure extends Failure {
-  public errors: {
-    property: string;
-    value: any;
-    constraints: object;
-  }[];
-
-  constructor(errors: { property: string; value: any; constraints: object }[]) {
+  public extra: any[] | undefined;
+  constructor(extra: any[]) {
     super({
       code: 400,
       message: "Validation Failure",
-    })
-    this.errors = errors;
+      extra: extra,
+    });
   }
 }
