@@ -5,7 +5,6 @@ import PropertiesTableHeader from "./components/properties_table_header.componen
 import ButtonComponent from "../../../components/button/button.component";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CreatePropertiesModalComponent from "./components/create_properties_modal.component";
-import ViewPropertyModalComponent from './components/view_property_modal.component';
 export default function PropertiesContainer() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -28,7 +27,7 @@ export default function PropertiesContainer() {
           </ButtonComponent>
         </PropertiesTableHeader>
         <PropertiesTableComponent />
-        <ViewPropertyModalComponent id={1} />
+      
         {open && <CreatePropertiesModalComponent isOpen={open} handleClose={handleClose} />}
 
       </ContainerStyle>
