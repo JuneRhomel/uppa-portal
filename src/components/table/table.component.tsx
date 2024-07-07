@@ -24,8 +24,8 @@ export function TheadComponent({ children }: TableComponentParams) {
 export function TbodyComponent({ children }: TableComponentParams) {
   return <TbodyStyle>{children}</TbodyStyle>;
 }
-export function TableRowComponent({ children }: TableComponentParams) {
-  return <TrStyle>{children}</TrStyle>;
+export function TableRowComponent({ children, onClick }: TableComponentParams) {
+  return <TrStyle onClick={onClick}>{children}</TrStyle>;
 }
 
 export function TableData({ children }: TableComponentParams) {

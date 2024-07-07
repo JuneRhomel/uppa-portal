@@ -75,7 +75,7 @@ export default function PropertiesTableComponent() {
           </tr>
         </TheadComponent>
         {propertiesQuery.isLoading && <PropertiesTableDataSkeleton />}
-        <PropertiesTableDataMapper property={properties} />
+        <PropertiesTableDataMapper properties={properties} />
       </TableComponent>
       <PaginationComponent numberOfRows={10} totalRows={numberOfRows} />
     </>
