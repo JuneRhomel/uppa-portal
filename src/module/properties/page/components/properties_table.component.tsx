@@ -69,9 +69,6 @@ export default function PropertiesTableComponent() {
             <TableHeadData columnName="unit_name">Property</TableHeadData>
             <TableHeadData columnName="unit_type_name">Type</TableHeadData>
             <TableHeadData columnName="unit_status_name">Status</TableHeadData>
-            <TableHeadData columnName="action" isSortTable={false}>
-              Action
-            </TableHeadData>
           </tr>
         </TheadComponent>
         {propertiesQuery.isLoading && <PropertiesTableDataSkeleton />}

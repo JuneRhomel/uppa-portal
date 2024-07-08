@@ -29,7 +29,6 @@ export default function PropertiesTableDataMapper({
             <TableData>{property.unit_name}</TableData>
             <TableData>{property.unit_type_name}</TableData>
             <TableData>{property.unit_status_name}</TableData>
-            <TableData>Action</TableData>
           </TableRowComponent>
         ))}
       </TbodyComponent>

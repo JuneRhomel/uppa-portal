@@ -23,9 +23,6 @@ export default function PropertiesTableDataSkeleton() {
           <TableData>
             <Skeleton />
           </TableData>
-          <TableData>
-            <Skeleton />
-          </TableData>
         </TableRowComponent>
       ))}
     </TbodyComponent>
