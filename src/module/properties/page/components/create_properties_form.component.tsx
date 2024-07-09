@@ -27,8 +27,8 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
     const navigate = useNavigate();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
     const [propertyName, setPropertyName] = useState("");
-    const [propertyTypeId, setPropertyTypeId] = useState("");
-    const [propertyStatusId, setPropertyStatusId] = useState("");
+    const [propertyTypeId, setPropertyTypeId] = useState(null);
+    const [propertyStatusId, setPropertyStatusId] = useState(null);
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [listPropertyType, setListPropertyType] = useState([] as PropertyTypEntity[]);
     const propertyTypesQuery = async () => {
@@ -93,8 +93,8 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
         navigate("/properties")
         handleClose();
         setPropertyName("");
-        setPropertyTypeId("");
-        setPropertyStatusId("");
+        setPropertyTypeId(null);
+        setPropertyStatusId(null);
     };
 
     return (

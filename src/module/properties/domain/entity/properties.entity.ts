@@ -1,14 +1,17 @@
 import { Expose } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsNumber, IsOptional } from "class-validator";
 
 export default class PropertiesEntity {
   @Expose()
+  @IsNumber()
+  @IsOptional()
   id: number;
 
   @Expose()
   unit_name: string;
 
   @Expose()
+  @IsNumber()
   unit_type_id: number;
 
   @Expose()
@@ -16,6 +19,7 @@ export default class PropertiesEntity {
   unit_type_name: string;
 
   @Expose()
+  @IsNumber()
   unit_status_id: number;
 
   @Expose()

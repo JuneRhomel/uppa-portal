@@ -44,7 +44,7 @@ export default function PaginationComponent({
       <PaginationLabelStyle>Page {page} of {totalPages}</PaginationLabelStyle>
       <PaginarionPageContainerStyle>
         <ButtonComponent
-          onClick={nextPage}
+          onClick={previousPage}
           sx={{ minWidth: 30 }}
           variant={"contained"}
           size={"small"}
@@ -74,7 +74,7 @@ export default function PaginationComponent({
         </FormControl>
 
         <ButtonComponent
-          onClick={previousPage}
+          onClick={nextPage}
           sx={{ minWidth: 30 }}
           variant={"contained"}
           size={"small"}

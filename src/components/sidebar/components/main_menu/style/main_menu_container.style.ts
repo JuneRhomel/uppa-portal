@@ -20,8 +20,8 @@ const MainMenuSidebarContainerStyle = styled.div<Props>`
   }
 
   ${(props) => props.$isactive && `
-    background-color: #EFEFEF;
-    color: #0B0F13;
+    background-color: #f2f4f6;
+    color: #1b2d45;
     font-weight: 500;
   `}
 

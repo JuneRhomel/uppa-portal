@@ -53,8 +53,8 @@ export default function PropertiesTableComponent() {
   const propertiesQuery = useQuery({
     queryKey: ["properties", search, page, columns, sortBy, sortOrder],
     queryFn: fetchProperties,
-    retry: false,
-    refetchOnWindowFocus: false,
+    retry: true,
+    refetchOnWindowFocus: true,
   });
 
   const numberOfRows = propertiesQuery.data?.totalRows ?? 0;

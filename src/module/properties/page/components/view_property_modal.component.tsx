@@ -35,17 +35,20 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
 
         setIsLoading(false);
     }
-    useEffect(() => {
-        fetchProperty(id)
-    }, []);
 
+    useEffect(() => {
+        fetchProperty(id);
+        const intervalId = setInterval(() => fetchProperty(id), 3000);
+
+        return () => clearInterval(intervalId);
+    }, [id]);
 
     return (
         <Modal keepMounted open={isShow}>
             <Box sx={style}>
                 {isLoading ?? <ViewPropertyModalLoadingComponent />}
                 <Stack direction="row" justifyContent="space-between" mb={2}>
-                    <Typography variant="subtitle1" fontWeight={600} color={"primary"} gutterBottom>
+                    <Typography variant="subtitle1" fontWeight={600} color={"secondary"} gutterBottom>
                         {property.unit_name}
                     </Typography>
 
@@ -57,7 +60,7 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                 </Stack>
                 <Stack direction="row" gap={3}>
                     <div>
-                        <Typography variant="caption" color={"primary"} display="block" >
+                        <Typography variant="caption" color={"secondary"} display="block" >
                             Type
                         </Typography>
                         <Typography variant="caption" fontWeight={500} color={"secondary"} display="block" gutterBottom>
@@ -65,7 +68,7 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                         </Typography>
                     </div>
                     <div>
-                        <Typography variant="caption" color={"primary"} display="block" >
+                        <Typography variant="caption" color={"secondary"} display="block" >
                             Status
                         </Typography>
                         <Chip color="success" variant="outlined" label={property.unit_status_name} size="small" />
@@ -75,11 +78,11 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                     <Fab color="error" size="small">
                         <DeleteOutlineRoundedIcon fontSize="small" />
                     </Fab>
-                    <Fab color="primary" onClick={() => setIsEdit(true)} size="small">
+                    <Fab color="secondary" onClick={() => setIsEdit(true)} size="small">
                         <EditRoundedIcon fontSize="small" />
                     </Fab>
                 </Stack>
-                {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={() => setIsEdit(false)}  property={property}/>}
+                {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={() => setIsEdit(false)} property={property} />}
             </Box>
         </Modal>
     );

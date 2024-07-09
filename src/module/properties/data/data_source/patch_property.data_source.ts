@@ -2,11 +2,11 @@ import ApiConstant from "../../../../application/constant/api.constant";
 import Failure from "../../../../application/failure/failure";
 import FailureMapperUtil from "../../../../util/failure_mapper/failure_mapper.util";
 import HttpCliestUtil from "../../../../util/http_client/http_cliest.util";
-import PostPropertyDataSourceParams from "./interface/post_property_data_source.params";
+import PatchPropertyDataSourceParams from "./interface/patch_property.data_source";
 
-export default async function PostPropertyDataSource({
+export default async function PatchPropertyDataSource({
   propertyModel,
-}: PostPropertyDataSourceParams): Promise<void | Failure> {
+}: PatchPropertyDataSourceParams): Promise<void | Failure> {
   try {
     const body = {
       unit_name: propertyModel.unit_name,
@@ -15,11 +15,10 @@ export default async function PostPropertyDataSource({
     };
 
     const response = await HttpCliestUtil({
-      method: "POST",
-      url: ApiConstant.PROPERTIES,
+      method: "PATCH",
+      url: `${ApiConstant.PROPERTIES}/${propertyModel.id}`,
       body: body,
     });
-
 
     if (response instanceof Failure) {
       return response;

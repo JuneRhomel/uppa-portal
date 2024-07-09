@@ -1,28 +1,43 @@
 import { Expose } from "class-transformer";
+import { IsNumber } from "class-validator";
 
 export default class PropertiesModel {
     @Expose()
+    @IsNumber()
     id: number;
+
     @Expose()
     unit_name: string;
+
     @Expose()
+    @IsNumber()
     unit_type_id: number;
+    
     @Expose()
     unit_type_name: string;
+    
     @Expose()
+    @IsNumber()
     unit_status_id: number;
+
     @Expose()
     unit_status_name: string;
+
     @Expose()
     created_at: Date | null;
+
     @Expose()
     updated_at: Date | null;
+
     @Expose()
     deleted_at: Date | null;
+
     @Expose()
     created_by: number;
+
     @Expose()
     deleted_by: number | null;
+
     @Expose()
     updated_by: number | null;
 

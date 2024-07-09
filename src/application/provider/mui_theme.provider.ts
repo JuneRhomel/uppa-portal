@@ -1,28 +1,34 @@
-
 import { createTheme } from "@mui/material/styles";
 
 // Create a custom theme
 const theme = createTheme({
   typography: {
-    fontFamily: 'Poppins, sans-serif', 
+    fontFamily: "Poppins, sans-serif",
   },
   palette: {
     primary: {
-      main: '#0B0F13',
+      main: "#3da9fc",
     },
     secondary: {
-      main: '#526A82',
+      main: "#00214d",
     },
     error: {
-      main: '#FF4C4C',
+      main: "#ff5470",
     },
     success: {
-      main: '#00E891',
-      contrastText: '#fff',
+      main: "#00E891",
+      contrastText: "#fff",
     },
   },
-  
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          color: "#fffffe", 
+        },
+      },
+    },
+  },
 });
-
 
 export default theme;

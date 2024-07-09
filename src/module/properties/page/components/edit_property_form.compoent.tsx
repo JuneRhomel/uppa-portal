@@ -15,19 +15,20 @@ import PropertiesEntity from "../../domain/entity/properties.entity";
 import { plainToInstance } from "class-transformer";
 import TimeoutFailure from "../../../../application/failure/timeout.failure";
 import Failure from "../../../../application/failure/failure";
-import PostPropertyUseCase from "../../domain/use_case/post_property.use_case";
 import EditPropertyModalParams from "../interface/edit_property_modal.params";
 import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_case";
 import PropertyTypEntity from "../../domain/entity/property_type.entity";
 import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
+import PatchPropertyUseCase from "../../domain/use_case/patch_property.use_case";
 
-export default function  EditPropertyFormComponent({ handleClose, property }: EditPropertyModalParams) {
+export default function EditPropertyFormComponent({ handleClose, property }: EditPropertyModalParams) {
     const navigate = useNavigate();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
     const [propertyName, setPropertyName] = useState("");
-    const [propertyTypeId, setPropertyTypeId] = useState("");
-    const [propertyStatusId, setPropertyStatusId] = useState("");
+    const [propertyId, setPropertyId] = useState(0);
+    const [propertyTypeId, setPropertyTypeId] = useState(0);
+    const [propertyStatusId, setPropertyStatusId] = useState(0);
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [listPropertyType, setListPropertyType] = useState([] as PropertyTypEntity[]);
     const propertyTypesQuery = async () => {
@@ -40,6 +41,7 @@ export default function  EditPropertyFormComponent({ handleClose, property }: Ed
     const propertyStatusQuery = async () => {
         const response = await GetPropertyStatusUseCase();
         if (response instanceof Failure) {
+            
             alert(response.message);
         }
         return response;
@@ -53,15 +55,14 @@ export default function  EditPropertyFormComponent({ handleClose, property }: Ed
             const propertyStatus = await propertyStatusQuery() as PropertyStatusEntity[];
             setListPropertyType(propertyTypes);
             setListPropertyStatus(propertyStatus);
-            setPropertyStatusId(property.unit_status_id.toString() || "")
-            setPropertyTypeId(property.unit_status_id.toString() || "")
-            setPropertyName(property.unit_name || "")
+            setPropertyId(property.id)
+            setPropertyStatusId(property.unit_status_id)
+            setPropertyTypeId(property.unit_type_id)
+            setPropertyName(property.unit_name)
         };
 
         fetchPropertyTypes();
-    }, []);
-
-
+    }, [])
 
     const handlePropertyNameChange = (event: any) => {
         setPropertyName(event.target.value);
@@ -76,11 +77,12 @@ export default function  EditPropertyFormComponent({ handleClose, property }: Ed
         setIsLoadingSave(true);
         event.preventDefault();
         const propertyEntity = plainToInstance(PropertiesEntity, {
+            id: propertyId,
             unit_name: propertyName,
             unit_type_id: propertyTypeId,
             unit_status_id: propertyStatusId
         })
-        const response = await PostPropertyUseCase({
+        const response = await PatchPropertyUseCase({
             propertyEntity
         });
         if (response instanceof TimeoutFailure) {
@@ -94,8 +96,8 @@ export default function  EditPropertyFormComponent({ handleClose, property }: Ed
         navigate("/properties")
         handleClose();
         setPropertyName("");
-        setPropertyTypeId("");
-        setPropertyStatusId("");
+        setPropertyTypeId(0);
+        setPropertyStatusId(0);
     };
 
     return (
