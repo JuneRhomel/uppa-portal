@@ -5,14 +5,15 @@ import {
     MenuItem,
     Select,
     TextField,
-    Button
+    Button,
+    Alert
 } from "@mui/material";
+import { useAlert } from '../../../../application/provider/alert_context/alert_context.provider';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate } from "react-router-dom";
 import CreatePropertiesFormContainerStyle from "../style/create_properties_form_container.style";
 import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
-import SendIcon from '@mui/icons-material/Send';
 import PropertiesEntity from "../../domain/entity/properties.entity";
 import { plainToInstance } from "class-transformer";
 import TimeoutFailure from "../../../../application/failure/timeout.failure";
@@ -23,7 +24,11 @@ import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_
 import PropertyTypEntity from "../../domain/entity/property_type.entity";
 import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
+
+
+
 export default function CreatePropertiesFormComponent({ handleClose }: CreatePropertiesModalParams) {
+    const { showAlert } = useAlert();
     const navigate = useNavigate();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
     const [propertyName, setPropertyName] = useState("");
@@ -87,8 +92,9 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
             return navigate("/login");
         }
         if (response instanceof Failure) {
-            return alert(response.message);
+            showAlert('New property has been created', 'success', "Saved");
         }
+        showAlert('Something went wrong', 'error');
         setIsLoadingSave(false);
         navigate("/properties")
         handleClose();
@@ -98,70 +104,72 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <CreatePropertiesFormContainerStyle>
-                <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            label="Property Name"
-                            variant="outlined"
-                            value={propertyName}
-                            onChange={handlePropertyNameChange}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel>Type</InputLabel>
-                            <Select
-                                value={propertyTypeId}
-                                label="Type"
+        <>
+            <form onSubmit={handleSubmit}>
+                <CreatePropertiesFormContainerStyle>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
                                 size="small"
-                                onChange={handlePropertyTypeIdChange}
-                            >
-                                {listPropertyType.map((propertyType) => (
-                                    <MenuItem
-                                        key={propertyType.id}
-                                        value={propertyType.id}
-                                    >
-                                        {propertyType.unit_type_name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                label="Property Name"
+                                variant="outlined"
+                                value={propertyName}
+                                onChange={handlePropertyNameChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>Type</InputLabel>
+                                <Select
+                                    value={propertyTypeId}
+                                    label="Type"
+                                    size="small"
+                                    onChange={handlePropertyTypeIdChange}
+                                >
+                                    {listPropertyType.map((propertyType) => (
+                                        <MenuItem
+                                            key={propertyType.id}
+                                            value={propertyType.id}
+                                        >
+                                            {propertyType.unit_type_name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>Status</InputLabel>
+                                <Select
+                                    value={propertyStatusId}
+                                    label="Status"
+                                    size="small"
+                                    onChange={handlePropertyStatusIdChange}
+                                >
+                                    {listPropertyStatus.map((propertyStatus) => (
+                                        <MenuItem
+                                            key={propertyStatus.id}
+                                            value={propertyStatus.id}
+                                        >
+                                            {propertyStatus.unit_status_name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel>Status</InputLabel>
-                            <Select
-                                value={propertyStatusId}
-                                label="Status"
-                                size="small"
-                                onChange={handlePropertyStatusIdChange}
-                            >
-                                {listPropertyStatus.map((propertyStatus) => (
-                                    <MenuItem
-                                        key={propertyStatus.id}
-                                        value={propertyStatus.id}
-                                    >
-                                        {propertyStatus.unit_status_name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-            </CreatePropertiesFormContainerStyle>
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
-                <LoadingButton
-                    type="submit"
-                    loading={isLoadingSave}
-                    variant="contained"
-                >
-                    <span>Save</span>
-                </LoadingButton>
-            </Stack>
-        </form>
+                </CreatePropertiesFormContainerStyle>
+                <Stack direction="row" justifyContent="flex-end" spacing={1}>
+                    <LoadingButton
+                        type="submit"
+                        loading={isLoadingSave}
+                        variant="contained"
+                    >
+                        <span>Save</span>
+                    </LoadingButton>
+                </Stack>
+            </form>
+        </>
     );
 }

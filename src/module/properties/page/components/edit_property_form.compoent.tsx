@@ -6,6 +6,7 @@ import {
     Select,
     TextField,
 } from "@mui/material";
+import { useAlert } from '../../../../application/provider/alert_context/alert_context.provider';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate } from "react-router-dom";
 import CreatePropertiesFormContainerStyle from "../style/create_properties_form_container.style";
@@ -24,6 +25,7 @@ import PatchPropertyUseCase from "../../domain/use_case/patch_property.use_case"
 
 export default function EditPropertyFormComponent({ handleClose, property }: EditPropertyModalParams) {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
     const [propertyName, setPropertyName] = useState("");
     const [propertyId, setPropertyId] = useState(0);
@@ -41,7 +43,7 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
     const propertyStatusQuery = async () => {
         const response = await GetPropertyStatusUseCase();
         if (response instanceof Failure) {
-            
+
             alert(response.message);
         }
         return response;
@@ -93,6 +95,7 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
             return alert(response.message);
         }
         setIsLoadingSave(false);
+        showAlert("Property updated successfully", "success");
         navigate("/properties")
         handleClose();
         setPropertyName("");
