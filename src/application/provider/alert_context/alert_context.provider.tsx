@@ -39,13 +39,11 @@ export const AlertProvider: React.FC<AlertProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => {
-        setIsOpen(false);
-      }, 4000); // Set the timer to 4 seconds
+    const timer = setTimeout(() => {
+      setIsOpen(false);
+    }, 4000); // Set the timer to 4 seconds
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   const handleClose = () => setIsOpen(false);

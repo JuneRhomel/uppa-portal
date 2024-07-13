@@ -7,7 +7,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Failure from "../../../../application/failure/failure";
 import { useNavigate } from "react-router-dom";
 
-export default function DeletePropertyModalComponet({ isOpen = true, handleClose, property }: DeletePropertyModalParams) {
+export default function DeletePropertyModalComponet({ isOpen = true, handleClose, property, handleCloseModal }: DeletePropertyModalParams) {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
@@ -38,6 +38,7 @@ export default function DeletePropertyModalComponet({ isOpen = true, handleClose
         showAlert("Property deleted successfully", "success");
         isOpen = false;
         navigate("/properties")
+        handleCloseModal();
     }
 
     return (

@@ -74,7 +74,6 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
     };
     const handlePropertyStatusIdChange = (event: any) => {
         setPropertyStatusId(event.target.value);
-        console.log(event.target.value);
     };
     const handleSubmit = async (event: any) => {
         setIsLoadingSave(true);
@@ -92,15 +91,15 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
             return navigate("/login");
         }
         if (response instanceof Failure) {
-            showAlert('New property has been created', 'success', "Saved");
+            showAlert('Something went wrong', 'error');
         }
-        showAlert('Something went wrong', 'error');
         setIsLoadingSave(false);
-        navigate("/properties")
         handleClose();
         setPropertyName("");
         setPropertyTypeId(null);
         setPropertyStatusId(null);
+        showAlert('New property has been created', 'success', "Saved");
+        navigate("/properties")
     };
 
     return (

@@ -36,10 +36,15 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
 
     const handelDelete = () => {
         setIsDelete(!isDelete)
+        setAnchorEl(null);
+    }
+    const handelEdit = () => {
+        setIsEdit(false)
+        setAnchorEl(null);
     }
 
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleCloseOption = () => {
@@ -72,14 +77,14 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
         }
         return (
             <>
-                <Stack direction="row" justifyContent="space-between" mb={2}>
-                    <Typography variant="subtitle1" fontWeight={600} color={"secondary"} gutterBottom>
+                <Stack direction="row" alignItems={"center"} justifyContent="space-between" mb={2}>
+                    <Typography variant="subtitle1" fontWeight={600} color={"secondary"} >
                         {property.unit_name}
                     </Typography>
 
                     <Stack direction="row" gap={1}>
                         <IconButton
-                            onClick={handleClick}
+                            onClick={handleSettings}
                         >
                             <SettingsRoundedIcon fontSize="small" />
                         </IconButton>
@@ -118,8 +123,8 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                         Delete
                     </MenuItem>
                 </Menu>
-                {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={() => setIsEdit(false)} property={property} />}
-                {isDelete && <DeletePropertyModalComponet isOpen={isDelete} property={property} handleClose={handelDelete} />}
+                {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={handelEdit} property={property} />}
+                {isDelete && <DeletePropertyModalComponet isOpen={isDelete} property={property} handleClose={handelDelete} handleCloseModal={handleClose} />}
             </>
         )
 
