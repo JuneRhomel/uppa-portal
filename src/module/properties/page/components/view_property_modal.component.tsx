@@ -12,13 +12,15 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import EditPropertyModalComponent from "./edit_property_modal.componet";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import DeletePropertyModalComponet from "./delete_property_modal.component";
+import Failure from "../../../../application/failure/failure";
 
 export default function ViewPropertyModalComponent({ id, isShow = false, handleClose }: ViewPropertyParams) {
     const [property, setProperty] = useState({} as PropertiesEntity);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
-
+    const [isDelete, setIsDelete] = useState(false);
     const style = {
         position: "absolute" as "absolute",
         top: "50%",
@@ -32,6 +34,9 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
         p: 2,
     };
 
+    const handelDelete = () => {
+        setIsDelete(!isDelete)
+    }
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,6 +49,11 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
 
     const fetchProperty = async (id) => {
         const response = await GetPropertyUseCase({ id }) as PropertiesEntity;
+
+        if (response instanceof Failure) {
+            isShow = false;
+            return
+        }
         setProperty(response);
 
         setIsLoading(false);
@@ -62,9 +72,6 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
         }
         return (
             <>
-
-
-
                 <Stack direction="row" justifyContent="space-between" mb={2}>
                     <Typography variant="subtitle1" fontWeight={600} color={"secondary"} gutterBottom>
                         {property.unit_name}
@@ -101,18 +108,18 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleCloseOption}
-
                 >
                     <MenuItem color="secondary" sx={{ fontSize: "14px" }} onClick={() => setIsEdit(true)} >
                         <EditRoundedIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
                         Edit
                     </MenuItem>
-                    <MenuItem color="error" sx={{ fontSize: "14px" }} onClick={handleCloseOption}>
+                    <MenuItem color="error" sx={{ fontSize: "14px" }} onClick={handelDelete}>
                         <DeleteRoundedIcon color="error" fontSize="small" sx={{ mr: 1 }} />
                         Delete
                     </MenuItem>
                 </Menu>
                 {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={() => setIsEdit(false)} property={property} />}
+                {isDelete && <DeletePropertyModalComponet isOpen={isDelete} property={property} handleClose={handelDelete} />}
             </>
         )
 
