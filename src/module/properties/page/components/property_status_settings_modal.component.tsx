@@ -9,11 +9,14 @@ import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.
 import Failure from "../../../../application/failure/failure";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import EditPropertyStatusModalComponent from "./edit_property_status_modal.component";
 
 
 export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose }: PropertyStatusSettingsModalParams) {
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isOpenEdit, setIsOpenEdit] = useState(false);
+    const [selectedPropertyStatus, setSelectedPropertyStatus] = useState({} as PropertyStatusEntity);
     const style = {
         position: "absolute" as "absolute",
         top: "50%",
@@ -51,6 +54,14 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
         fetchPropertyStatus();
     }, []);
 
+    const handleCloseEdit = () => {
+        setIsOpenEdit(false);
+    }
+
+    const handleEditStatus = (propertyStatus: PropertyStatusEntity) => {
+        setSelectedPropertyStatus(propertyStatus);
+        setIsOpenEdit(true);
+    }
     const Render = () => {
         if (isLoading) {
             return <Skeleton height={300} />
@@ -72,7 +83,7 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                 <Stack spacing={1}>
                     {listPropertyStatus.map((propertyStatus) => (
                         <Stack key={propertyStatus.id} direction="row" alignItems={"center"} justifyContent="space-between" >
-                            <Stack direction="row" width={"100%"}  alignItems={"center"} justifyContent={"space-between"} borderRadius={1} border={"1px solid #e0e0e0"} p={1}>
+                            <Stack direction="row" width={"100%"} alignItems={"center"} justifyContent={"space-between"} borderRadius={1} border={"1px solid #e0e0e0"} p={1}>
                                 <Typography variant="subtitle1" fontWeight={400} color={"secondary"} >
                                     {propertyStatus.unit_status_name}
                                 </Typography>
@@ -80,13 +91,14 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                                     <IconButton color="error">
                                         <DeleteRoundedIcon fontSize="small" />
                                     </IconButton>
-                                    <IconButton color="primary">
+                                    <IconButton color="primary" onClick={() => handleEditStatus(propertyStatus)}>
                                         <EditRoundedIcon fontSize="small" />
                                     </IconButton>
                                 </Stack>
                             </Stack>
                         </Stack>
                     ))}
+                    {isOpenEdit && <EditPropertyStatusModalComponent isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyStatus={selectedPropertyStatus} />}
                 </Stack>
             </>
         )
@@ -95,9 +107,10 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
     return (
         <Modal keepMounted open={isOpen}>
             <Box sx={style}>
-
                 {Render()}
             </Box>
         </Modal>
+
+
     );
 }
