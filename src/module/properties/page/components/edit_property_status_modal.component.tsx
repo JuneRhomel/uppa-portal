@@ -21,7 +21,7 @@ export default function EditPropertyStatusModalComponent({ isOpen = false, handl
         border: "2px solid #e0e0e0;",
         borderRadius: "4px",
         boxShadow: 24,
-        p: 2,
+       p: "40px 30px"
     };
 
     const [isLoadingSave, setIsLoadingSave] = React.useState(false);

@@ -15,7 +15,7 @@ export default function LoadingModalComponentStyle() {
     border: "2px solid #e0e0e0;",
     borderRadius: "4px",
     boxShadow: 24,
-    p: 2,
+    p: "40px 30px"
   };
   return (
     <Modal keepMounted open={true}>
@@ -27,7 +27,7 @@ export default function LoadingModalComponentStyle() {
         <CreatePropertiesFormContainerStyle>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Skeleton variant="rectangular"  height={30} />
+              <Skeleton variant="rectangular" height={30} />
             </Grid>
             <Grid item xs={6}>
               <Skeleton variant="rectangular" height={30} />

@@ -10,6 +10,7 @@ import Failure from "../../../../application/failure/failure";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditPropertyStatusModalComponent from "./edit_property_status_modal.component";
+import DeletePropertyStatusModalComponent from "./delete_property_status_modal.component";
 
 
 export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose }: PropertyStatusSettingsModalParams) {
@@ -27,7 +28,7 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
         border: "2px solid #e0e0e0;",
         borderRadius: "4px",
         boxShadow: 24,
-        p: 2,
+        p: "40px 30px"
     };
 
     const propertyStatusQuery = async () => {
@@ -57,7 +58,6 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
     const handleCloseEdit = () => {
         setIsOpenEdit(false);
     }
-
     const handleEditStatus = (propertyStatus: PropertyStatusEntity) => {
         setSelectedPropertyStatus(propertyStatus);
         setIsOpenEdit(true);
@@ -79,7 +79,6 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                         <CloseRoundedIcon />
                     </IconButton>
                 </Stack>
-
                 <Stack spacing={1}>
                     {listPropertyStatus.map((propertyStatus) => (
                         <Stack key={propertyStatus.id} direction="row" alignItems={"center"} justifyContent="space-between" >
@@ -88,9 +87,6 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                                     {propertyStatus.unit_status_name}
                                 </Typography>
                                 <Stack direction="row">
-                                    <IconButton color="error">
-                                        <DeleteRoundedIcon fontSize="small" />
-                                    </IconButton>
                                     <IconButton color="primary" onClick={() => handleEditStatus(propertyStatus)}>
                                         <EditRoundedIcon fontSize="small" />
                                     </IconButton>
@@ -98,8 +94,7 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                             </Stack>
                         </Stack>
                     ))}
-                    {isOpenEdit && <EditPropertyStatusModalComponent isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyStatus={selectedPropertyStatus} />}
-                </Stack>
+                    {isOpenEdit && <EditPropertyStatusModalComponent isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyStatus={selectedPropertyStatus} />}                </Stack>
             </>
         )
     }
