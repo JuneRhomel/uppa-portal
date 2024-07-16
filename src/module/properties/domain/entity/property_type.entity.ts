@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 
 
-export default class PropertyTypEntity {
+export default class PropertyTypeEntity {
     @Expose()
     id: number;
     @Expose()

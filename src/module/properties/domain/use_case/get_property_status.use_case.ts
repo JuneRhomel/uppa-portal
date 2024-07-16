@@ -3,7 +3,7 @@ import FailureMapperUtil from "../../../../util/failure_mapper/failure_mapper.ut
 import GetPropertyStatusDataSource from "../../data/data_source/get_property_status.data_source";
 import PropertyStatUsEntity from "../entity/property_status.entity";
 
-export default async function GetPropertyStatusRepository(): Promise<
+export default async function GetPropertyStatusUseCase(): Promise<
   PropertyStatUsEntity[] | Failure
 > {
   try {

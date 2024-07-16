@@ -1,4 +1,5 @@
 import {
+    Button,
     FormControl,
     Grid,
     InputLabel,
@@ -27,10 +28,10 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
-    const [propertyName, setPropertyName] = useState("");
-    const [propertyId, setPropertyId] = useState(0);
-    const [propertyTypeId, setPropertyTypeId] = useState(0);
-    const [propertyStatusId, setPropertyStatusId] = useState(0);
+    const [propertyName, setPropertyName] = useState(property.unit_name);
+    const [propertyId, setPropertyId] = useState(property.id);
+    const [propertyTypeId, setPropertyTypeId] = useState(property.unit_type_id);
+    const [propertyStatusId, setPropertyStatusId] = useState(property.unit_status_id);
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [listPropertyType, setListPropertyType] = useState([] as PropertyTypEntity[]);
     const propertyTypesQuery = async () => {
@@ -57,10 +58,6 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
             const propertyStatus = await propertyStatusQuery() as PropertyStatusEntity[];
             setListPropertyType(propertyTypes);
             setListPropertyStatus(propertyStatus);
-            setPropertyId(property.id)
-            setPropertyStatusId(property.unit_status_id)
-            setPropertyTypeId(property.unit_type_id)
-            setPropertyName(property.unit_name)
         };
 
         fetchPropertyTypes();
@@ -159,7 +156,13 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
                     </Grid>
                 </Grid>
             </CreatePropertiesFormContainerStyle>
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
+            <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mt={3}
+                    >
+                <Button variant="outlined" onClick={handleClose}>Cancel</Button>
                 <LoadingButton
                     type="submit"
                     loading={isLoadingSave}

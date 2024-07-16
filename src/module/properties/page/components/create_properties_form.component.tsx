@@ -21,7 +21,7 @@ import Failure from "../../../../application/failure/failure";
 import PostPropertyUseCase from "../../domain/use_case/post_property.use_case";
 import CreatePropertiesModalParams from "../interface/create_properties_modal.params";
 import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_case";
-import PropertyTypEntity from "../../domain/entity/property_type.entity";
+import PropertyTypeEntity from "../../domain/entity/property_type.entity";
 import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 
@@ -35,7 +35,7 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
     const [propertyTypeId, setPropertyTypeId] = useState(null);
     const [propertyStatusId, setPropertyStatusId] = useState(null);
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
-    const [listPropertyType, setListPropertyType] = useState([] as PropertyTypEntity[]);
+    const [listPropertyType, setListPropertyType] = useState([] as PropertyTypeEntity[]);
     const propertyTypesQuery = async () => {
         const response = await GetPropertyTypeUseCase();
         if (response instanceof Failure) {
@@ -52,10 +52,8 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
     }
 
     useEffect(() => {
-        document.title = "Create Property - Properties";
-
         const fetchPropertyTypes = async () => {
-            const propertyTypes = await propertyTypesQuery() as PropertyTypEntity[];
+            const propertyTypes = await propertyTypesQuery() as PropertyTypeEntity[];
             const propertyStatus = await propertyStatusQuery() as PropertyStatusEntity[];
             setListPropertyType(propertyTypes);
             setListPropertyStatus(propertyStatus);
@@ -159,7 +157,14 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
                         </Grid>
                     </Grid>
                 </CreatePropertiesFormContainerStyle>
-                <Stack direction="row" justifyContent="flex-end" spacing={1}>
+                <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mt={3}
+                    >
+                                        <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+
                     <LoadingButton
                         type="submit"
                         loading={isLoadingSave}

@@ -8,12 +8,10 @@ import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
 import Failure from "../../../../application/failure/failure";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditPropertyStatusModalComponent from "./edit_property_status_modal.component";
-import DeletePropertyStatusModalComponent from "./delete_property_status_modal.component";
 
 
-export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose }: PropertyStatusSettingsModalParams) {
+export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose ,}: PropertyStatusSettingsModalParams) {
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);

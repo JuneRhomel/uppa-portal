@@ -5,6 +5,7 @@ const theme = createTheme({
   typography: {
     fontFamily: "Poppins, sans-serif",
   },
+
   palette: {
     primary: {
       main: "#3da9fc",
@@ -24,7 +25,12 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         contained: {
-          color: "#fffffe", 
+          color: "#fffffe",
+        },
+        root: {
+          textTransform: "none",
+          color: "#757B81",
+
         },
       },
     },

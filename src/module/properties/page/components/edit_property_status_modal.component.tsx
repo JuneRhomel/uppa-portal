@@ -10,7 +10,7 @@ import Failure from "../../../../application/failure/failure";
 
 export default function EditPropertyStatusModalComponent({ isOpen = false, handleClose, propertyStatus }: EditPropertyStatusModalParams) {
     const { showAlert } = useAlert();
-    const [propertyStatusName, setPropertyStatusName] = useState("");
+    const [propertyStatusName, setPropertyStatusName] = useState(propertyStatus.unit_status_name);
     const style = {
         position: "absolute" as "absolute",
         top: "50%",
@@ -21,16 +21,16 @@ export default function EditPropertyStatusModalComponent({ isOpen = false, handl
         border: "2px solid #e0e0e0;",
         borderRadius: "4px",
         boxShadow: 24,
-       p: "40px 30px"
+        p: "40px 30px"
     };
 
-    const [isLoadingSave, setIsLoadingSave] = React.useState(false);
+    const [isLoadingSave, setIsLoadingSave] = useState(false);
     const [error, setError] = useState('');
 
     const handelSave = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!propertyStatusName) {
-            setError('Property Status Name must be less than 50 characters');
+            setError('Property Status Name must have a value');
             return;
         }
         propertyStatus.unit_status_name = propertyStatusName;
@@ -70,19 +70,24 @@ export default function EditPropertyStatusModalComponent({ isOpen = false, handl
                         helperText={error}
                         fullWidth
                         onChange={(e) => setPropertyStatusName(e.target.value)}
-                        label={propertyStatus.unit_status_name}
+                        label="Property Status Name"
+                        value={propertyStatusName}
                         variant="outlined"
                         size="small"
                     />
-                    <Stack direction="row" justifyContent="flex-end" spacing={2} mt={2}>
-                        <Button color="secondary" size="small" onClick={handleClose}>Cancel</Button>
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mt={3}
+                    >
+                        <Button variant="outlined" onClick={handleClose}>Cancel</Button>
                         <LoadingButton
                             type="submit"
-                            size="small"
                             loading={isLoadingSave}
                             variant="contained"
                         >
-                            <span>Save</span>
+                            Save
                         </LoadingButton>
                     </Stack>
                 </form>

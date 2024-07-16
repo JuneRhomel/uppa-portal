@@ -24,6 +24,7 @@ export default function PropertiesTableComponent() {
   const page = queryPathParameters.get("page") ?? "1";
   const search = queryPathParameters.get("search") ?? "";
   const sortOrder = queryPathParameters.get("sortOrder") ?? "DESC";
+  const filters = queryPathParameters.get("filters") ?? "";
 
   const columns = "unit_name,unit_type_name,unit_status_name";
   const fetchProperties = async () => {
@@ -34,6 +35,7 @@ export default function PropertiesTableComponent() {
       sortBy,
       sortOrder,
       search,
+      filters,
     });
 
     const response = await PropertiesUseCase({
@@ -51,7 +53,7 @@ export default function PropertiesTableComponent() {
   };
 
   const propertiesQuery = useQuery({
-    queryKey: ["properties", search, page, columns, sortBy, sortOrder],
+    queryKey: ["properties", search, page, columns, sortBy, sortOrder,filters],
     queryFn: fetchProperties,
     retry: true,
     refetchOnWindowFocus: true,

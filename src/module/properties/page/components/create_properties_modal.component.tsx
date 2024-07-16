@@ -28,7 +28,7 @@ export default function CreatePropertiesModalComponent({
     <Modal keepMounted  open={isOpen}>
       <Box sx={style}>
         <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h5" sx={{ fontWeight: "500" }} component="h5">
+        <Typography variant="subtitle1" fontWeight={600} color={"secondary"} >
             Create Property
           </Typography>
           <IconButton onClick={handleClose} >

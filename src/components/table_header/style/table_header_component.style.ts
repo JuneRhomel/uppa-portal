@@ -2,12 +2,11 @@ import styled from "styled-components";
 
 const TableHeaderStyle = styled.div`
     width: 100%;
-    height: 40px;
     display: flex;
     justify-content: space-between;
-    height: 40px;
     align-items: center;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
 `;
 
 export default TableHeaderStyle;
