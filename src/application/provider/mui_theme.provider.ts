@@ -29,7 +29,6 @@ const theme = createTheme({
         },
         root: {
           textTransform: "none",
-          color: "#757B81",
 
         },
       },

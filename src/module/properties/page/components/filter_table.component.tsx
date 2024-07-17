@@ -8,6 +8,7 @@ import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_
 import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
 import PropertyTypeEntity from "../../domain/entity/property_type.entity";
 import FilterTabelComponentParams from "../interface/filter_tabel_component.params";
+import FilterTableContainerStyle from "../style/filter_table_container.style";
 
 export default function FilterTableComponent({ isOpen }: FilterTabelComponentParams) {
     const navigate = useNavigate();
@@ -95,69 +96,69 @@ export default function FilterTableComponent({ isOpen }: FilterTabelComponentPar
         );
 
     };
-    if (!isOpen) {
-        return null;
-    }
     return (
-        <Box paddingBlock={2} display="flex" gap={2}>
-            <Button
-                variant="outlined"
-                endIcon={<KeyboardArrowDownIcon />}
-                onClick={handleClickStatus}
-            >
-                <Typography fontSize={12} >
-                    Status :&nbsp;
-                </Typography>
-                <Typography fontSize={12} color="primary" fontWeight={"bold"}>
-                    {selectedStatus ? ` ${selectedStatus}` : ` All`}
-                </Typography>
-            </Button>
+        <FilterTableContainerStyle isOpen={isOpen}>
 
-            <Button
-                variant="outlined"
-                endIcon={<KeyboardArrowDownIcon />}
-                onClick={handleClickType}
+            <Box display="flex" gap={2}>
+                <Button
+                    variant="outlined"
+                    endIcon={<KeyboardArrowDownIcon />}
+                    onClick={handleClickStatus}
+                >
+                    <Typography fontSize={12} >
+                        Status :&nbsp;
+                    </Typography>
+                    <Typography fontSize={12} color="primary" fontWeight={"bold"}>
+                        {selectedStatus ? ` ${selectedStatus}` : ` All`}
+                    </Typography>
+                </Button>
 
-            >
-                <Typography fontSize={12} >
-                    Type :&nbsp;
-                </Typography>
+                <Button
+                    variant="outlined"
+                    endIcon={<KeyboardArrowDownIcon />}
+                    onClick={handleClickType}
 
-                <Typography fontSize={12} color="primary" fontWeight={"bold"}>
-                    {selectedType ? ` ${selectedType}` : ` All`}
-                </Typography>
-            </Button>
+                >
+                    <Typography fontSize={12} >
+                        Type :&nbsp;
+                    </Typography>
 
-            <Menu
-                anchorEl={anchorElStatus}
-                open={openStatus}
-                onClose={handleCloseStatus}
-            >
-                {listPropertyStatus.map((status) => (
-                    <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeStatus(status.unit_status_name)}>
-                        {status.unit_status_name}
+                    <Typography fontSize={12} color="primary" fontWeight={"bold"}>
+                        {selectedType ? ` ${selectedType}` : ` All`}
+                    </Typography>
+                </Button>
+
+                <Menu
+                    anchorEl={anchorElStatus}
+                    open={openStatus}
+                    onClose={handleCloseStatus}
+                >
+                    {listPropertyStatus.map((status) => (
+                        <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeStatus(status.unit_status_name)}>
+                            {status.unit_status_name}
+                        </MenuItem>
+                    ))}
+                    <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeStatus("All")}>
+                        All
                     </MenuItem>
-                ))}
-                <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeStatus("All")}>
-                    All
-                </MenuItem>
-            </Menu>
+                </Menu>
 
 
-            <Menu
-                anchorEl={anchorElType}
-                open={openType}
-                onClose={handleCloseType}
-            >
-                {listPropertyType.map((type) => (
-                    <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeType(type.unit_type_name)}>
-                        {type.unit_type_name}
+                <Menu
+                    anchorEl={anchorElType}
+                    open={openType}
+                    onClose={handleCloseType}
+                >
+                    {listPropertyType.map((type) => (
+                        <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeType(type.unit_type_name)}>
+                            {type.unit_type_name}
+                        </MenuItem>
+                    ))}
+                    <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeType("All")}>
+                        All
                     </MenuItem>
-                ))}
-                <MenuItem color="secondary" sx={{ fontSize: "12px" }} onClick={() => handelChangeType("All")}>
-                    All
-                </MenuItem>
-            </Menu>
-        </Box >
+                </Menu>
+            </Box >
+        </FilterTableContainerStyle>
     );
 }
