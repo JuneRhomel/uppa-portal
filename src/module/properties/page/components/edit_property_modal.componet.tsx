@@ -10,6 +10,7 @@ export default function EditPropertyModalComponent({
     isOpen = false,
     handleClose,
     property,
+    refetch
 }: EditPropertyModalParams) {
     const style = {
         position: "absolute" as "absolute",
@@ -36,7 +37,7 @@ export default function EditPropertyModalComponent({
                         <CloseRoundedIcon />
                     </IconButton>
                 </Stack>
-                    <EditPropertyFormComponent property={property} handleClose={handleClose} />
+                <EditPropertyFormComponent refetch={refetch} property={property} handleClose={handleClose} />
             </Box>
         </Modal>
     );

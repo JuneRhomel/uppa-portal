@@ -11,7 +11,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import EditPropertyStatusModalComponent from "./edit_property_status_modal.component";
 
 
-export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose ,}: PropertyStatusSettingsModalParams) {
+export default function PropertyStatusSettingsModalComponent({ isOpen, handleClose, refetch }: PropertyStatusSettingsModalParams) {
     const [listPropertyStatus, setListPropertyStatus] = useState([] as PropertyStatusEntity[]);
     const [isLoading, setIsLoading] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -92,7 +92,7 @@ export default function PropertyStatusSettingsModalComponent({ isOpen, handleClo
                             </Stack>
                         </Stack>
                     ))}
-                    {isOpenEdit && <EditPropertyStatusModalComponent isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyStatus={selectedPropertyStatus} />}                </Stack>
+                    {isOpenEdit && <EditPropertyStatusModalComponent refetch={refetch} isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyStatus={selectedPropertyStatus} />}                </Stack>
             </>
         )
     }

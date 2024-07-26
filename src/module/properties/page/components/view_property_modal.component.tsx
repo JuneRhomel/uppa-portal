@@ -15,7 +15,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import DeletePropertyModalComponet from "./delete_property_modal.component";
 import Failure from "../../../../application/failure/failure";
 
-export default function ViewPropertyModalComponent({ id, isShow = false, handleClose }: ViewPropertyParams) {
+export default function ViewPropertyModalComponent({ id, isShow = false, handleClose, refetch }: ViewPropertyParams) {
     const [property, setProperty] = useState({} as PropertiesEntity);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -123,8 +123,8 @@ export default function ViewPropertyModalComponent({ id, isShow = false, handleC
                         Delete
                     </MenuItem>
                 </Menu>
-                {isEdit && <EditPropertyModalComponent isOpen={isEdit} handleClose={handelEdit} property={property} />}
-                {isDelete && <DeletePropertyModalComponet isOpen={isDelete} property={property} handleClose={handelDelete} handleCloseModal={handleClose} />}
+                {isEdit && <EditPropertyModalComponent refetch={refetch} isOpen={isEdit} handleClose={handelEdit} property={property} />}
+                {isDelete && <DeletePropertyModalComponet refetch={refetch} isOpen={isDelete} property={property} handleClose={handelDelete} handleCloseModal={handleClose} />}
             </>
         )
 

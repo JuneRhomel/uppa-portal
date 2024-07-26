@@ -27,7 +27,7 @@ import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 
 
 
-export default function CreatePropertiesFormComponent({ handleClose }: CreatePropertiesModalParams) {
+export default function CreatePropertiesFormComponent({ handleClose,refetch }: CreatePropertiesModalParams) {
     const { showAlert } = useAlert();
     const navigate = useNavigate();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
@@ -95,9 +95,9 @@ export default function CreatePropertiesFormComponent({ handleClose }: CreatePro
         handleClose();
         setPropertyName("");
         setPropertyTypeId(null);
+        refetch();
         setPropertyStatusId(null);
         showAlert('New property has been created', 'success', "Saved");
-        navigate("/properties")
     };
 
     return (

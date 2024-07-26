@@ -4,4 +4,5 @@ export default interface EditPropertyTypeModalParams {
     isOpen: boolean;
     handleClose: () => void;
     propertyType: PropertyTypEntity;
+    refetch: () => void
 }

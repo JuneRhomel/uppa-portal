@@ -11,8 +11,7 @@ import SortIconStyle from "./style/sort_icon.style";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
-import TrStyle from "./style/tr.style";
-
+import { motion } from 'framer-motion'
 export function TableComponent({ children }: TableComponentParams) {
   return <TableStyle>{children}</TableStyle>;
 }
@@ -25,7 +24,7 @@ export function TbodyComponent({ children }: TableComponentParams) {
   return <TbodyStyle>{children}</TbodyStyle>;
 }
 export function TableRowComponent({ children, onClick }: TableComponentParams) {
-  return <TrStyle onClick={onClick}>{children}</TrStyle>;
+  return <motion.tr whileHover={ { scale: 1.01}} style={{ cursor: "pointer" }} initial={{ opacity: 0}} animate={{ opacity: 1}} onClick={onClick}>{children}</motion.tr>;
 }
 
 export function TableData({ children }: TableComponentParams) {
@@ -53,12 +52,12 @@ export function TableHeadData({
   const renderIcon = () => {
     if (sortBy === columnName) {
       if (sortOrder === "DESC") {
-        return <ArrowDropUpRoundedIcon fontSize="small"/>;
+        return <ArrowDropUpRoundedIcon fontSize="small" />;
       } else if (sortOrder === "ASC") {
-        return <ArrowDropDownRoundedIcon fontSize="small"/>;
+        return <ArrowDropDownRoundedIcon fontSize="small" />;
       }
     }
-    return <SwapVertRoundedIcon  fontSize="small" />;
+    return <SwapVertRoundedIcon fontSize="small" />;
   };
 
   if (!isSortTable) return <ThStyle>{children}</ThStyle>;

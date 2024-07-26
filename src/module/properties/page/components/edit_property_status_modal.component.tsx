@@ -8,7 +8,7 @@ import { useAlert } from '../../../../application/provider/alert_context/alert_c
 import Failure from "../../../../application/failure/failure";
 
 
-export default function EditPropertyStatusModalComponent({ isOpen = false, handleClose, propertyStatus }: EditPropertyStatusModalParams) {
+export default function EditPropertyStatusModalComponent({ isOpen = false, handleClose, propertyStatus, refetch }: EditPropertyStatusModalParams) {
     const { showAlert } = useAlert();
     const [propertyStatusName, setPropertyStatusName] = useState(propertyStatus.unit_status_name);
     const style = {
@@ -46,6 +46,7 @@ export default function EditPropertyStatusModalComponent({ isOpen = false, handl
         setIsLoadingSave(false);
         handleClose();
         setPropertyStatusName("");
+        refetch();
         showAlert('Successfully edited property status', 'success', "Saved");
 
     }

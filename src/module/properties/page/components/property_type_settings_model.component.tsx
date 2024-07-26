@@ -9,7 +9,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import EditPropertyTypeModalComponent from "./edit_property_type_modal.component";
 
 
-export default function PropertyTypeSettingsModalComponent({ isOpen, handleClose }: PropertyTypeSettingsModalParams) {
+export default function PropertyTypeSettingsModalComponent({ isOpen, handleClose, refetch }: PropertyTypeSettingsModalParams) {
     const [listPropertyType, setListPropertyType] = useState([] as PropertyTypEntity[]);
     const [selectedPropertyType, setSelectedPropertyType] = useState({} as PropertyTypEntity);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -89,7 +89,7 @@ export default function PropertyTypeSettingsModalComponent({ isOpen, handleClose
                     </Stack>
                 </Box>
             </Modal>
-            {isOpenEdit && <EditPropertyTypeModalComponent isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyType={selectedPropertyType} />}
+            {isOpenEdit && <EditPropertyTypeModalComponent refetch={refetch} isOpen={isOpenEdit} handleClose={handleCloseEdit} propertyType={selectedPropertyType} />}
         </>
     )
 }

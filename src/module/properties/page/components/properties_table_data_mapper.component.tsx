@@ -7,7 +7,8 @@ import {
 import PropertiesTableDataMapperParams from "../interface/properties_table_data_mapper.params";
 import ViewPropertyModalComponent from "./view_property_modal.component";
 export default function PropertiesTableDataMapper({
-  properties
+  properties,
+  refetch,
 }: PropertiesTableDataMapperParams) {
   const [selectedPropertyId, setSelectedPropertyId] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function PropertiesTableDataMapper({
         ))}
       </TbodyComponent>
       {isModalOpen && (
-        <ViewPropertyModalComponent isShow={isModalOpen} id={selectedPropertyId} handleClose={() => setIsModalOpen(false)} />
+        <ViewPropertyModalComponent refetch={refetch} isShow={isModalOpen} id={selectedPropertyId} handleClose={() => setIsModalOpen(false)} />
       )}
     </>
   );

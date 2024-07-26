@@ -9,6 +9,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 export default function CreatePropertiesModalComponent({
   isOpen = false,
   handleClose,
+  refetch
 }: CreatePropertiesModalParams) {
   const style = {
     position: "absolute" as "absolute",
@@ -35,7 +36,7 @@ export default function CreatePropertiesModalComponent({
             <CloseRoundedIcon />
           </IconButton>
         </Stack>
-        <CreatePropertiesFormComponent handleClose={handleClose} />
+        <CreatePropertiesFormComponent refetch={refetch} handleClose={handleClose} />
       </Box>
     </Modal>
   );

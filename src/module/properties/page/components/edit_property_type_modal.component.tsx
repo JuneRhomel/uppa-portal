@@ -7,7 +7,7 @@ import PatchPropertyTypeUseCase from "../../domain/use_case/patch_property_type.
 import Failure from "../../../../application/failure/failure";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-export default function EditPropertyTypeModalComponent({ isOpen = false, handleClose, propertyType }: EditPropertyTypeModalParams) {
+export default function EditPropertyTypeModalComponent({ isOpen = false, handleClose, propertyType, refetch }: EditPropertyTypeModalParams) {
     const { showAlert } = useAlert();
     
     const [isLoadingSave, setIsLoadingSave] = useState(false);
@@ -38,12 +38,11 @@ export default function EditPropertyTypeModalComponent({ isOpen = false, handleC
         const response = await PatchPropertyTypeUseCase({
             propertyTypeEntity: propertyType
         })
-        console.log(response)
         if (response instanceof Failure) {
             showAlert("Failed to Update Property Type", "error");
             return
         }
-
+        refetch();
         handleClose();
         setPropertyTypeName(propertyType.unit_type_name);
         showAlert("Property Type Updated Successfully", "success");

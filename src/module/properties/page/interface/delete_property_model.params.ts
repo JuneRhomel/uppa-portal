@@ -5,4 +5,5 @@ export default interface DeletePropertyModalParams {
     handleClose: () => void;
     handleCloseModal: () => void;
     property: PropertiesEntity;
+    refetch: () => void;
 }

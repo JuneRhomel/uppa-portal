@@ -4,7 +4,7 @@ import LoginContainer from "../../module/login/page/login.container";
 import DashboardContainer from "../../module/dashboad/dashboard.container";
 import MasterContainer from "../../module/_master/page/master.container";
 import PropertiesContainer from "../../module/properties/page/properties.container";
-
+import TenantContainer from "../../module/tenant/page/tenent.container";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/properties",
         Component: PropertiesContainer,
+      },
+      {
+        path: "/tenants",
+        Component: TenantContainer,
       }
     ],
   },

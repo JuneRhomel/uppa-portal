@@ -6,12 +6,14 @@ import SidebarMenuContainerStyle from "./style/sidebar_menu_container.style";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import { useLocation } from "react-router-dom";
 import HomeWorkOutlinedIcon from '@mui/icons-material/HomeWorkOutlined';
+import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
 export default function SidebarComponent() {
   const location = useLocation();
 
   const menuList = [
     { title: "Dashboard", icon: <DashboardOutlinedIcon />, url: "/" },
     { title: "Properties", icon: <HomeWorkOutlinedIcon />, url: "/properties" },
+    { title: "Tenants", icon: <SupervisedUserCircleRoundedIcon />, url: "/tenants" },
   ];
 
   const renderMenuList = () => {

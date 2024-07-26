@@ -5,10 +5,8 @@ import { Modal, Box, AlertTitle, Typography, Alert, Stack, Button } from "@mui/m
 import DeletePropertyUseCase from "../../domain/use_case/delete_property.use_case"
 import LoadingButton from "@mui/lab/LoadingButton";
 import Failure from "../../../../application/failure/failure";
-import { useNavigate } from "react-router-dom";
 
-export default function DeletePropertyModalComponet({ isOpen = true, handleClose, property, handleCloseModal }: DeletePropertyModalParams) {
-    const navigate = useNavigate();
+export default function DeletePropertyModalComponet({ isOpen = true, handleClose, property, handleCloseModal, refetch }: DeletePropertyModalParams) {
     const { showAlert } = useAlert();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
     const style = {
@@ -34,7 +32,7 @@ export default function DeletePropertyModalComponet({ isOpen = true, handleClose
         setIsLoadingSave(true)
         showAlert("Property deleted successfully", "success");
         isOpen = false;
-        navigate("/properties")
+        refetch()
         handleCloseModal();
     }
 

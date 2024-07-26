@@ -24,7 +24,7 @@ import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 import PatchPropertyUseCase from "../../domain/use_case/patch_property.use_case";
 
-export default function EditPropertyFormComponent({ handleClose, property }: EditPropertyModalParams) {
+export default function EditPropertyFormComponent({ handleClose, property, refetch }: EditPropertyModalParams) {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const [isLoadingSave, setIsLoadingSave] = useState(false);
@@ -91,6 +91,7 @@ export default function EditPropertyFormComponent({ handleClose, property }: Edi
         if (response instanceof Failure) {
             return alert(response.message);
         }
+        refetch()
         setIsLoadingSave(false);
         showAlert("Property updated successfully", "success");
         navigate("/properties")
