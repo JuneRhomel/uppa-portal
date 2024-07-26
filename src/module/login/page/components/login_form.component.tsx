@@ -1,116 +1,111 @@
-import {  IconButton, InputAdornment, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import React from "react";
-import LoginContainerStyle from "../style/login_container.style";
-import LoginFormStyle from "../style/login_form.style";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useState } from "react";
-import LoginInputContainerStyle from "../style/login_input_container.style";
-import LoginHeaderStyle from "../style/login_header.style";
+import React, { useState } from "react";
+import { Box, Flex, Heading, Text, Button, TextField, Checkbox, Link, IconButton } from '@radix-ui/themes';
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import LoginUseCase from "../../domain/use_case/login.use_case";
-import { plainToInstance } from "class-transformer";
 import LoginEntity from "../../domain/entity/login.entity";
-import ButtonComponent from "../../../../components/button/button.component";
-
+import LoginFailure from "../../domain/failure/login.failure";
+import Failure from "../../../../application/failure/failure";
+import { useNavigate } from "react-router-dom";
 export default function LoginFormComponent() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [accountCode, setAccountCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [inputForm, setInputForm] = useState({
+    email: "",
+    password: "",
+    accountCode: ""
+  } as LoginEntity)
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
-  const handelFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const renderShowPasswordIcon = () => {
+    if (showPassword) {
+      return <EyeOpenIcon />
+    }
+
+    return <EyeClosedIcon />
+  }
+
+  function handelLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
     event.preventDefault();
-    
-    const loginEntity = plainToInstance(LoginEntity, {
-      accountCode,
-      email,
-      password
-    })
+    const response = LoginUseCase({ loginEntity: inputForm });
 
-    const response = await LoginUseCase({
-      loginEntity
-    })
+    if (response instanceof LoginFailure) {
+      console.log("login failure");
+      setIsLoading(false);
+    }
 
-    console.log(response)
-    // if (response instanceof LoginFailure) {
-    //   alert("Login Failure")
-    // }
-    // if (response instanceof UnhandledFailure) {
-    //   alert("Unhandled Failure")
-    // }
+    if (response instanceof Failure) {
+      console.log("login failure");
+      setIsLoading(false);
+    }
+
     setIsLoading(false);
-    navigate("/");
-  };
-  const handelPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
+    navigate("/properties");
+  }
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
 
-  const handleAccountCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAccountCode(event.target.value);
-  };
+  const handelInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setInputForm({ ...inputForm, [name]: value });
+  }
+
 
   return (
-    <LoginContainerStyle>
-      <LoginFormStyle onSubmit={handelFormSubmit} >
-        <LoginHeaderStyle>
-          Login
-        </LoginHeaderStyle>
+    <form onSubmit={handelLoginSubmit}>
+      <Flex justify={"center"} align={"center"} width={"100lvw"} height={"100lvh"}>
+        <Box width={"500px"}>
+          <Box mb={"5"}>
+            <Heading mb="2" size="7">Login</Heading>
+            <Text size={"2"}>Hi, Welcome Back 👋</Text>
+          </Box>
+          <Flex direction={"column"} gap={"5"} mt={"5"} mb={"5"}>
+            <Button type="button" style={{ width: "100%" }} size={"3"} variant="outline">Login With Google</Button>
+            <Text style={{ textAlign: "center" }} size={"1"} color="gray">or Login with Email</Text>
+          </Flex>
 
-        <LoginInputContainerStyle>
-          <TextField
-            fullWidth
-            id="email"
-            label="Email"
-            variant="outlined"
-            onChange={handleEmailChange}
-          />
+          <Box>
+            <Flex gap={"2"} direction={"column"} width={"100%"} >
+              <Box>
+                <Text title="email" size={"2"}  weight={"medium"}> Email</Text>
+                <TextField.Root type="email" onChange={handelInputChange} size={"3"} name="email" placeholder="E.g. 5hDQH@example.com" />
+              </Box>
 
-          <TextField
-            fullWidth
-            id="password"
-            type={showPassword ? "text" : "password"}
-            label="Password"
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            onChange={handelPasswordChange}
-          />
-          <TextField
-            fullWidth
-            id="accountCode"
-            label="Account Code"
-            variant="outlined"
-            onChange={handleAccountCodeChange}
-          />
-          <ButtonComponent size="large" variant="contained" type="submit" isLoading={isLoading}> Login</ButtonComponent>
-        </LoginInputContainerStyle>
-      </LoginFormStyle>
-    </LoginContainerStyle>
+              <Box>
+                <Text title="password" size={"2"} weight={"medium"}> Password</Text>
+                <TextField.Root onChange={handelInputChange} type={showPassword ? "text" : "password"} size={"3"} name="password" placeholder="Enter your password" >
+                  <TextField.Slot pr="3" side="right">
+                    <IconButton type="button" size="3" onClick={toggleShowPassword} variant="ghost">
+                      {renderShowPasswordIcon()}
+                    </IconButton>
+                  </TextField.Slot>
+                </TextField.Root>
+              </Box>
+
+              <Box>
+                <Text title="accountCode" size={"2"}  weight={"medium"}> Account Code</Text>
+                <TextField.Root type="text" onChange={handelInputChange} size={"3"} name="accountCode" placeholder="E.g. uppa_admin" />
+              </Box>
+            </Flex>
+          </Box >
+          <Flex justify={"between"} align={"center"} mt={"3"}>
+            <Text as="label" size="1">
+              <Flex gap="2">
+                <Checkbox size={"1"} defaultChecked />
+                Remember me
+              </Flex>
+            </Text>
+
+            <Box>
+              <Link size={"1"} href="#">Forgot Password?</Link>
+            </Box>
+          </Flex>
+
+          <Button type="submit" mt={"5"} loading={false} style={{ width: "100%" }} size={"3"} >Login</Button>
+        </Box >
+      </Flex >
+    </form>
   );
 }

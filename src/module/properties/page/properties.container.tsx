@@ -1,63 +1,18 @@
 import React, { useState } from 'react';
-import { motion } from "framer-motion"
-import ContainerStyle from "../../../components/container/style/container.style";
-import PropertiesTableComponent from "./components/properties_table.component";
-import PropertiesTableHeader from "./components/properties_table_header.component";
-import ButtonComponent from "../../../components/button/button.component";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import CreatePropertiesModalComponent from "./components/create_properties_modal.component";
-import { Box, Button, IconButton, Menu, MenuItem, Stack, TextField } from '@mui/material';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import TypeSpecimenRoundedIcon from '@mui/icons-material/TypeSpecimenRounded';
-import PropertyStatusSettingsModalComponent from './components/property_status_settings_modal.component';
-import PropertyTypeSettingsModalComponent from './components/property_type_settings_model.component';
-import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
-import FilterTableComponent from './components/filter_table.component';
 import { useQuery } from '@tanstack/react-query';
-import ListPropertiesEntity from '../domain/entity/list_properties.entity';
 import TimeoutFailure from '../../../application/failure/timeout.failure';
 import PropertiesUseCase from '../domain/use_case/properties.use_case';
 import PaginationEntity from '../../../application/entity/pagination.entity';
 import { plainToInstance } from 'class-transformer';
 import { useNavigate } from 'react-router-dom';
 import Failure from '../../../application/failure/failure';
+import { Box, Button, Flex, Table, TextField, Text } from '@radix-ui/themes';
+import PropertiesEntity from '../domain/entity/properties.entity';
+import ListPropertiesEntity from '../domain/entity/list_properties.entity';
+import { MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
+import Pagination from '../../../components/pagination/pagination.component';
 
 export default function PropertiesContainer() {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
-  const [propertySettingsShow, setpropertySettingsShow] = useState<null | HTMLElement>(null);
-
-  const [statusSettings, setStatusSettings] = useState(false);
-
-  const [typeSettings, setTypeSettings] = useState(false);
-
-  const [filter, setFilter] = useState(false);
-
-  const open = Boolean(propertySettingsShow);
-  const handleSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setpropertySettingsShow(event.currentTarget);
-  };
-  const handleCloseOption = () => {
-    setpropertySettingsShow(null);
-  };
-
-  const hadelStatusSettings = () => {
-    setStatusSettings(true);
-    setpropertySettingsShow(null);
-  }
-  const hadelTypeSettings = () => {
-    setTypeSettings(true);
-    setpropertySettingsShow(null);
-  }
-  const hadelCloseStatusSettings = () => {
-    setStatusSettings(false);
-  }
-  const hadelCloseTypeSettings = () => {
-    setTypeSettings(false);
-  }
-
 
   const navigate = useNavigate();
   const queryPathParameters = new URLSearchParams(location.search);
@@ -100,61 +55,57 @@ export default function PropertiesContainer() {
     refetchOnWindowFocus: true,
   });
 
+  const properties = propertiesQuery.data?.properties as PropertiesEntity[];
+  const totalRows = propertiesQuery.data?.totalRows as number;
 
+  function calculateTotalPages(totalRows, recordsPerPage) {
+    if (recordsPerPage <= 0) {
+      return 0;
+    }
+    return Math.ceil(totalRows / recordsPerPage);
+  }
+
+  const totalPages = calculateTotalPages(totalRows, 10);
   const refetch = () => propertiesQuery.refetch();
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <ContainerStyle>
-        <PropertiesTableHeader>
-          <Stack direction="row" spacing={4}>
-            <IconButton
-              onClick={handleSettings}
-            >
-              <SettingsRoundedIcon fontSize="small" />
-            </IconButton>
+    <div>
+      <Flex justify={"between"} mb="5">
+        <TextField.Root placeholder="Search the properties">
+          <TextField.Slot>
+            <MagnifyingGlassIcon height="16" width="16" />
+          </TextField.Slot>
+        </TextField.Root>
 
-            <Button onClick={() => setFilter(!filter)}
-              size="medium" style={{ gap: "5px" }} >
-              <TuneRoundedIcon fontSize="small" /> Filter
-            </Button>
+        <Button onClick={refetch}> <PlusIcon /> Create Property</Button>
+      </Flex>
 
-            <ButtonComponent
-              variant="contained"
-              size="medium"
-              style={{ textTransform: "none" }}
-              isLoading={false}
-              type={"button"}
-              onClick={handleOpen}
-            >
-              <AddRoundedIcon fontSize="small" style={{ marginRight: "5px" }} />
-              Add Property
-            </ButtonComponent>
-          </Stack>
-        </PropertiesTableHeader>
+      <Table.Root variant='surface'>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeaderCell>ID</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Property</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+          </Table.Row>
+        </Table.Header>
 
-        <FilterTableComponent isOpen={filter} />
+        <Table.Body>
 
-        <PropertiesTableComponent refetch={refetch} propertiesQuery={propertiesQuery} />
-      </ContainerStyle>
+          {propertiesQuery.isLoading && <Table.Row><Table.Cell><Text>Loading...</Text></Table.Cell></Table.Row>}
 
-      <Menu
-        anchorEl={propertySettingsShow}
-        open={open}
-        onClose={handleCloseOption}
-      >
-        <MenuItem color="secondary" onClick={hadelStatusSettings} sx={{ fontSize: "14px" }}>
-          <AutoGraphRoundedIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
-          Property Status Settings
-        </MenuItem>
-        <MenuItem color="error" sx={{ fontSize: "14px" }} onClick={hadelTypeSettings} >
-          <TypeSpecimenRoundedIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
-          Property Type Settings
-        </MenuItem>
-      </Menu>
+          {properties && properties.map((property) => (
+            <Table.Row key={property.id}>
+              <Table.RowHeaderCell>{property.id}</Table.RowHeaderCell>
+              <Table.RowHeaderCell>{property.unit_name}</Table.RowHeaderCell>
+              <Table.Cell>{property.unit_type_name}</Table.Cell>
+              <Table.Cell>{property.unit_status_name}</Table.Cell>
+            </Table.Row>
+          ))}
 
-      {openModal && <CreatePropertiesModalComponent refetch={refetch} isOpen={openModal} handleClose={handleClose} />}
-      {statusSettings && <PropertyStatusSettingsModalComponent refetch={refetch} isOpen={statusSettings} handleClose={hadelCloseStatusSettings} />}
-      {typeSettings && <PropertyTypeSettingsModalComponent refetch={refetch} isOpen={typeSettings} handleClose={hadelCloseTypeSettings} />}
-    </motion.div>
+        </Table.Body>
+      </Table.Root>
+
+      <Pagination totalRows={totalRows} recordsPerPage={10} />
+    </div>
   );
 }
