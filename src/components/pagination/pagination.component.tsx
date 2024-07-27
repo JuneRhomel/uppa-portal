@@ -1,13 +1,20 @@
 import React from 'react';
-import { Flex, Text, Button } from '@radix-ui/themes';
+import { Flex, Text, Button, Tooltip } from '@radix-ui/themes';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Pagination({ totalRows, recordsPerPage }) {
+    const navigate = useNavigate();
+    const location = useLocation();
     const totalPages = Math.ceil(totalRows / recordsPerPage) as number;
     const [currentPage, setCurrentPage] = React.useState(1);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+
+        const queryPathParameters = new URLSearchParams(location.search);
+        queryPathParameters.set("page", page.toString());
+        navigate(`?${queryPathParameters.toString()}`);
     };
 
     const getPageNumbers = () => {
@@ -30,12 +37,14 @@ export default function Pagination({ totalRows, recordsPerPage }) {
 
             <Flex gap="2">
                 {currentPage > 1 && (
-                    <Button onClick={() => handlePageChange(currentPage - 1)}>
-                        <ChevronLeftIcon />
-                    </Button>
+                    <Tooltip content={"Previous Page"}>
+                        <Button variant={"soft"} onClick={() => handlePageChange(currentPage - 1)}>
+                            <ChevronLeftIcon />
+                        </Button>
+                    </Tooltip>
                 )}
                 {getPageNumbers().map((page) => (
-                    <Button
+                    <Button variant={"outline"}
                         key={page}
                         onClick={() => handlePageChange(page)}
                         disabled={page === currentPage}
@@ -44,9 +53,12 @@ export default function Pagination({ totalRows, recordsPerPage }) {
                     </Button>
                 ))}
                 {currentPage < totalPages && (
-                    <Button onClick={() => handlePageChange(currentPage + 1)}>
-                        <ChevronRightIcon />
-                    </Button>
+                    <Tooltip content={"Next Page"}>
+
+                        <Button variant={"soft"} onClick={() => handlePageChange(currentPage + 1)}>
+                            <ChevronRightIcon />
+                        </Button>
+                    </Tooltip>
                 )}
             </Flex>
         </Flex>

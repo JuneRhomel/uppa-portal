@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Box, Button, Flex, Separator, Table, TextField, Text, Popover, Heading, IconButton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import TimeoutFailure from '../../../application/failure/timeout.failure';
 import PropertiesUseCase from '../domain/use_case/properties.use_case';
@@ -6,12 +7,15 @@ import PaginationEntity from '../../../application/entity/pagination.entity';
 import { plainToInstance } from 'class-transformer';
 import { useNavigate } from 'react-router-dom';
 import Failure from '../../../application/failure/failure';
-import { Box, Button, Flex, Table, TextField, Text } from '@radix-ui/themes';
 import PropertiesEntity from '../domain/entity/properties.entity';
 import ListPropertiesEntity from '../domain/entity/list_properties.entity';
-import { MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
 import Pagination from '../../../components/pagination/pagination.component';
-
+import TableHeaderComponent from '../../../components/table_header/table_header.component';
+import TableHeadComponent from './components/table_head.component';
+import PropertyFilterComponent from './components/property_filter.component';
+import PropertyTableLoading from './components/property_table_loading';
+import { GearIcon } from '@radix-ui/react-icons';
+import PropertySettingsComponent from './components/property_settings.component';
 export default function PropertiesContainer() {
 
   const navigate = useNavigate();
@@ -58,45 +62,40 @@ export default function PropertiesContainer() {
   const properties = propertiesQuery.data?.properties as PropertiesEntity[];
   const totalRows = propertiesQuery.data?.totalRows as number;
 
-  function calculateTotalPages(totalRows, recordsPerPage) {
-    if (recordsPerPage <= 0) {
-      return 0;
-    }
-    return Math.ceil(totalRows / recordsPerPage);
+
+  const refetch = () => propertiesQuery.refetch();
+
+
+  const renderPrefix = () => {
+    return (
+      <>
+        <PropertyFilterComponent />
+        <PropertySettingsComponent />
+      </>
+    )
   }
 
-  const totalPages = calculateTotalPages(totalRows, 10);
-  const refetch = () => propertiesQuery.refetch();
   return (
     <div>
-      <Flex justify={"between"} mb="5">
-        <TextField.Root placeholder="Search the properties">
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-        </TextField.Root>
-
-        <Button onClick={refetch}> <PlusIcon /> Create Property</Button>
-      </Flex>
-
+      <Box mb={"7"}>
+        <Heading size='8'>Properties</Heading>
+      </Box>
+      <TableHeaderComponent
+        create={true}
+        prefix={renderPrefix()}
+        reload={true}
+        onReload={refetch}
+      />
       <Table.Root variant='surface'>
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>ID</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Property</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
-          </Table.Row>
-        </Table.Header>
+        <TableHeadComponent />
 
         <Table.Body>
-
-          {propertiesQuery.isLoading && <Table.Row><Table.Cell><Text>Loading...</Text></Table.Cell></Table.Row>}
+          {propertiesQuery.isLoading && <PropertyTableLoading />}
 
           {properties && properties.map((property) => (
             <Table.Row key={property.id}>
-              <Table.RowHeaderCell>{property.id}</Table.RowHeaderCell>
-              <Table.RowHeaderCell>{property.unit_name}</Table.RowHeaderCell>
+              <Table.Cell>{property.id}</Table.Cell>
+              <Table.Cell>{property.unit_name}</Table.Cell>
               <Table.Cell>{property.unit_type_name}</Table.Cell>
               <Table.Cell>{property.unit_status_name}</Table.Cell>
             </Table.Row>

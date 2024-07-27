@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Flex, Heading, Text, Button, TextField, Checkbox, Link, IconButton } from '@radix-ui/themes';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import * as Form from '@radix-ui/react-form';
 import LoginUseCase from "../../domain/use_case/login.use_case";
 import LoginEntity from "../../domain/entity/login.entity";
 import LoginFailure from "../../domain/failure/login.failure";
@@ -54,12 +55,12 @@ export default function LoginFormComponent() {
 
 
   return (
-    <form onSubmit={handelLoginSubmit}>
+    <Form.Root onSubmit={handelLoginSubmit}>
       <Flex justify={"center"} align={"center"} width={"100lvw"} height={"100lvh"}>
-        <Box width={"500px"}>
+        <Box width={"500px"} >
           <Box mb={"5"}>
             <Heading mb="2" size="7">Login</Heading>
-            <Text size={"2"}>Hi, Welcome Back 👋</Text>
+            <Text size={"2"}>Hi, Welcome Back June Rhomel, 👋</Text>
           </Box>
           <Flex direction={"column"} gap={"5"} mt={"5"} mb={"5"}>
             <Button type="button" style={{ width: "100%" }} size={"3"} variant="outline">Login With Google</Button>
@@ -69,24 +70,59 @@ export default function LoginFormComponent() {
           <Box>
             <Flex gap={"2"} direction={"column"} width={"100%"} >
               <Box>
-                <Text title="email" size={"2"}  weight={"medium"}> Email</Text>
-                <TextField.Root type="email" onChange={handelInputChange} size={"3"} name="email" placeholder="E.g. 5hDQH@example.com" />
+                <Form.Field className="FormField" name="email">
+                  <Form.Label >Email</Form.Label>
+
+
+                  <Form.Control asChild>
+                    <TextField.Root type="email" onChange={handelInputChange} size={"3"} name="email" placeholder="E.g. 5hDQH@example.com" required />
+                  </Form.Control>
+
+                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
+                    Please enter your email
+                  </Form.Message>
+
+                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="typeMismatch">
+                    Please provide a valid email
+                  </Form.Message>
+                </Form.Field>
               </Box>
 
               <Box>
-                <Text title="password" size={"2"} weight={"medium"}> Password</Text>
-                <TextField.Root onChange={handelInputChange} type={showPassword ? "text" : "password"} size={"3"} name="password" placeholder="Enter your password" >
-                  <TextField.Slot pr="3" side="right">
-                    <IconButton type="button" size="3" onClick={toggleShowPassword} variant="ghost">
-                      {renderShowPasswordIcon()}
-                    </IconButton>
-                  </TextField.Slot>
-                </TextField.Root>
+                <Form.Field className="FormField" name="password">
+
+
+                  <Text title="password" size={"2"} weight={"medium"}> Password</Text>
+
+                  <Form.Control asChild>
+                    <TextField.Root required onChange={handelInputChange} type={showPassword ? "text" : "password"} size={"3"} name="password" placeholder="Enter your password" >
+                      <TextField.Slot pr="3" side="right">
+                        <IconButton type="button" size="3" onClick={toggleShowPassword} variant="ghost">
+                          {renderShowPasswordIcon()}
+                        </IconButton>
+                      </TextField.Slot>
+                    </TextField.Root>
+                  </Form.Control>
+
+                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
+                    Please enter your password
+                  </Form.Message>
+                </Form.Field>
               </Box>
 
               <Box>
-                <Text title="accountCode" size={"2"}  weight={"medium"}> Account Code</Text>
-                <TextField.Root type="text" onChange={handelInputChange} size={"3"} name="accountCode" placeholder="E.g. uppa_admin" />
+                <Form.Field name="accountCode">
+
+                  <Text title="accountCode" size={"2"} weight={"medium"}> Account Code</Text>
+
+                  <Form.Control asChild>
+                    <TextField.Root required type="text" onChange={handelInputChange} size={"3"} name="accountCode" placeholder="E.g. uppa_admin" />
+                  </Form.Control>
+
+                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
+                    Please enter your account code
+                  </Form.Message>
+                </Form.Field>
               </Box>
             </Flex>
           </Box >
@@ -106,6 +142,6 @@ export default function LoginFormComponent() {
           <Button type="submit" mt={"5"} loading={false} style={{ width: "100%" }} size={"3"} >Login</Button>
         </Box >
       </Flex >
-    </form>
+    </Form.Root>
   );
 }
