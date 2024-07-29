@@ -4,9 +4,10 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TableHeaderComponentParams from "./interface/table_header.component.params";
 
+
 export default function TableHeaderComponent({
-    prefix = false,
-    create = false,
+    prefix,
+    create,
     reload,
     onReload
 }: TableHeaderComponentParams) {
@@ -21,10 +22,11 @@ export default function TableHeaderComponent({
         navigate(`?${queryPathParameters.toString()}`);
     };
 
-    const renderCreateButton = () => {
-        if (create) {
-            return <Button>  <PlusIcon /> Create Property</Button>
+    const renderCreate = () => {
+        if (!create) {
+            return null
         }
+        return create
     }
 
     const renderPrefix = () => {
@@ -57,7 +59,7 @@ export default function TableHeaderComponent({
 
 
 
-            {renderCreateButton()}
+            {renderCreate()}
         </Flex>
     )
 }

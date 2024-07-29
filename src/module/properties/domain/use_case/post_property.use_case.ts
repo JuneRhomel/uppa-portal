@@ -11,7 +11,6 @@ export default async function PostPropertyUseCase({
   try {
     const validateErrors = await validate(propertyEntity);
     if (validateErrors.length > 0) {
-      console.log(validateErrors);
       return new ValidationFailure(validateErrors);
     }
 

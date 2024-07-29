@@ -8,35 +8,40 @@ import Failure from "../../../../application/failure/failure";
 import PropertyTypeEntity from "../../domain/entity/property_type.entity";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PropertyFilterComponent() {
     const navigate = useNavigate();
     const location = useLocation();
     const [selectedType, setSelectedType] = useState('All');
     const [selectedStatus, setSelectedStatus] = useState('All');
-    const [propertyTypes, setPropertyTypes] = useState([] as PropertyTypeEntity[]);
-    const [propertyStatuses, setPropertyStatuses] = useState([] as PropertyStatusEntity[]);
-
-
 
     const fetchPropertyTypesAndStatuses = async () => {
         const [typesResponse, statusesResponse] = await Promise.all([
             GetPropertyTypeUseCase(),
             GetPropertyStatusUseCase()
-        ]) as [PropertyTypeEntity[] | Failure, PropertyStatusEntity[] | Failure];
+        ]);
 
-        if (!(typesResponse instanceof Failure)) {
-            setPropertyTypes(typesResponse);
+        if (typesResponse instanceof Failure) {
+            console.error(typesResponse);
         }
 
-        if (!(statusesResponse instanceof Failure)) {
-            setPropertyStatuses(statusesResponse);
+        if (statusesResponse instanceof Failure) {
+            console.error(statusesResponse);
         }
+
+        return { types: typesResponse, statuses: statusesResponse };
     }
 
-    useEffect(() => {
-        fetchPropertyTypesAndStatuses();
-    }, []);
+    const propertiesTypesAndStatusQuery = useQuery({
+        queryKey: ["properties_types_and_statuses"],
+        queryFn: fetchPropertyTypesAndStatuses,
+        retry: true,
+        refetchOnWindowFocus: true,
+    });
+
+    const propertyTypes = propertiesTypesAndStatusQuery.data?.types as PropertyTypeEntity[] ?? [];
+    const propertyStatuses = propertiesTypesAndStatusQuery.data?.statuses as PropertyStatusEntity[] ?? [];
 
 
     const handleFilterSubmit = () => {
@@ -80,7 +85,7 @@ export default function PropertyFilterComponent() {
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
                                         {propertyTypes.map((propertyType: PropertyTypeEntity) => (
-                                            <Select.Item value={propertyType.unit_type_name}>{propertyType.unit_type_name}</Select.Item>
+                                            <Select.Item key={propertyType.id} value={propertyType.unit_type_name}>{propertyType.unit_type_name}</Select.Item>
                                         ))}
                                     </Select.Group>
                                 </Select.Content>
@@ -99,7 +104,7 @@ export default function PropertyFilterComponent() {
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
                                         {propertyStatuses.map((propertyStatus: PropertyStatusEntity) => (
-                                            <Select.Item value={propertyStatus.unit_status_name}>{propertyStatus.unit_status_name}</Select.Item>
+                                            <Select.Item key={propertyStatus.id} value={propertyStatus.unit_status_name}>{propertyStatus.unit_status_name}</Select.Item>
                                         ))}
                                     </Select.Group>
                                 </Select.Content>

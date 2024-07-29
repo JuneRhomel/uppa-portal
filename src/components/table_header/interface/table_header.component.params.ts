@@ -1,7 +1,8 @@
 export default interface TableHeaderComponentParams {
     filter?: React.ReactNode;
-    create?: boolean;
+    create?: React.ReactNode;
     onFilter?: () => void;
     reload?: boolean;
-    onReload?: () => void
+    onReload?: () => void;
+    prefix ?: React.ReactNode;
 }

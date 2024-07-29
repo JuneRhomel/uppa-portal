@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Separator, Table, TextField, Text, Popover, Heading, IconButton } from '@radix-ui/themes';
+import { Box, Table, TextField, Text, Popover, Heading, IconButton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import TimeoutFailure from '../../../application/failure/timeout.failure';
 import PropertiesUseCase from '../domain/use_case/properties.use_case';
@@ -14,8 +14,9 @@ import TableHeaderComponent from '../../../components/table_header/table_header.
 import TableHeadComponent from './components/table_head.component';
 import PropertyFilterComponent from './components/property_filter.component';
 import PropertyTableLoading from './components/property_table_loading';
-import { GearIcon } from '@radix-ui/react-icons';
 import PropertySettingsComponent from './components/property_settings.component';
+import PropertyCreateComponent from './components/property_create.component';
+import { motion, useAnimation } from "framer-motion";
 export default function PropertiesContainer() {
 
   const navigate = useNavigate();
@@ -70,41 +71,53 @@ export default function PropertiesContainer() {
     return (
       <>
         <PropertyFilterComponent />
-        <PropertySettingsComponent />
+        <PropertySettingsComponent refetchProperties={refetch} />
       </>
+    )
+  }
+  const renderCreateProperty = () => {
+    return (
+      <PropertyCreateComponent refetchProperties={refetch} />
     )
   }
 
   return (
     <div>
-      <Box mb={"7"}>
-        <Heading size='8'>Properties</Heading>
-      </Box>
-      <TableHeaderComponent
-        create={true}
-        prefix={renderPrefix()}
-        reload={true}
-        onReload={refetch}
-      />
-      <Table.Root variant='surface'>
-        <TableHeadComponent />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
+        <Box mb={"7"}>
+          <Heading size='8'>Properties</Heading>
+        </Box>
+      </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+        <TableHeaderComponent
+          create={renderCreateProperty()}
+          prefix={renderPrefix()}
+          reload={true}
+          onReload={refetch}
+        />
+      </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} >
+        <Table.Root variant='surface'>
+          <TableHeadComponent />
 
-        <Table.Body>
-          {propertiesQuery.isLoading && <PropertyTableLoading />}
+          <Table.Body>
+            {propertiesQuery.isLoading && <PropertyTableLoading />}
 
-          {properties && properties.map((property) => (
-            <Table.Row key={property.id}>
-              <Table.Cell>{property.id}</Table.Cell>
-              <Table.Cell>{property.unit_name}</Table.Cell>
-              <Table.Cell>{property.unit_type_name}</Table.Cell>
-              <Table.Cell>{property.unit_status_name}</Table.Cell>
-            </Table.Row>
-          ))}
+            {properties && properties.map((property) => (
+              <Table.Row key={property.id}>
+                <Table.Cell>{property.id}</Table.Cell>
+                <Table.Cell>{property.unit_name}</Table.Cell>
+                <Table.Cell>{property.unit_type_name}</Table.Cell>
+                <Table.Cell>{property.unit_status_name}</Table.Cell>
+              </Table.Row>
+            ))}
 
-        </Table.Body>
-      </Table.Root>
-
-      <Pagination totalRows={totalRows} recordsPerPage={10} />
-    </div>
+          </Table.Body>
+        </Table.Root>
+      </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} >
+        <Pagination totalRows={totalRows} recordsPerPage={10} />
+      </motion.div>
+    </div >
   );
 }
