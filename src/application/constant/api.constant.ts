@@ -5,4 +5,5 @@ export default class ApiConstant {
   static PROPERTIES = "/unit";
   static PROPERTY_TYPES = "/unit-types";
   static PROPERTY_STATUS = "/unit-status";
+  static TENANTS = "/tenant";
 }

@@ -82,6 +82,22 @@ export default function PropertyCreateComponent({
         setOpen(false);
     }
 
+    const renderPropertyTypes = () => {
+        if (propertiesTypesAndStatusQuery.isLoading) {
+            return <Select.Item value="1">Loading...</Select.Item>
+        }
+        return propertyTypes.map((propertyType) => (
+            <Select.Item key={propertyType.id} value={propertyType.id.toString()}>{propertyType.unit_type_name}</Select.Item>
+        ))
+    }
+    const renderPropertyStatuses = () => {
+        if (propertiesTypesAndStatusQuery.isLoading) {
+                return <Select.Item value="1">Loading...</Select.Item>
+        }
+        return propertyStatuses.map((propertyStatus) => (
+            <Select.Item key={propertyStatus.id} value={propertyStatus.id.toString()}>{propertyStatus.unit_status_name}</Select.Item>
+        ))
+    }
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -117,10 +133,7 @@ export default function PropertyCreateComponent({
                                         <Select.Trigger placeholder="Select Type..." />
                                         <Select.Content>
                                             <Select.Group>
-                                                {propertiesTypesAndStatusQuery.isLoading && <Select.Item value="1">Loading...</Select.Item>}
-                                                {propertyTypes.map((type) => (
-                                                    <Select.Item key={type.id} value={type.id.toString()}>{type.unit_type_name}</Select.Item>
-                                                ))}
+                                                {renderPropertyTypes()}
                                             </Select.Group>
                                         </Select.Content>
                                     </Select.Root>
@@ -135,10 +148,7 @@ export default function PropertyCreateComponent({
                                         <Select.Trigger placeholder="Select status..." />
                                         <Select.Content>
                                             <Select.Group>
-                                                {propertiesTypesAndStatusQuery.isLoading && <Select.Item value="1">Loading...</Select.Item>}
-                                                {propertyStatuses.map((status) => (
-                                                    <Select.Item key={status.id} value={status.id.toString()}>{status.unit_status_name}</Select.Item>
-                                                ))}
+                                                {renderPropertyStatuses()}
                                             </Select.Group>
                                         </Select.Content>
                                     </Select.Root>
@@ -146,7 +156,7 @@ export default function PropertyCreateComponent({
                                 <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter property status</Form.Message>
                             </Form.Field>
                         </Flex>
-                        
+
                         <Flex justify={"end"} mt="5" gap="2">
                             <Dialog.Close >
                                 <Button type="button" variant={"outline"} >Cancel</Button>

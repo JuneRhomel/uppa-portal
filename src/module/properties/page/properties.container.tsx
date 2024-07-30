@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Table, TextField, Text, Popover, Heading, IconButton } from '@radix-ui/themes';
+import React from 'react';
+import { Box, Table,Heading } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import TimeoutFailure from '../../../application/failure/timeout.failure';
 import PropertiesUseCase from '../domain/use_case/properties.use_case';
@@ -16,9 +16,9 @@ import PropertyFilterComponent from './components/property_filter.component';
 import PropertyTableLoading from './components/property_table_loading';
 import PropertySettingsComponent from './components/property_settings.component';
 import PropertyCreateComponent from './components/property_create.component';
-import { motion, useAnimation } from "framer-motion";
-export default function PropertiesContainer() {
+import { motion } from "framer-motion";
 
+export default function PropertiesContainer() {
   const navigate = useNavigate();
   const queryPathParameters = new URLSearchParams(location.search);
   const sortBy = queryPathParameters.get("sortBy") ?? "id";
@@ -30,7 +30,7 @@ export default function PropertiesContainer() {
   const columns = "unit_name,unit_type_name,unit_status_name";
   const fetchProperties = async () => {
     const paginationEntity = plainToInstance(PaginationEntity, {
-      numberOfRows: 10,
+      numberOfRows: 14,
       page: parseInt(page, 10),
       columns,
       sortBy,
