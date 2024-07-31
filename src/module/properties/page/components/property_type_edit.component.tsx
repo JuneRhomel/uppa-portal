@@ -5,7 +5,7 @@ import * as Form from "@radix-ui/react-form";
 import PropertyTypeEditParams from "../interface/property_type_edit.params";
 import PatchPropertyTypeUseCase from "../../domain/use_case/patch_property_type.use_case";
 import Failure from "../../../../application/failure/failure";
-import { toast } from "react-toastify";
+import {toast} from 'react-hot-toast';
 
 export default function PropertyTypeEditComponent({
     isOpen,

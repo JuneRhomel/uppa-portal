@@ -1,6 +1,6 @@
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, IconButton, Select, TextField, Tooltip } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, IconButton, Select, Separator, TextField, Tooltip } from "@radix-ui/themes";
 import React, { useState } from "react";
 import PropertyTypeEntity from "../../domain/entity/property_type.entity";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
@@ -8,11 +8,11 @@ import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.
 import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_case";
 import Failure from "../../../../application/failure/failure";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from 'react-toastify';
 import PropertiesEntity from "../../domain/entity/properties.entity";
 import { plainToInstance } from "class-transformer";
 import PostPropertyUseCase from "../../domain/use_case/post_property.use_case";
 import PropertyCreateParams from "../interface/property_create.params";
+import { toast } from 'react-hot-toast';
 
 
 export default function PropertyCreateComponent({
@@ -76,9 +76,9 @@ export default function PropertyCreateComponent({
             return;
         }
 
+        toast.success("Save", { icon: "👏" });
         propertiesTypesAndStatusQuery.refetch();
         refetchProperties();
-        toast.success('Save')
         setOpen(false);
     }
 
@@ -92,7 +92,7 @@ export default function PropertyCreateComponent({
     }
     const renderPropertyStatuses = () => {
         if (propertiesTypesAndStatusQuery.isLoading) {
-                return <Select.Item value="1">Loading...</Select.Item>
+            return <Select.Item value="1">Loading...</Select.Item>
         }
         return propertyStatuses.map((propertyStatus) => (
             <Select.Item key={propertyStatus.id} value={propertyStatus.id.toString()}>{propertyStatus.unit_status_name}</Select.Item>
@@ -116,6 +116,7 @@ export default function PropertyCreateComponent({
                 </Flex>
                 <Box>
                     <Dialog.Title size={"3"}>Create Property</Dialog.Title>
+                    <Separator my="3" size="4" />
                     <Form.Root onSubmit={handleSave}>
                         <Form.Field name="unit_name">
                             <Form.Label style={{ fontSize: "13px" }}>Property Name</Form.Label>

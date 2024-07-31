@@ -5,7 +5,7 @@ import * as Form from "@radix-ui/react-form";
 import PropertyStatusEditParams from "../interface/property_status_edit.params";
 import PatchPropertyStatusUseCase from "../../domain/use_case/patch_property_status.use_case";
 import Failure from "../../../../application/failure/failure";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 export default function PropertyStatusEditComponent({
     isOpen,

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion"
-import { Badge, Box, Heading, Table } from "@radix-ui/themes";
+import { Badge, Box, Button, Heading, Table } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import GetTenantListUseCase from "../domain/use_case/get_tenant_list.use_case";
 import PaginationEntity from "../../../application/entity/pagination.entity";
@@ -15,6 +15,9 @@ import TimeoutFailure from "../../../application/failure/timeout.failure";
 import { useNavigate } from "react-router-dom";
 import TableLoadingComponent from "./component/table_loading.component";
 import TableDataComponent from "./component/table_data.component";
+import { MixerVerticalIcon } from "@radix-ui/react-icons";
+import TenantFilterComponent from "./component/tenant_filter.component";
+import TenantCreateComponent from "./component/tenant_create.component";
 
 export default function TenantContainer() {
     const navigate = useNavigate();
@@ -67,6 +70,17 @@ export default function TenantContainer() {
         tenantListQuery.refetch();
     }
 
+    const renderPrefix = () => {
+        return (
+            <TenantFilterComponent />
+        )
+    }
+    const renderCreateButton = () => {
+        return (
+            <TenantCreateComponent />
+        )
+    }
+
     return (
         <div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
@@ -79,6 +93,8 @@ export default function TenantContainer() {
                 <TableHeaderComponent
                     reload={true}
                     onReload={refetch}
+                    prefix={renderPrefix()}
+                    create={renderCreateButton()}
                 />
             </motion.div>
 
