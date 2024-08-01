@@ -77,7 +77,7 @@ export default function TenantContainer() {
     }
     const renderCreateButton = () => {
         return (
-            <TenantCreateComponent />
+            <TenantCreateComponent fetchTenant={refetch} />
         )
     }
 

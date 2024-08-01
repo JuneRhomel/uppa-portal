@@ -6,19 +6,19 @@ import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
 import Failure from "../../../../application/failure/failure";
 import GetTenantStatusUseCase from "../../domain/use_case/get_tenant_status.use_case";
 import { useQuery } from "@tanstack/react-query";
-
-export default function TenantCreateComponent() {
-    const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        contactNumber: "",
-        statusId: 2,
-    })
+import { plainToInstance } from "class-transformer";
+import TenantEntity from '../../domain/entity/tenant.entity';
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import PostTenantUseCase from "../../domain/use_case/post_tenant.use_case";
+import TenantCreateComponentParams from "../interface/tenant_create_component.params";
+export default function TenantCreateComponent({ fetchTenant }: TenantCreateComponentParams) {
+    const { register, handleSubmit, reset } = useForm();
+    const [open, setOpen] = useState(false);
     const fetchTenantStatuses = async () => {
         const response = await GetTenantStatusUseCase() as TenantStatusEntity[] | Failure;
         if (response instanceof Failure) {
-            console.error(response);
+            toast.error(response.message);
         }
         return response;
     }
@@ -45,21 +45,33 @@ export default function TenantCreateComponent() {
         if (tenantStatusesQuery.isLoading) {
             return <Select.Item value="1">Loading...</Select.Item>
         }
-        return tenantStatuses.map((tenantStatus) => (
-            <Select.Item key={tenantStatus.id} value={tenantStatus.id.toString()}>{renderBadge(tenantStatus.statusName)}</Select.Item>
+
+        return tenantStatuses.map((status) => (
+            <Select.Item key={status.id} value={status.id.toString()}>
+                {renderBadge(status.statusName)}
+            </Select.Item>
         ))
     }
 
+    const handleSave = async (formData) => {
+        const data = formData as TenantEntity
+        const tenantEntity = plainToInstance(TenantEntity, data, {
+            excludeExtraneousValues: true,
+        });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value })
-    }
-    const handleSelectChange = (name, value) => {
-        setForm({ ...form, [name]: value })
-    }
+        const result = await PostTenantUseCase({ tenantEntity });
 
+        if (result instanceof Failure) {
+            toast.error(result.message);
+            return;
+        }
+        setOpen(false);
+        toast.success("Save", { icon: "👏" });
+        reset();
+        fetchTenant();
+    };
     return (
-        <Dialog.Root >
+        <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
                 <Button variant={"solid"}><PlusIcon /> Create Property</Button>
             </Dialog.Trigger>
@@ -84,18 +96,18 @@ export default function TenantCreateComponent() {
                         </Callout.Text>
                     </Callout.Root>
 
-                    <Form.Root >
+                    <Form.Root onSubmit={handleSubmit(handleSave)} >
                         <Form.Field name="first_name">
                             <Form.Label style={{ fontSize: "13px" }}>First Name</Form.Label>
                             <Form.Control asChild>
-                                <TextField.Root onChange={handleChange} type="text" name="first_name" required />
+                                <TextField.Root {...register("first_name")} type="text" name="first_name" required />
                             </Form.Control>
                             <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter tenant name</Form.Message>
                         </Form.Field>
                         <Form.Field name="last_name">
                             <Form.Label style={{ fontSize: "13px" }}>Last Name</Form.Label>
                             <Form.Control asChild>
-                                <TextField.Root onChange={handleChange} type="text" name="last_name" required />
+                                <TextField.Root {...register("last_name")} type="text" name="last_name" required />
                             </Form.Control>
                             <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter tenant name</Form.Message>
                         </Form.Field>
@@ -103,19 +115,20 @@ export default function TenantCreateComponent() {
                             <Form.Field style={{ width: "100%" }} name="email">
                                 <Form.Label style={{ fontSize: "13px" }}>Email</Form.Label>
                                 <Form.Control asChild>
-                                    <TextField.Root onChange={handleChange} type="email" name="email" required />
+                                    <TextField.Root {...register("email")} type="email" name="email" required />
                                 </Form.Control>
                                 <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter email</Form.Message>
                             </Form.Field>
                             <Form.Field style={{ width: "100%" }} name="contact_number">
                                 <Form.Label style={{ fontSize: "13px" }}>Contact Number</Form.Label>
                                 <Form.Control asChild>
-                                    <TextField.Root onChange={handleChange} type="number" name="contact_number" required />
+                                    <TextField.Root {...register("contact_number")} type="number" name="contact_number" required />
                                 </Form.Control>
                                 <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter contact number</Form.Message>
+                                <Form.Message style={{ color: "red", fontSize: "10px" }} match={(value) => value.length > 11 || value.length < 11} >Please enter valid contact number</Form.Message>
                             </Form.Field>
                         </Flex>
-                        <Form.Field name="status_id" onChange={handleChange} >
+                        <Form.Field name="status_id"  >
                             <Form.Label style={{ fontSize: "13px" }}>Status</Form.Label><br />
                             <Select.Root name="status_id" required defaultValue="2" value="2" >
                                 <Select.Trigger placeholder="Select Type..." />

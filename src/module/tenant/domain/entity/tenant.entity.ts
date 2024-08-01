@@ -19,11 +19,13 @@ export default class TenantEntity {
 
     @Expose()
     @IsString()
-    public status: string;
+    @IsOptional()
+    public status: string | undefined;
 
     @Expose()
     @IsNumber()
-    public status_id: number;
+    @IsOptional()
+    public status_id: number | undefined;
 
     @Expose()
     @IsString()
@@ -35,21 +37,6 @@ export default class TenantEntity {
     @Length(3, 100)
     public email: string;
 
-    @Expose()
-    @IsDate()
-    public created_at: Date | undefined;
-
-    @Expose()
-    @IsDate()
-    public updated_at: Date | undefined;
-
-    @Expose()
-    @IsNumber()
-    public created_by: number;
-
-    @Expose()
-    @IsNumber()
-    public updated_by: number;
 
 
     constructor(
@@ -60,10 +47,7 @@ export default class TenantEntity {
         status: string,
         status_id: number,
         contact_number: string,
-        created_at: Date,
-        updated_at: Date,
-        created_by: number,
-        updated_by: number
+
     ) {
         this.id = id;
         this.first_name = first_name;
@@ -72,9 +56,5 @@ export default class TenantEntity {
         this.status = status;
         this.status_id = status_id;
         this.contact_number = contact_number;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.created_by = created_by;
-        this.updated_by = updated_by;
     }
 }

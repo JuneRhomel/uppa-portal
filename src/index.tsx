@@ -15,8 +15,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Toaster position="top-right"  reverseOrder={false} />
-    <Theme appearance={"dark"}>
+    <Toaster position="top-right" reverseOrder={false} />
+    <Theme appearance={"light"}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

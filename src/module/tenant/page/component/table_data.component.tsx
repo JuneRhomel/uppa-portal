@@ -1,4 +1,4 @@
-import { Badge, Link, Table } from "@radix-ui/themes";
+import { Avatar, Badge, Link, Table } from "@radix-ui/themes";
 import React from "react";
 import TableLoadingComponent from "./table_loading.component";
 import TableDataComponentParams from "../interface/table_data_component.params";
@@ -7,7 +7,7 @@ import TenantEntity from "../../domain/entity/tenant.entity";
 
 export default function TableDataComponent({ tenantListQuery }: TableDataComponentParams) {
 
-    const renderBadge = (status: string) => {
+    const renderBadge = (status: string | undefined) => {
 
         if (status === "Active") {
             return <Badge color={"green"}>{status}</Badge>
@@ -33,7 +33,8 @@ export default function TableDataComponent({ tenantListQuery }: TableDataCompone
                         {tenant.id}
                     </Table.Cell>
                     <Table.Cell>
-                        {tenant.last_name} {tenant.first_name}
+                        <Avatar radius={"full"}  size={"1"} src="https://picsum.photos/seed/picsum/200/300" fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
+                        {tenant.first_name} {tenant.last_name}
                     </Table.Cell>
                     <Table.Cell>
                         <Link href={`mailto:${tenant.email}`} >{tenant.email}</Link>
