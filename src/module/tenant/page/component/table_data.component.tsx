@@ -33,7 +33,7 @@ export default function TableDataComponent({ tenantListQuery }: TableDataCompone
                         {tenant.id}
                     </Table.Cell>
                     <Table.Cell>
-                        <Avatar radius={"full"}  size={"1"} src="https://picsum.photos/seed/picsum/200/300" fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
+                        <Avatar radius={"full"}  size={"1"}  fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
                         {tenant.first_name} {tenant.last_name}
                     </Table.Cell>
                     <Table.Cell>

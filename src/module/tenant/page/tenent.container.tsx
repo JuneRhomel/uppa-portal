@@ -63,7 +63,6 @@ export default function TenantContainer() {
         refetchOnWindowFocus: true,
     });
 
-    const tenants = tenantListQuery.data?.tenants as TenantEntity[];
     const totalRows = tenantListQuery.data?.totalRows as number;
 
     const refetch = () => {
