@@ -7,6 +7,7 @@ import PropertiesContainer from "../../module/properties/page/properties.contain
 import TenantContainer from "../../module/tenant/page/tenent.container";
 import ManagePropertyContainer from "../../module/manage_properties/page/manage_property.container";
 import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_water/page/mother_meter_water.container";
+import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/mother-meter/water",
         Component: MotherMeterWaterContainer,
+      },
+      {
+        path: "/mother-meter/electricity",
+        Component: MotherMeterElectricityContainer,
       }
     ],
   },

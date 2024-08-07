@@ -8,4 +8,5 @@ export default class ApiConstant {
   static TENANTS = "/tenant";
   static TENANT_STATUSES = "/tenant/status";
   static MOTHER_METER_WATER = "/mother/meter/water";
+  static MOTHER_METER_ELECTRICITY = "/mother/meter/electricity";
 }

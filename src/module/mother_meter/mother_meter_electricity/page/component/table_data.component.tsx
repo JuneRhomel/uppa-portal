@@ -1,15 +1,14 @@
 import React from "react";
-import TableDataComponentParams from "../interface/table_data_componet.params"
+import TableDataComponentParams from "../interface/table_data_component.params"
 import { Table } from "@radix-ui/themes";
-export default function TabelDataComponent({ motherMeterEntity }: TableDataComponentParams) {
+export default function TabelDataComponent({ motherMeterElectricityEntity }: TableDataComponentParams) {
     const render = () => {
-        if (!motherMeterEntity) {
-            return <></>
-        }
-        return motherMeterEntity.map((motherMeter) => {
+        return motherMeterElectricityEntity.map((motherMeter) => {
+            if (!motherMeter) {
+                return <></>
+            }
             return (
                 <Table.Row key={motherMeter.id}>
-
                     <Table.Cell>
                         {motherMeter.id}
                     </Table.Cell>

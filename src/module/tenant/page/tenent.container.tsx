@@ -31,7 +31,7 @@ export default function TenantContainer() {
     const columns = "full_name,first_name,last_name,email,status_name,contact_number";
     const fetchTenants = async () => {
         const paginationEntity = plainToInstance(PaginationEntity, {
-            numberOfRows: 14,
+            numberOfRows: 10,
             page: parseInt(page, 10),
             columns,
             sortBy,
