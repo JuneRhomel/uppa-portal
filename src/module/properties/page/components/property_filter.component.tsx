@@ -56,6 +56,27 @@ export default function PropertyFilterComponent() {
         setSelectedStatus("All");
     }
 
+    const renderPropertyTypes = () => {
+        if (!Array.isArray(propertyTypes) || propertyTypes.length === 0) {
+            return null;
+        }
+        return propertyTypes.map((item) => {
+            return (
+                <Select.Item key={item.id} value={item.unit_type_name}>{item.unit_type_name}</Select.Item>
+            )
+        })
+    }
+
+    const renderPropertyStatuses = () => {
+        if (!Array.isArray(propertyStatuses) || propertyStatuses.length === 0) {
+            return null;
+        }
+        return propertyStatuses.map((item) => {
+            return (
+                <Select.Item key={item.id} value={item.unit_status_name}>{item.unit_status_name}</Select.Item>
+            )
+        })
+    }
     return (
         <Popover.Root>
             <Tooltip content={"Filters"}>
@@ -84,9 +105,7 @@ export default function PropertyFilterComponent() {
                                 <Select.Content>
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
-                                        {propertyTypes.map((propertyType: PropertyTypeEntity) => (
-                                            <Select.Item key={propertyType.id} value={propertyType.unit_type_name}>{propertyType.unit_type_name}</Select.Item>
-                                        ))}
+                                        {renderPropertyTypes()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>
@@ -103,9 +122,7 @@ export default function PropertyFilterComponent() {
                                 <Select.Content>
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
-                                        {propertyStatuses.map((propertyStatus: PropertyStatusEntity) => (
-                                            <Select.Item key={propertyStatus.id} value={propertyStatus.unit_status_name}>{propertyStatus.unit_status_name}</Select.Item>
-                                        ))}
+                                        {renderPropertyStatuses()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>

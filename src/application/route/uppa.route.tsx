@@ -8,40 +8,49 @@ import TenantContainer from "../../module/tenant/page/tenent.container";
 import ManagePropertyContainer from "../../module/manage_properties/page/manage_property.container";
 import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_water/page/mother_meter_water.container";
 import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
+import PreopertyView from "../../module/properties/page/view/preoperty.view";
+
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MasterContainer />,
-    Component: MasterContainer,
     children: [
       {
         index: true,
-        Component: DashboardContainer,
+        element: <DashboardContainer />,
       },
       {
-        path: "/properties",
-        Component: PropertiesContainer,
+        path: "properties",
+        children: [
+          {
+            index: true,
+            element: <PropertiesContainer />,
+          },
+          {
+            path: ":id",  
+            element: <PreopertyView />, 
+          }
+        ]
       },
       {
-        path: "/manage-properties",
-        Component: ManagePropertyContainer,
+        path: "manage-properties",
+        element: <ManagePropertyContainer />,
       },
       {
-        path: "/tenants",
-        Component: TenantContainer,
+        path: "tenants",
+        element: <TenantContainer />,
       },
       {
-        path: "/mother-meter/water",
-        Component: MotherMeterWaterContainer,
+        path: "mother-meter/water",
+        element: <MotherMeterWaterContainer />,
       },
       {
-        path: "/mother-meter/electricity",
-        Component: MotherMeterElectricityContainer,
+        path: "mother-meter/electricity",
+        element: <MotherMeterElectricityContainer />,
       }
     ],
   },
-
   {
     path: "/login",
     element: <LoginContainer />,

@@ -84,6 +84,23 @@ export default function PropertySettingsComponent({
         }
         return null
     }
+    const renderPropertyStatuses = () => {
+        if (!Array.isArray(propertyStatuses) || propertyStatuses.length === 0) {
+            return null;
+        }
+        return propertyStatuses.map((status) => {
+            return (
+                <Table.Row key={status.id}>
+                    <Table.Cell>{status.unit_status_name}</Table.Cell>
+                    <Table.Cell>
+                        <Tooltip content={"Edit"}>
+                            <IconButton onClick={() => handleEditStatus(status)} variant={'ghost'}><Pencil1Icon /></IconButton>
+                        </Tooltip>
+                    </Table.Cell>
+                </Table.Row>
+            )
+        })
+    }
 
     return (
         <>
@@ -127,20 +144,7 @@ export default function PropertySettingsComponent({
                                                 <Table.ColumnHeaderCell>Action</Table.ColumnHeaderCell>
                                             </Table.Row>
                                         </Table.Header>
-                                        {propertiesTypesAndStatusQuery.isSuccess &&
-                                            <Table.Body>
-                                                {propertyStatuses.map((status) => (
-                                                    <Table.Row key={status.id}>
-                                                        <Table.Cell>{status.unit_status_name}</Table.Cell>
-                                                        <Table.Cell>
-                                                            <Tooltip content={"Edit"}>
-                                                                <IconButton onClick={() => handleEditStatus(status)} variant={'ghost'}><Pencil1Icon /></IconButton>
-                                                            </Tooltip>
-                                                        </Table.Cell>
-                                                    </Table.Row>
-                                                ))}
-                                            </Table.Body>}
-
+                                        {renderPropertyStatuses()}
                                     </Table.Root>
                                 </Box>
                             </Tabs.Content>

@@ -1,8 +1,25 @@
-import { Box, Card, Flex, Avatar, Text } from "@radix-ui/themes";
+import { Box, Card, Flex, Avatar, Text, IconButton } from "@radix-ui/themes";
 import React from "react";
+import { MdDarkMode,MdLightMode } from "react-icons/md";
 
 
 export default function CardComponent() {
+    const handleTheme = () => {
+        const theme = localStorage.getItem("theme");
+        if (theme === "dark") {
+            location.reload();
+            return localStorage.setItem("theme", "light");
+        }
+        location.reload();
+        return localStorage.setItem("theme", "dark");
+    }
+    const renderIcon = () => {
+        const theme = localStorage.getItem("theme");
+        if (theme === "dark") {
+            return <MdDarkMode />
+        }
+        return <MdLightMode />
+    }
     return (
         <Box >
             <Card>
@@ -23,6 +40,7 @@ export default function CardComponent() {
                     </Box>
                 </Flex>
             </Card>
+            <IconButton variant="soft" onClick={handleTheme}>{renderIcon()}</IconButton>
         </Box>
     )
 }

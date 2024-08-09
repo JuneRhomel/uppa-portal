@@ -12,7 +12,6 @@ export default function MasterContainer() {
 
   const renderMasterContainer = () => (
     <MasterContainerStyle>
-
       <MenuComponent />
       <MasterContentStyle>
         <MasterMainStyle>
