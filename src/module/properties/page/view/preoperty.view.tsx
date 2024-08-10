@@ -1,25 +1,84 @@
-import { CopyIcon } from '@radix-ui/react-icons';
-import { Badge, Code, DataList, Flex, IconButton, Link, Table, Separator , Text} from '@radix-ui/themes';
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import { BackpackIcon, CopyIcon } from '@radix-ui/react-icons';
+import { Badge, Code, DataList, Flex, IconButton, Link, Table, Separator, Text, Box, Button, Tooltip } from '@radix-ui/themes';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import ContentComponent from '../../../../components/content/content.component';
+import { IoArrowBack } from "react-icons/io5";
+import GetPropertyUseCase from "../../../../module/properties/domain/use_case/get_property.use_case";
+import Failure from '../../../../application/failure/failure';
+import toast from 'react-hot-toast';
+import PropertiesEntity from '../../domain/entity/properties.entity';
+import { useQuery } from '@tanstack/react-query';
+import { FiEdit3 } from "react-icons/fi";
+import { MdOutlineDeleteSweep } from "react-icons/md";
+import DeletePropertyComponent from './component/delete_property.component';
 
 export default function PreopertyView() {
+    const navigate = useNavigate();
     const { id } = useParams();
+    const [openDelete, setOpenDelete] = useState(false);
 
-    const fetchProperty = () => {
-        return null
+    const fetchProperty = async () => {
+        const response = await GetPropertyUseCase({ id: Number(id) });
+
+        if (response instanceof Failure) {
+            toast.error("Something went wrong");
+            return response
+        }
+
+        return response as PropertiesEntity
+
+    }
+
+    const handleBack = () => {
+        navigate(-1)
+    }
+
+    const propertyQuery = useQuery({
+        queryKey: ["property"],
+        queryFn: fetchProperty,
+        retry: true,
+    })
+
+    if (propertyQuery.isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (propertyQuery.isError) {
+        return <div>Error</div>
+    }
+    const property = propertyQuery.data as PropertiesEntity
+
+    const handleDelete = () => {
+        setOpenDelete(!openDelete)
     }
 
     return (
         <div>
+            <Flex justify="between" align="center" mb={'4'}>
+                <Tooltip content={"Back"}>
+                    <Link style={{ "width": "fit-content", "display": "inline-block" }} href='#' onClick={handleBack}  >
+                        <Flex gap="2" width={"fit-content"} align={"center"}>
+                            <IoArrowBack /> Back
+                        </Flex>
+                    </Link>
+                </Tooltip>
+                <Flex gap="2">
+                    <Tooltip content={"Edit"}>
+                        <Button onClick={() => { }} variant="soft"><FiEdit3 /> Edit</Button>
+                    </Tooltip>
+                    <Tooltip content={"Delete"}>
+                        <Button onClick={handleDelete} variant="soft" color='red'><MdOutlineDeleteSweep /> Delete</Button>
+                    </Tooltip>
+                </Flex>
+            </Flex>
             <ContentComponent >
                 <DataList.Root>
                     <DataList.Item>
                         <DataList.Label minWidth="158px">ID</DataList.Label>
                         <DataList.Value>
                             <Flex align="center" gap="2">
-                                <Code variant="ghost">u_2J89JSA4GJ</Code>
+                                <Code variant="ghost">{property.id}</Code>
                                 <IconButton
                                     size="1"
                                     aria-label="Copy value"
@@ -34,7 +93,7 @@ export default function PreopertyView() {
                     <DataList.Item>
                         <DataList.Label minWidth="158px">Property Name</DataList.Label>
                         <DataList.Value>
-                            Unit 101
+                            {property.unit_name}
                         </DataList.Value>
                     </DataList.Item>
                     <DataList.Item>
@@ -42,18 +101,17 @@ export default function PreopertyView() {
                             <DataList.Label minWidth="158px">Status</DataList.Label>
                             <DataList.Value>
                                 <Badge color="jade" variant="soft" radius="full">
-                                    Avalable
+                                    {property.unit_status_name}
                                 </Badge>
                             </DataList.Value>
                         </DataList.Item>
                         <DataList.Label minWidth="158px">Type</DataList.Label>
-                        <DataList.Value>Studio Unit</DataList.Value>
+                        <DataList.Value>{property.unit_type_name}</DataList.Value>
                     </DataList.Item>
-
                     <DataList.Item>
                         <DataList.Label minWidth="158px">Created At</DataList.Label>
                         <DataList.Value>
-                            June 20, 2022
+                            {String(property.created_at)}
                         </DataList.Value>
                     </DataList.Item>
                 </DataList.Root>
@@ -77,6 +135,8 @@ export default function PreopertyView() {
                     </Table.Body>
                 </Table.Root>
             </ContentComponent>
+
+            <DeletePropertyComponent isOpen={openDelete}  handleClose={handleDelete}/>
         </div>
     );
 }

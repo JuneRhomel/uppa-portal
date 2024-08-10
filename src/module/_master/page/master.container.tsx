@@ -4,6 +4,7 @@ import MasterContainerStyle from "./style/master_container.style";
 import MenuComponent from "../../../components/menu/menu.component";
 import MasterContentStyle from "./style/master_content.style";
 import MasterMainStyle from "./style/master_main.style";
+import HeaderComponent from "../../../components/header/header.component";
 
 export default function MasterContainer() {
   const token = localStorage.getItem("token");
@@ -14,6 +15,7 @@ export default function MasterContainer() {
     <MasterContainerStyle>
       <MenuComponent />
       <MasterContentStyle>
+        <HeaderComponent />
         <MasterMainStyle>
 
           <Outlet />
