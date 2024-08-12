@@ -28,8 +28,8 @@ const router = createBrowserRouter([
             element: <PropertiesContainer />,
           },
           {
-            path: ":id",  
-            element: <PreopertyView />, 
+            path: ":id",
+            element: <PreopertyView />,
           }
         ]
       },
@@ -39,15 +39,42 @@ const router = createBrowserRouter([
       },
       {
         path: "tenants",
-        element: <TenantContainer />,
+        children: [
+          {
+            index: true,
+            element: <TenantContainer />,
+          },
+          {
+            path: ":id",
+            element: <TenantContainer />,
+          },
+        ]
       },
       {
         path: "mother-meter/water",
-        element: <MotherMeterWaterContainer />,
+        children: [
+          {
+            index: true,
+            element: <MotherMeterWaterContainer />,
+          },
+          {
+            path: ":id",
+            element: <MotherMeterWaterContainer />,
+          },
+        ]
       },
       {
         path: "mother-meter/electricity",
-        element: <MotherMeterElectricityContainer />,
+        children: [
+          {
+            index: true,
+            element: <MotherMeterElectricityContainer />,
+          },
+          {
+            path: ":id",
+            element: <MotherMeterElectricityContainer />,
+          },
+        ]
       }
     ],
   },

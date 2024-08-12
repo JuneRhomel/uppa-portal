@@ -30,7 +30,7 @@ export default function TableDataComponent({ tenantListQuery }: TableDataCompone
             return (
                 <Table.Row key={tenant.id}>
                     <Table.Cell>
-                        {tenant.id}
+                        <Link href={`/tenant/${tenant.id}`} >{tenant.id}</Link>
                     </Table.Cell>
                     <Table.Cell>
                         <Avatar radius={"full"}  size={"1"}  fallback={tenant.first_name.slice(0, 1)} mr={"2"} />

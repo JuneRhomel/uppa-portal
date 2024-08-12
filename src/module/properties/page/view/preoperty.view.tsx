@@ -12,11 +12,13 @@ import { useQuery } from '@tanstack/react-query';
 import { FiEdit3 } from "react-icons/fi";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 import DeletePropertyComponent from './component/delete_property.component';
+import EditPropertyComponent from './component/edit_property.component';
 
 export default function PreopertyView() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [openDelete, setOpenDelete] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
 
     const fetchProperty = async () => {
         const response = await GetPropertyUseCase({ id: Number(id) });
@@ -53,6 +55,13 @@ export default function PreopertyView() {
         setOpenDelete(!openDelete)
     }
 
+    const handleEdit = () => {
+        setOpenEdit(!openEdit)
+    }
+
+    const refetch = () => {
+        propertyQuery.refetch()
+    }
     return (
         <div>
             <Flex justify="between" align="center" mb={'4'}>
@@ -65,7 +74,7 @@ export default function PreopertyView() {
                 </Tooltip>
                 <Flex gap="2">
                     <Tooltip content={"Edit"}>
-                        <Button onClick={() => { }} variant="soft"><FiEdit3 /> Edit</Button>
+                        <Button onClick={handleEdit} variant="soft"><FiEdit3 /> Edit</Button>
                     </Tooltip>
                     <Tooltip content={"Delete"}>
                         <Button onClick={handleDelete} variant="soft" color='red'><MdOutlineDeleteSweep /> Delete</Button>
@@ -136,7 +145,8 @@ export default function PreopertyView() {
                 </Table.Root>
             </ContentComponent>
 
-            <DeletePropertyComponent isOpen={openDelete}  handleClose={handleDelete}/>
+            <DeletePropertyComponent isOpen={openDelete} handleClose={handleDelete} />
+            <EditPropertyComponent refetch={refetch} isOpen={openEdit} handleClose={handleEdit} />
         </div>
     );
 }

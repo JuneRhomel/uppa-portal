@@ -5,9 +5,7 @@ import PostMotherMeterElectricityDataSourceParams from "./interface/post_mother_
 import ApiConstant from "../../../../../application/constant/api.constant";
 
 export default async function PostMotherMeterElectricityDataSource({ motherMeterElectricityModel }: PostMotherMeterElectricityDataSourceParams) {
-
     try {
-
         return await HttpCliestUtil({
             method: "POST",
             url: ApiConstant.MOTHER_METER_ELECTRICITY,
@@ -15,7 +13,6 @@ export default async function PostMotherMeterElectricityDataSource({ motherMeter
         });
 
     } catch (error) {
-
         return FailureMapperUtil(error);
     }
 }

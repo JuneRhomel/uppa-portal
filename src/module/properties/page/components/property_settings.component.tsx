@@ -102,6 +102,24 @@ export default function PropertySettingsComponent({
         })
     }
 
+    const renderPropertyTypes = () => {
+        if (!Array.isArray(propertyTypes) || propertyTypes.length === 0) {
+            return null;
+        }
+        return propertyTypes.map((type) => {
+            return (
+                <Table.Row key={type.id}>
+                    <Table.Cell>{type.unit_type_name}</Table.Cell>
+                    <Table.Cell>
+                        <Tooltip content={"Edit"}>
+                            <IconButton onClick={() => handleEditType(type)} variant={'ghost'}><Pencil1Icon /></IconButton>
+                        </Tooltip>
+                    </Table.Cell>
+                </Table.Row>
+            )
+        })
+    }
+
     return (
         <>
             <Dialog.Root>
@@ -168,16 +186,7 @@ export default function PropertySettingsComponent({
                                         </Table.Header>
 
                                         <Table.Body>
-                                            {propertyTypes.map((type) => (
-                                                <Table.Row key={type.id}>
-                                                    <Table.Cell>{type.unit_type_name}</Table.Cell>
-                                                    <Table.Cell>
-                                                        <Tooltip content={"Edit"}>
-                                                            <IconButton onClick={() => handleEditType(type)} variant={'ghost'}><Pencil1Icon /></IconButton>
-                                                        </Tooltip>
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                            ))}
+                                            {renderPropertyTypes()}
                                         </Table.Body>
                                     </Table.Root>
                                 </Box>
