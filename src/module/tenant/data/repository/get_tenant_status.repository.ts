@@ -3,7 +3,7 @@ import FailureMapperUtil from "../../../../util/failure_mapper/failure_mapper.ut
 import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
 import GetTenantStatusDataSource from "../data_source/get_tenant_stauts.data_source";
 
-export default async function GetTenantStatusRepository(): Promise<TenantStatusEntity | Failure> {
+export default async function GetTenantStatusRepository(): Promise<TenantStatusEntity[] | Failure> {
     try {
         const response = await GetTenantStatusDataSource();
 

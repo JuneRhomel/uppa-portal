@@ -59,7 +59,7 @@ export default function NavMenuComponent() {
                 <Text size={"2"} mb={'0'} weight={"medium"}>Tenant Management</Text>
             </Box>
             <Tooltip side="right" content="Tenants">
-                <NavMenuStyle onClick={() => handelClick("tenants")} className={isActive("/tenants")}>
+                <NavMenuStyle onClick={() => handelClick("tenant")} className={isActive("/tenant")}>
                     <FaUsers />
                     <Text as="div" size="2">Tenant Directory</Text>
                 </NavMenuStyle>

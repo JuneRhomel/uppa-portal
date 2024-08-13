@@ -6,6 +6,7 @@ import GetTenantStatusUseCase from "../../domain/use_case/get_tenant_status.use_
 import Failure from "../../../../application/failure/failure";
 import { useQuery } from "@tanstack/react-query";
 import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
+import { isArray } from "class-validator";
 
 export default function TenantFilterComponent() {
     const navigate = useNavigate();
@@ -39,6 +40,23 @@ export default function TenantFilterComponent() {
         setSelectedStatus("All");
     }
 
+    const renderStatus = () => {
+        if (tenantStatusesQuery.isLoading) {
+            return <Select.Item value="1">Loading...</Select.Item>
+        }
+        if (tenantStatuses.length === 0) {
+            return <Select.Item value="1">Error</Select.Item>
+        }
+        if (!isArray(tenantStatuses)) {
+            return <Select.Item value="1">Error</Select.Item>
+        }
+        return tenantStatuses.map((status) => (
+            <Select.Item key={status.id} value={status.statusName}>
+                {status.statusName}
+            </Select.Item>
+        ))
+    }
+
     return (
         <Popover.Root>
             <Tooltip content={"Filters"}>
@@ -66,20 +84,18 @@ export default function TenantFilterComponent() {
                                 <Select.Content>
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
-                                        {tenantStatuses.map((tenantStatus: TenantStatusEntity) => (
-                                            <Select.Item key={tenantStatus.id} value={tenantStatus.statusName}>{tenantStatus.statusName}</Select.Item>
-                                        ))}
+                                        {renderStatus()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>
                         </Box>
 
                     </Flex>
-                        <Separator my={"3"} size={"4"} />
-                        <Flex justify={"end"} gap={"2"}>
-                            <Button onClick={handleClearFilter} variant={"soft"}>Clear</Button>
-                            <Button onClick={handleFilterSubmit}>Apply</Button>
-                        </Flex>
+                    <Separator my={"3"} size={"4"} />
+                    <Flex justify={"end"} gap={"2"}>
+                        <Button onClick={handleClearFilter} variant={"soft"}>Clear</Button>
+                        <Button onClick={handleFilterSubmit}>Apply</Button>
+                    </Flex>
                 </Box>
             </Popover.Content>
         </Popover.Root >

@@ -3,10 +3,11 @@ import React from "react";
 import TableLoadingComponent from "./table_loading.component";
 import TableDataComponentParams from "../interface/table_data_component.params";
 import TenantEntity from "../../domain/entity/tenant.entity";
+import { useNavigate } from "react-router-dom";
 
 
 export default function TableDataComponent({ tenantListQuery }: TableDataComponentParams) {
-
+    const navigate = useNavigate();
     const renderBadge = (status: string | undefined) => {
 
         if (status === "Active") {
@@ -26,14 +27,19 @@ export default function TableDataComponent({ tenantListQuery }: TableDataCompone
         }
         const tenants = tenantListQuery.data?.tenants as TenantEntity[];
 
+        const handleView = (id, event: React.MouseEvent<HTMLAnchorElement>) => {
+            event.preventDefault()
+            navigate(`/tenant/${id}`);
+        }
+
         return tenants.map((tenant) => {
             return (
                 <Table.Row key={tenant.id}>
                     <Table.Cell>
-                        <Link href={`/tenant/${tenant.id}`} >{tenant.id}</Link>
+                        <Link href="#" onClick={(event) => handleView(tenant.id, event)}  >{tenant.id}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                        <Avatar radius={"full"}  size={"1"}  fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
+                        <Avatar radius={"full"} size={"1"} fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
                         {tenant.first_name} {tenant.last_name}
                     </Table.Cell>
                     <Table.Cell>

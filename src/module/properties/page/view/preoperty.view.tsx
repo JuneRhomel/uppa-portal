@@ -13,6 +13,7 @@ import { FiEdit3 } from "react-icons/fi";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 import DeletePropertyComponent from './component/delete_property.component';
 import EditPropertyComponent from './component/edit_property.component';
+import { BackFn } from "../../../../util/shared/fuction.shared";
 
 export default function PreopertyView() {
     const navigate = useNavigate();
@@ -30,10 +31,6 @@ export default function PreopertyView() {
 
         return response as PropertiesEntity
 
-    }
-
-    const handleBack = () => {
-        navigate(-1)
     }
 
     const propertyQuery = useQuery({
@@ -66,7 +63,7 @@ export default function PreopertyView() {
         <div>
             <Flex justify="between" align="center" mb={'4'}>
                 <Tooltip content={"Back"}>
-                    <Link style={{ "width": "fit-content", "display": "inline-block" }} href='#' onClick={handleBack}  >
+                    <Link style={{ "width": "fit-content", "display": "inline-block" }} href='#' onClick={BackFn}  >
                         <Flex gap="2" width={"fit-content"} align={"center"}>
                             <IoArrowBack /> Back
                         </Flex>

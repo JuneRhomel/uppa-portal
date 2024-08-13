@@ -9,6 +9,7 @@ import ManagePropertyContainer from "../../module/manage_properties/page/manage_
 import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_water/page/mother_meter_water.container";
 import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
 import PreopertyView from "../../module/properties/page/view/preoperty.view";
+import TenantView from "../../module/tenant/page/view/tenant.vew";
 
 
 const router = createBrowserRouter([
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
         element: <ManagePropertyContainer />,
       },
       {
-        path: "tenants",
+        path: "tenant",
         children: [
           {
             index: true,
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":id",
-            element: <TenantContainer />,
+            element: <TenantView />,
           },
         ]
       },
