@@ -19,7 +19,7 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
         headers,
         body: body ? JSON.stringify(body) : undefined,
     });
-    
+
     if(response.status === 403) { 
         localStorage.removeItem('token');
         return new TimeoutFailure()

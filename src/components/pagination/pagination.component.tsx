@@ -1,88 +1,66 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import PaginationContainerStyle from "./style/pagination_container.style";
-import PaginationLabelStyle from "./style/pagination_label.style";
-import PaginarionPageContainerStyle from "./style/pagination_page_container.style";
-import ButtonComponent from "../button/button.component";
-import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
-import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import PaginationComponentParams from "./interface/pagination_component.params";
-import { SelectChangeEvent } from "@mui/material/Select";
-export default function PaginationComponent({
-  numberOfRows,
-  totalRows,
-}: PaginationComponentParams) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const totalPages = Math.ceil(totalRows / numberOfRows);
+import React from 'react';
+import { Flex, Text, Button, Tooltip } from '@radix-ui/themes';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { useLocation, useNavigate } from 'react-router-dom';
 
-  const queryPathParameters = new URLSearchParams(location.search);
-  const sortOrder = queryPathParameters.get("sortOrder") ?? "";
-  const page = queryPathParameters.get("page") ?? "1";
-  const search = queryPathParameters.get("search") ?? "";
-  const sortBy = queryPathParameters.get("sortBy") ?? "";
+export default function Pagination({ totalRows, recordsPerPage }) {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const totalPages = Math.ceil(totalRows / recordsPerPage) as number;
+    const [currentPage, setCurrentPage] = React.useState(1);
 
-  const handleDropdownChange = (event: SelectChangeEvent) => {
-    const tagetPage = Number(event.target.value) || 1;
-    navigate(`/properties?page=${tagetPage}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
-  };
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
 
-  const nextPage = () => {
-    if (Number(page) < totalPages) {
-      navigate(`/properties?page=${Number(page) + 1}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
-    }
-  };
+        const queryPathParameters = new URLSearchParams(location.search);
+        queryPathParameters.set("page", page.toString());
+        navigate(`?${queryPathParameters.toString()}`);
+    };
 
-  const previousPage = () => {
-    if (Number(page) > 1) {
-      navigate(`/properties?page=${Number(page) - 1}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
-    }
-  };
-  return (
-    <PaginationContainerStyle>
-      <PaginationLabelStyle>Page {page} of {totalPages}</PaginationLabelStyle>
-      <PaginarionPageContainerStyle>
-        <ButtonComponent
-          onClick={previousPage}
-          sx={{ minWidth: 30 }}
-          variant={"contained"}
-          size={"small"}
-          type={"button"}
-        >
-          <KeyboardArrowLeftRoundedIcon fontSize="small" />
-        </ButtonComponent>
+    const getPageNumbers = () => {
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, startPage + 4);
 
-        <FormControl sx={{ m: 1, minWidth: 55, height: 30 }} size="small">
-          <InputLabel sx={{ fontSize: "12px" }}>Page</InputLabel>
-          <Select
-            sx={{ fontSize: "10px" }}
-            value={page}
-            label="Page"
-            onChange={handleDropdownChange}
-          >
-            {Array.from({ length: totalPages }, (_, index) => (
-              <MenuItem
-                key={index + 1}
-                sx={{ fontSize: "10px" }}
-                value={index + 1}
-              >
-                {index + 1}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        const pages: number[] = [];
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
 
-        <ButtonComponent
-          onClick={nextPage}
-          sx={{ minWidth: 30 }}
-          variant={"contained"}
-          size={"small"}
-          type={"button"}
-        >
-          <KeyboardArrowRightRoundedIcon fontSize="small" />
-        </ButtonComponent>
-      </PaginarionPageContainerStyle>
-    </PaginationContainerStyle>
-  );
+        return pages;
+    };
+
+    return (
+        <Flex justify="between" mt="4">
+            <Text size="1" as="span">
+                Total Records: {totalRows}
+            </Text>
+
+            <Flex gap="2">
+                {currentPage > 1 && (
+                    <Tooltip content={"Previous Page"}>
+                        <Button variant={"soft"} onClick={() => handlePageChange(currentPage - 1)}>
+                            <ChevronLeftIcon />
+                        </Button>
+                    </Tooltip>
+                )}
+                {getPageNumbers().map((page) => (
+                    <Button variant={"outline"}
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        disabled={page === currentPage}
+                    >
+                        {page}
+                    </Button>
+                ))}
+                {currentPage < totalPages && (
+                    <Tooltip content={"Next Page"}>
+
+                        <Button variant={"soft"} onClick={() => handlePageChange(currentPage + 1)}>
+                            <ChevronRightIcon />
+                        </Button>
+                    </Tooltip>
+                )}
+            </Flex>
+        </Flex>
+    );
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import SidebarComponent from "../../../components/sidebar/sidebar.component";
 import MasterContainerStyle from "./style/master_container.style";
-import HeaderComponent from "../../../components/header/header.component";
+import MenuComponent from "../../../components/menu/menu.component";
 import MasterContentStyle from "./style/master_content.style";
 import MasterMainStyle from "./style/master_main.style";
+import HeaderComponent from "../../../components/header/header.component";
 
 export default function MasterContainer() {
   const token = localStorage.getItem("token");
@@ -13,12 +13,12 @@ export default function MasterContainer() {
 
   const renderMasterContainer = () => (
     <MasterContainerStyle>
-      <SidebarComponent />
+      <MenuComponent />
       <MasterContentStyle>
-        <HeaderComponent/>
+        <HeaderComponent />
         <MasterMainStyle>
 
-        <Outlet />
+          <Outlet />
         </MasterMainStyle>
       </MasterContentStyle>
     </MasterContainerStyle>

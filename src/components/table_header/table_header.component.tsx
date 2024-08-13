@@ -1,50 +1,65 @@
+import { MagnifyingGlassIcon, PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { Box, Button, Flex, IconButton, TextField, Tooltip } from "@radix-ui/themes";
 import React from "react";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import TableHeaderStyle from "./style/table_header_component.style";
-import TabeSerchContainerStyle from "./style/table_search_container.style";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import TableHeaderParams from "./interface/table_header_component.params";
+import TableHeaderComponentParams from "./interface/table_header.component.params";
 
-export default function TableHeaderComponent({ children }: TableHeaderParams) {
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  const queryPathParameters = new URLSearchParams(location.search);
-  const columns = queryPathParameters.get("columns") ?? "";
-  const sortBy = queryPathParameters.get("sortBy") ?? "";
-  const sortOrder = queryPathParameters.get("sortOrder") ?? "";
-  const page = queryPathParameters.get("page") ?? "1";
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const search = event.target.value;
-    navigate(
-      `/properties?page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}&columns=${columns}&search=${search}`
-    );
-  };
+export default function TableHeaderComponent({
+    prefix,
+    create,
+    reload,
+    onReload
+}: TableHeaderComponentParams) {
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  return (
-    <TableHeaderStyle>
-      <TabeSerchContainerStyle>
-        <TextField
-          size="small"
-          label="Search"
-          variant="outlined"
-          color="primary"
-          onChange={handleSearch}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton edge="end">
-                  <SearchRoundedIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </TabeSerchContainerStyle>
-      <div>
-        {children}
-      </div>
-    </TableHeaderStyle>
-  );
+    const handelSearch = (e) => {
+
+        e.preventDefault();
+        const queryPathParameters = new URLSearchParams(location.search);
+        queryPathParameters.set("search", e.target.value);
+        navigate(`?${queryPathParameters.toString()}`);
+    };
+
+    const renderCreate = () => {
+        if (!create) {
+            return null
+        }
+        return create
+    }
+
+    const renderPrefix = () => {
+        if (!prefix) {
+            return null
+        }
+        return prefix
+    }
+
+    const renderReload = () => {
+        if (!reload) {
+            return null
+        }
+        return (
+            <Tooltip content={"Reload"}>
+                <IconButton variant={"soft"} onClick={onReload}><ReloadIcon /></IconButton>
+            </Tooltip>)
+    }
+    return (
+        <Flex justify={"between"} mb="5">
+            <Flex gap="3" align="center">
+                <TextField.Root onChange={handelSearch} placeholder="Search the properties">
+                    <TextField.Slot>
+                        <MagnifyingGlassIcon height="16" width="16" />
+                    </TextField.Slot>
+                </TextField.Root>
+                {renderReload()}
+                {renderPrefix()}
+            </Flex>
+
+
+
+            {renderCreate()}
+        </Flex>
+    )
 }

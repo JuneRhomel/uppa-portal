@@ -5,27 +5,80 @@ import DashboardContainer from "../../module/dashboad/dashboard.container";
 import MasterContainer from "../../module/_master/page/master.container";
 import PropertiesContainer from "../../module/properties/page/properties.container";
 import TenantContainer from "../../module/tenant/page/tenent.container";
+import ManagePropertyContainer from "../../module/manage_properties/page/manage_property.container";
+import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_water/page/mother_meter_water.container";
+import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
+import PreopertyView from "../../module/properties/page/view/preoperty.view";
+import TenantView from "../../module/tenant/page/view/tenant.vew";
+
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MasterContainer />,
-    Component: MasterContainer,
     children: [
       {
         index: true,
-        Component: DashboardContainer,
+        element: <DashboardContainer />,
       },
       {
-        path: "/properties",
-        Component: PropertiesContainer,
+        path: "properties",
+        children: [
+          {
+            index: true,
+            element: <PropertiesContainer />,
+          },
+          {
+            path: ":id",
+            element: <PreopertyView />,
+          }
+        ]
       },
       {
-        path: "/tenants",
-        Component: TenantContainer,
+        path: "manage-properties",
+        element: <ManagePropertyContainer />,
+      },
+      {
+        path: "tenant",
+        children: [
+          {
+            index: true,
+            element: <TenantContainer />,
+          },
+          {
+            path: ":id",
+            element: <TenantView />,
+          },
+        ]
+      },
+      {
+        path: "mother-meter/water",
+        children: [
+          {
+            index: true,
+            element: <MotherMeterWaterContainer />,
+          },
+          {
+            path: ":id",
+            element: <MotherMeterWaterContainer />,
+          },
+        ]
+      },
+      {
+        path: "mother-meter/electricity",
+        children: [
+          {
+            index: true,
+            element: <MotherMeterElectricityContainer />,
+          },
+          {
+            path: ":id",
+            element: <MotherMeterElectricityContainer />,
+          },
+        ]
       }
     ],
   },
-
   {
     path: "/login",
     element: <LoginContainer />,

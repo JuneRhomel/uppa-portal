@@ -1,64 +1,26 @@
-import React, { useState } from 'react';
-import { motion } from "framer-motion"
-import ContainerStyle from "../../../components/container/style/container.style";
-import PropertiesTableComponent from "./components/properties_table.component";
-import PropertiesTableHeader from "./components/properties_table_header.component";
-import ButtonComponent from "../../../components/button/button.component";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import CreatePropertiesModalComponent from "./components/create_properties_modal.component";
-import { Box, Button, IconButton, Menu, MenuItem, Stack, TextField } from '@mui/material';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import TypeSpecimenRoundedIcon from '@mui/icons-material/TypeSpecimenRounded';
-import PropertyStatusSettingsModalComponent from './components/property_status_settings_modal.component';
-import PropertyTypeSettingsModalComponent from './components/property_type_settings_model.component';
-import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
-import FilterTableComponent from './components/filter_table.component';
+import React from 'react';
+import { Box, Table, Heading, Container } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
-import ListPropertiesEntity from '../domain/entity/list_properties.entity';
 import TimeoutFailure from '../../../application/failure/timeout.failure';
 import PropertiesUseCase from '../domain/use_case/properties.use_case';
 import PaginationEntity from '../../../application/entity/pagination.entity';
 import { plainToInstance } from 'class-transformer';
 import { useNavigate } from 'react-router-dom';
 import Failure from '../../../application/failure/failure';
+import PropertiesEntity from '../domain/entity/properties.entity';
+import ListPropertiesEntity from '../domain/entity/list_properties.entity';
+import Pagination from '../../../components/pagination/pagination.component';
+import TableHeaderComponent from '../../../components/table_header/table_header.component';
+import TableHeadComponent from './components/table_head.component';
+import PropertyFilterComponent from './components/property_filter.component';
+import PropertyTableLoading from './components/property_table_loading';
+import PropertySettingsComponent from './components/property_settings.component';
+import PropertyCreateComponent from './components/property_create.component';
+import { motion } from "framer-motion";
+import TableDataComponent from './components/table_data.component';
+import ContentComponent from '../../../components/content/content.component';
 
 export default function PropertiesContainer() {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
-  const [propertySettingsShow, setpropertySettingsShow] = useState<null | HTMLElement>(null);
-
-  const [statusSettings, setStatusSettings] = useState(false);
-
-  const [typeSettings, setTypeSettings] = useState(false);
-
-  const [filter, setFilter] = useState(false);
-
-  const open = Boolean(propertySettingsShow);
-  const handleSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setpropertySettingsShow(event.currentTarget);
-  };
-  const handleCloseOption = () => {
-    setpropertySettingsShow(null);
-  };
-
-  const hadelStatusSettings = () => {
-    setStatusSettings(true);
-    setpropertySettingsShow(null);
-  }
-  const hadelTypeSettings = () => {
-    setTypeSettings(true);
-    setpropertySettingsShow(null);
-  }
-  const hadelCloseStatusSettings = () => {
-    setStatusSettings(false);
-  }
-  const hadelCloseTypeSettings = () => {
-    setTypeSettings(false);
-  }
-
-
   const navigate = useNavigate();
   const queryPathParameters = new URLSearchParams(location.search);
   const sortBy = queryPathParameters.get("sortBy") ?? "id";
@@ -70,7 +32,7 @@ export default function PropertiesContainer() {
   const columns = "unit_name,unit_type_name,unit_status_name";
   const fetchProperties = async () => {
     const paginationEntity = plainToInstance(PaginationEntity, {
-      numberOfRows: 10,
+      numberOfRows: 14,
       page: parseInt(page, 10),
       columns,
       sortBy,
@@ -100,61 +62,59 @@ export default function PropertiesContainer() {
     refetchOnWindowFocus: true,
   });
 
+  const totalRows = propertiesQuery.data?.totalRows as number;
+
 
   const refetch = () => propertiesQuery.refetch();
+
+
+  const renderPrefix = () => {
+    return (
+      <>
+        <PropertyFilterComponent />
+        <PropertySettingsComponent refetchProperties={refetch} />
+      </>
+    )
+  }
+  const renderCreateProperty = () => {
+    return (
+      <PropertyCreateComponent refetchProperties={refetch} />
+    )
+  }
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <ContainerStyle>
-        <PropertiesTableHeader>
-          <Stack direction="row" spacing={4}>
-            <IconButton
-              onClick={handleSettings}
-            >
-              <SettingsRoundedIcon fontSize="small" />
-            </IconButton>
+    <div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} >
+        <Box mb={"4"}>
+          <Heading size='8'>Properties</Heading>
+        </Box>
+      </motion.div>
+      <ContentComponent >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+          <TableHeaderComponent
+            create={renderCreateProperty()}
+            prefix={renderPrefix()}
+            reload={true}
+            onReload={refetch}
+          />
+        </motion.div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} >
+          <Table.Root variant='surface'>
+            <TableHeadComponent />
 
-            <Button onClick={() => setFilter(!filter)}
-              size="medium" style={{ gap: "5px" }} >
-              <TuneRoundedIcon fontSize="small" /> Filter
-            </Button>
+            <Table.Body>
+              {propertiesQuery.isLoading && <PropertyTableLoading />}
+              {propertiesQuery.data?.properties && (
+                <TableDataComponent propertyEntity={propertiesQuery.data.properties as PropertiesEntity[]} />
+              )}
 
-            <ButtonComponent
-              variant="contained"
-              size="medium"
-              style={{ textTransform: "none" }}
-              isLoading={false}
-              type={"button"}
-              onClick={handleOpen}
-            >
-              <AddRoundedIcon fontSize="small" style={{ marginRight: "5px" }} />
-              Add Property
-            </ButtonComponent>
-          </Stack>
-        </PropertiesTableHeader>
-
-        <FilterTableComponent isOpen={filter} />
-
-        <PropertiesTableComponent refetch={refetch} propertiesQuery={propertiesQuery} />
-      </ContainerStyle>
-
-      <Menu
-        anchorEl={propertySettingsShow}
-        open={open}
-        onClose={handleCloseOption}
-      >
-        <MenuItem color="secondary" onClick={hadelStatusSettings} sx={{ fontSize: "14px" }}>
-          <AutoGraphRoundedIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
-          Property Status Settings
-        </MenuItem>
-        <MenuItem color="error" sx={{ fontSize: "14px" }} onClick={hadelTypeSettings} >
-          <TypeSpecimenRoundedIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
-          Property Type Settings
-        </MenuItem>
-      </Menu>
-
-      {openModal && <CreatePropertiesModalComponent refetch={refetch} isOpen={openModal} handleClose={handleClose} />}
-      {statusSettings && <PropertyStatusSettingsModalComponent refetch={refetch} isOpen={statusSettings} handleClose={hadelCloseStatusSettings} />}
-      {typeSettings && <PropertyTypeSettingsModalComponent refetch={refetch} isOpen={typeSettings} handleClose={hadelCloseTypeSettings} />}
-    </motion.div>
+            </Table.Body>
+          </Table.Root>
+        </motion.div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} >
+          <Pagination totalRows={totalRows} recordsPerPage={10} />
+        </motion.div>
+      </ContentComponent>
+    </div >
   );
 }
