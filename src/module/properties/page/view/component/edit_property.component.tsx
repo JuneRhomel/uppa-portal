@@ -134,7 +134,7 @@ export default function EditPropertyComponent({
                     )} type="text" defaultValue={property.unit_name} >
                         <TextField.Slot />
                     </TextField.Root>
-                    {errors.unit_name && <Text color="red" size={"2"}>{errors.unit_name.message?.toString()}</Text>}
+                    {errors.unit_name && <Text color="red" size={"1"}>{errors.unit_name.message?.toString()}</Text>}
                     <Flex mt="2" gap={"8"}>
                         <Box>
                             <Text as="p" size={"2"}> Unit Type</Text>
@@ -154,7 +154,7 @@ export default function EditPropertyComponent({
                                     </Select.Root>
                                 )}
                             />
-                            {errors.unit_type_id && <Text color="red" size={"2"}>{errors.unit_type_id.message?.toString()}</Text>}
+                            {errors.unit_type_id && <Text color="red" size={"1"}>{errors.unit_type_id.message?.toString()}</Text>}
                         </Box>
                         <Box>
                             <Text as="p" size={"2"}> Unit Status</Text>
@@ -174,7 +174,7 @@ export default function EditPropertyComponent({
                                     </Select.Root>
                                 )}
                             />
-                            {errors.unit_status_id && <Text color="red" size={"2"}>{errors.unit_status_id.message?.toString()}</Text>}
+                            {errors.unit_status_id && <Text color="red" size={"1"}>{errors.unit_status_id.message?.toString()}</Text>}
                         </Box>
                     </Flex>
                     <Flex justify={"end"} mt="5" gap="2">

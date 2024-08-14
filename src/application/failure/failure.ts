@@ -3,7 +3,7 @@ export default class Failure {
   
     public message: string;
   
-    public extra: any[] | undefined;
+    public extra: any | undefined;
   
     constructor({
       code,
@@ -12,7 +12,7 @@ export default class Failure {
     }: {
       code: number;
       message: string;
-      extra?: any[] | undefined;
+      extra?: any | undefined;
     }) {
       this.code = code;
       this.message = message;

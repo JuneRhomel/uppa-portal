@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GetTenantUseCase from "../../../../module/tenant/domain/use_case/get_tenant.use_case";
 import Failure from "../../../../application/failure/failure";
@@ -10,18 +10,20 @@ import { FiEdit3 } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 import ContentComponent from "../../../../components/content/content.component";
+import EditTenantComponent from "./component/edit_tenant.component";
+import DeleteTenantComponent from "./component/delete_tenant.component";
 
 export default function TenantView() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [isOpenEdit, setIsOpenEdit] = useState(false);
+    const [isOpenDelete, setIsOpenDelete] = useState(false);
     const fetchTenant = async () => {
         const response = await GetTenantUseCase({ id: Number(id) });
         if (response instanceof Failure) {
             toast.error("Something went wrong");
             return response
         }
-
-        console.log(response);
 
         return response as TenantEntity
     }
@@ -53,7 +55,17 @@ export default function TenantView() {
         }
         return <Badge color={"orange"}>{status}</Badge>
     }
+    const handelModelEdit = () => {
+        setIsOpenEdit(!isOpenEdit)
+    }
 
+    const refetch = () => {
+        tenantQuery.refetch()
+    }
+
+    const handelModelDelete = () => {
+        setIsOpenDelete(!isOpenDelete)
+    }
 
     return (
         <div>
@@ -67,18 +79,18 @@ export default function TenantView() {
                 </Tooltip>
                 <Flex gap="2">
                     <Tooltip content={"Edit"}>
-                        <Button variant="soft"><FiEdit3 /> Edit</Button>
+                        <Button onClick={handelModelEdit} variant="soft"><FiEdit3 /> Edit</Button>
                     </Tooltip>
                     <Tooltip content={"Delete"}>
-                        <Button variant="soft" color='red'><MdOutlineDeleteSweep /> Delete</Button>
+                        <Button variant="soft" onClick={handelModelDelete} color='red'><MdOutlineDeleteSweep /> Delete</Button>
                     </Tooltip>
                 </Flex>
             </Flex>
             <ContentComponent >
                 <DataList.Root>
-                        <DataList.Label>
-                            <Avatar radius={"full"} size={"2"} fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
-                        </DataList.Label>
+                    <DataList.Label>
+                        <Avatar radius={"full"} size={"2"} fallback={tenant.first_name.slice(0, 1)} mr={"2"} />
+                    </DataList.Label>
                     <DataList.Item>
                         <DataList.Label minWidth="158px">ID</DataList.Label>
                         <DataList.Value><Code variant="ghost" >{tenant.id}</Code></DataList.Value>
@@ -95,6 +107,8 @@ export default function TenantView() {
                     </DataList.Item>
                 </DataList.Root>
             </ContentComponent>
+            {isOpenEdit && <EditTenantComponent refetch={refetch} isOpen={isOpenEdit} handleClose={handelModelEdit} />}
+            {isOpenDelete && <DeleteTenantComponent isOpen={isOpenDelete} handleClose={handelModelDelete} />}
         </div>
     )
 }
