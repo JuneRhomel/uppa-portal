@@ -42,25 +42,25 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
         return <Badge color={"orange"}>{status}</Badge>
     }
 
-    // const renderStatusOptions = () => {
-    //     if (tenantStatusesQuery.isLoading) {
-    //         return <Select.Item value="1">Loading...</Select.Item>
-    //     }
+    const renderStatusOptions = () => {
+        if (tenantStatusesQuery.isLoading) {
+            return <Select.Item value="1">Loading...</Select.Item>
+        }
 
-    //     if (tenantStatuses.length === 0) {
-    //         return <Select.Item value="1">Error</Select.Item>
-    //     }
-    //     if (tenantStatusesQuery.data instanceof Failure) {
-    //         toast.error(tenantStatusesQuery.data.message);
-    //         return <Select.Item value="1">Error</Select.Item>
-    //     }
+        if (tenantStatuses.length === 0) {
+            return <Select.Item value="1">Error</Select.Item>
+        }
+        if (tenantStatusesQuery.data instanceof Failure) {
+            toast.error(tenantStatusesQuery.data.message);
+            return <Select.Item value="1">Error</Select.Item>
+        }
 
-    //     return tenantStatuses.map((status) => (
-    //         <Select.Item key={status.id} value={status.id.toString()}>
-    //             {renderBadge(status.statusName)}
-    //         </Select.Item>
-    //     ))
-    // }
+        return tenantStatuses.map((status) => (
+            <Select.Item key={status.id} value={status.id.toString()}>
+                {renderBadge(status.statusName)}
+            </Select.Item>
+        ))
+    }
 
     const handleSave = async (formData) => {
         const data = formData as TenantEntity
@@ -79,6 +79,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
         reset();
         fetchTenant();
     };
+    
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
@@ -143,7 +144,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
                                 <Select.Trigger placeholder="Select Type..." />
                                 <Select.Content>
                                     <Select.Group>
-                                      
+                                      {renderStatusOptions()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>

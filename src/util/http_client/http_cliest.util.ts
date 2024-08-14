@@ -20,17 +20,18 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
         body: body ? JSON.stringify(body) : undefined,
     });
 
-    if(response.status === 403) { 
+    if (response.status === 403) {
         localStorage.removeItem('token');
         return new TimeoutFailure()
     }
     const data = await response.json();
-    
+
     if (url === '/auth' && data.token) {
         localStorage.setItem('token', data.token);
-    }   
-    if (!response.ok) {
-        return new Failure({ code: data.code, message: data.message });
+    }
+
+    if (response.status >= 400) {
+        return new Failure(data);
     }
     return data;
 }
