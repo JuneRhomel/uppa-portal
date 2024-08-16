@@ -1,13 +1,12 @@
 import Failure from "../../../../../application/failure/failure";
 import FailureMapperUtil from "../../../../../util/failure_mapper/failure_mapper.util";
 import GetMotherMeterWaterRepository from "../../data/repository/get_mother_meter_water.repository";
-import MotherMeterWaterListEntity from "../entity/mother_meter_water_list.entity";
-import GetMotherMeterWaterUseCaseParams from "./interface/get_mother_meter_water_use_case.params";
+import MotherMeterWaterEntity from "../entity/mother_meter_water.entity";
 
-export default async function GetMotherMeterWaterUseCase(
-    { paginationEntity }: GetMotherMeterWaterUseCaseParams): Promise<MotherMeterWaterListEntity | Failure> {
+export default async function GetMotherMeterWaterUseCase({
+    id }: { id: number }): Promise<MotherMeterWaterEntity | Failure> {
     try {
-        return await GetMotherMeterWaterRepository({ paginationEntity });
+        return await GetMotherMeterWaterRepository({ id });
     } catch (error) {
         return FailureMapperUtil(error);
     }

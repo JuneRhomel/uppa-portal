@@ -22,7 +22,6 @@ export default function FailureMapperUtil(exception: any) {
   }
 
   if (exception.message === "DuplicateFailure") {
-    console.error(exception.extra);
     return new DuplicatedFailure(exception.extra);
   }
 

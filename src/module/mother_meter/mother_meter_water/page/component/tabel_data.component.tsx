@@ -1,17 +1,23 @@
 import React from "react";
 import TableDataComponentParams from "../interface/table_data_componet.params"
-import { Table } from "@radix-ui/themes";
+import { Link, Table } from "@radix-ui/themes";
+import { useNavigate } from "react-router-dom";
 export default function TabelDataComponent({ motherMeterEntity }: TableDataComponentParams) {
+    const navigate = useNavigate();
     const render = () => {
         if (!motherMeterEntity) {
             return <></>
+        }
+        const navigateTo = (event: React.MouseEvent<HTMLAnchorElement>) => {
+            event.preventDefault()
+            navigate(`/mother-meter/water/${event.currentTarget.textContent}`);
         }
         return motherMeterEntity.map((motherMeter) => {
             return (
                 <Table.Row key={motherMeter.id}>
 
                     <Table.Cell>
-                        {motherMeter.id}
+                        <Link href="#" onClick={navigateTo}>{motherMeter.id}</Link>
                     </Table.Cell>
                     <Table.Cell>
                         {motherMeter.serialNumber}

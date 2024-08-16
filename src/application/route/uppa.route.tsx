@@ -10,6 +10,7 @@ import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_wa
 import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
 import PreopertyView from "../../module/properties/page/view/preoperty.view";
 import TenantView from "../../module/tenant/page/view/tenant.vew";
+import MotherMeterWaterView from "../../module/mother_meter/view/mother_meter_water/mother_meter_water.view";
 
 
 const router = createBrowserRouter([
@@ -60,7 +61,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":id",
-            element: <MotherMeterWaterContainer />,
+            element: <MotherMeterWaterView />,
           },
         ]
       },

@@ -5,7 +5,7 @@ import TableHeaderComponent from "../../../../components/table_header/table_head
 import { useNavigate } from "react-router-dom";
 import PaginationEntity from "../../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
-import GetMotherMeterWaterUseCase from "../domain/use_case/get_mother_meter_water.use_case"
+import GetMotherMeterWaterListUseCase from "../domain/use_case/get_mother_meter_water_list.use_case"
 import TimeoutFailure from "../../../../application/failure/timeout.failure";
 import toast from "react-hot-toast";
 import MotherMeterWaterListEntity from "../domain/entity/mother_meter_water_list.entity";
@@ -16,6 +16,7 @@ import MotherMeterWaterEntity from "../domain/entity/mother_meter_water.entity";
 import TableHeadComponent from "./component/table_head.component";
 import TableLoadingComponent from "./component/table_loading.component";
 import MotherMeterWaterCreateComponent from "./component/mother_meter_water_create.component";
+
 export default function MotherMeterWaterContainer() {
     const navigate = useNavigate();
     const queryPathParameters = new URLSearchParams(location.search);
@@ -38,9 +39,10 @@ export default function MotherMeterWaterContainer() {
             filters,
         });
 
-        const response = await GetMotherMeterWaterUseCase({
+        const response = await GetMotherMeterWaterListUseCase({
             paginationEntity
         });
+        
         if (response instanceof TimeoutFailure) {
             toast.error("Your session has expired. Please login again.");
             return navigate("/login");
