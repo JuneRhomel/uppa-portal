@@ -17,11 +17,11 @@ const theme = localStorage.getItem("theme");
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
+    <Toaster position="top-right" reverseOrder={false} />
     <ThemeProvider theme={theme === "light" ? schemaThemeLight : schemaThemeDark}>
       <Theme appearance={theme as "light" | "dark"}>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-          <Toaster position="top-right" reverseOrder={false} />
         </QueryClientProvider>
       </Theme>
     </ThemeProvider>

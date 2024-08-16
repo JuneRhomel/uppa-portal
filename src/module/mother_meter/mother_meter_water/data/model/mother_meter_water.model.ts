@@ -1,14 +1,14 @@
 import { Expose } from "class-transformer";
 
 export default class MotherMeterWaterModel {
-    @Expose()
+    @Expose({ name: "id" })
     id: number;
 
-    @Expose()
+    @Expose({ name: "serial_number" })
     serialNumber: number;
 
 
-    @Expose()
+    @Expose({ name: "created_at" })
     createdAt: Date | undefined;
 
     constructor(

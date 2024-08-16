@@ -24,6 +24,7 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
         localStorage.removeItem('token');
         return new TimeoutFailure()
     }
+
     const data = await response.json();
 
     if (url === '/auth' && data.token) {
