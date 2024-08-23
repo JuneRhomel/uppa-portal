@@ -8,9 +8,9 @@ import PropertyCreateParams from "../interface/property_create.params"
 import { toast } from 'react-hot-toast';
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
-import { postProperty } from "../../../../infrastructure/api/slice/post_property_api.slice";
-import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
-import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
+import { postProperty } from "../../../../infrastructure/api/slice/property/post_property_api.slice";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/property/get_property_status_api.slice";
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/property/get_property_types_api.slice";
 import PropertiesEntity from "../../../../infrastructure/api/module/property/domain/entity/properties.entity";
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";

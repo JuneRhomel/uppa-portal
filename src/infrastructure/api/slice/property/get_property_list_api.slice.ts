@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import ListPropertiesEntity from "../module/property/domain/entity/list_properties.entity";
-import PaginationEntity from "../../../application/entity/pagination.entity";
-import PropertiesUseCase from "../module/property/domain/use_case/properties.use_case";
-import UnhandledFailure from "../../../application/failure/unhandled.failure";
-import Failure from "../../../application/failure/failure";
+import ListPropertiesEntity from "../../module/property/domain/entity/list_properties.entity";
+import PaginationEntity from "../../../../application/entity/pagination.entity";
+import PropertiesUseCase from "../../module/property/domain/use_case/properties.use_case";
+import UnhandledFailure from "../../../../application/failure/unhandled.failure";
+import Failure from "../../../../application/failure/failure";
 import { instanceToPlain } from "class-transformer";
 
 interface apiStates {

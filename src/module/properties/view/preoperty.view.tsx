@@ -12,8 +12,8 @@ import DeletePropertyComponent from './component/delete_property.component';
 import EditPropertyComponent from './component/edit_property.component';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../infrastructure/redux/store.redux';
-import { getProperty } from '../../../infrastructure/api/slice/get_property_api.slice';
 import PropertiesEntity from '../../../infrastructure/api/module/property/domain/entity/properties.entity';
+import { getProperty } from '../../../infrastructure/api/slice/property/get_property_api.slice';
 
 
 export default function PreopertyView() {

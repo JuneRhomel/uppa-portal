@@ -7,9 +7,9 @@ import { useQuery } from "@tanstack/react-query";
 import PropertySettingsComponentParams from "../interface/property_settings.params";
 import PropertyTypeEditComponent from "./property_type_edit.component";
 import { useDispatch } from "react-redux";
-import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/property/get_property_status_api.slice";
 import type { AppDispatch } from '../../../../infrastructure/redux/store.redux';
-import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/property/get_property_types_api.slice";
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
 

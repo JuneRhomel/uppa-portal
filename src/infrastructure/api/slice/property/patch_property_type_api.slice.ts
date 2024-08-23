@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import AlreadyExistFailure from "../../../application/failure/already_exist.failure";
-import UnhandledFailure from "../../../application/failure/unhandled.failure";
-import PatchPropertyTypeUseCaseParams from "../module/property/domain/use_case/interface/patch_property_type_use_case.params";
-import PatchPropertyTypeUseCase from "../module/property/domain/use_case/patch_property_type.use_case";
+import AlreadyExistFailure from "../../../../application/failure/already_exist.failure";
+import UnhandledFailure from "../../../../application/failure/unhandled.failure";
+import PatchPropertyTypeUseCaseParams from "../../module/property/domain/use_case/interface/patch_property_type_use_case.params";
+import PatchPropertyTypeUseCase from "../../module/property/domain/use_case/patch_property_type.use_case";
 
 
 interface apiStates {

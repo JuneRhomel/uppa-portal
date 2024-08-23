@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import PropertiesEntity from "../module/property/domain/entity/properties.entity";
-import GetPropertyUseCase from "../module/property/domain/use_case/get_property.use_case";
-import UnhandledFailure from "../../../application/failure/unhandled.failure";
+import PropertiesEntity from "../../module/property/domain/entity/properties.entity";
+import GetPropertyUseCase from "../../module/property/domain/use_case/get_property.use_case";
+import UnhandledFailure from "../../../../application/failure/unhandled.failure";
 
 interface apiStates {
     isLoading: boolean,
