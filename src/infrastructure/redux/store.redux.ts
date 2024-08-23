@@ -8,6 +8,11 @@ import getPropertyStatusApiReducer from "../api/slice/get_property_status_api.sl
 import getProeprtyTypesApiReducer from "../api/slice/get_property_types_api.slice";
 import patchPropertyStatusSliceApiReducer from "../api/slice/patch_property_status_api.slice";
 import patchPropertyTypeSliceApiReducer from "../api/slice/patch_property_type_api.slice";
+import getTenantListApiSliceReducer from "../api/slice/tenant/get_tenant_list_api.slice";
+import getTenantApiSliceReducer from "../api/slice/tenant/get_tenant_api.slice";
+import patchTenantApiSliceReducer from "../api/slice/tenant/patch_tenant_api.slice";
+import getTenantListStatusApiSliceReducer from "../api/slice/tenant/get_tenant_status_list_ai.slice";
+import deleteTenantApiSliceReducer from "../api/slice/tenant/delete_tenant_api.slice";
 
 
 const ReduxStore = configureStore({
@@ -20,7 +25,12 @@ const ReduxStore = configureStore({
         getPropertyStatusApi: getPropertyStatusApiReducer,
         getProeprtyTypesApi: getProeprtyTypesApiReducer,
         patchPropertyStatusSliceApi: patchPropertyStatusSliceApiReducer,
-        patchPropertyTypeSliceApi: patchPropertyTypeSliceApiReducer
+        patchPropertyTypeSliceApi: patchPropertyTypeSliceApiReducer,
+        getTenantListApi: getTenantListApiSliceReducer,
+        getTenantApi: getTenantApiSliceReducer,
+        patchTenantApi: patchTenantApiSliceReducer,
+        getTenantListStatusApi: getTenantListStatusApiSliceReducer,
+        deleteTenantApi: deleteTenantApiSliceReducer
     }
 })
 export default ReduxStore;

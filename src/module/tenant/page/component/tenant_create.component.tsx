@@ -4,34 +4,42 @@ import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
 import Failure from "../../../../application/failure/failure";
-import GetTenantStatusUseCase from "../../domain/use_case/get_tenant_status.use_case";
 import { useQuery } from "@tanstack/react-query";
 import { plainToInstance } from "class-transformer";
-import TenantEntity from '../../domain/entity/tenant.entity';
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import PostTenantUseCase from "../../domain/use_case/post_tenant.use_case";
 import TenantCreateComponentParams from "../interface/tenant_create_component.params";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { patchTenant } from "../../../../infrastructure/api/slice/tenant/patch_tenant_api.slice";
+import { getTenantStatusList } from "../../../../infrastructure/api/slice/tenant/get_tenant_status_list_ai.slice";
+import TenantEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant.entity";
+
 export default function TenantCreateComponent({ fetchTenant }: TenantCreateComponentParams) {
     const { register, handleSubmit, reset } = useForm();
+    const dispatch: AppDispatch = useDispatch();
     const [open, setOpen] = useState(false);
+
     const fetchTenantStatuses = async () => {
-        const response = await GetTenantStatusUseCase() as TenantStatusEntity[] | Failure;
-        if (response instanceof Failure) {
-            toast.error(response.message);
-            throw new Error(response.message);
+        const response = await dispatch(getTenantStatusList());
+
+        if (response.payload === "UnhandledFailure") {
+            console.error(response);
+            return
         }
-        return response;
+
+        return response.payload as TenantStatusEntity[];
     }
 
     const tenantStatusesQuery = useQuery({
-        queryKey: ["tenant_statuses"],
+        queryKey: ["tenant_statuses",open],
         queryFn: fetchTenantStatuses,
         retry: true,
         refetchOnWindowFocus: true,
     });
 
     const tenantStatuses = tenantStatusesQuery.data as TenantStatusEntity[] ?? [];
+
     const renderBadge = (status: string) => {
         if (status === "Active") {
             return <Badge color={"green"}>{status}</Badge>
@@ -43,17 +51,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
     }
 
     const renderStatusOptions = () => {
-        if (tenantStatusesQuery.isLoading) {
-            return <Select.Item value="1">Loading...</Select.Item>
-        }
 
-        if (tenantStatuses.length === 0) {
-            return <Select.Item value="1">Error</Select.Item>
-        }
-        if (tenantStatusesQuery.data instanceof Failure) {
-            toast.error(tenantStatusesQuery.data.message);
-            return <Select.Item value="1">Error</Select.Item>
-        }
 
         return tenantStatuses.map((status) => (
             <Select.Item key={status.id} value={status.id.toString()}>
@@ -68,18 +66,24 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
             excludeExtraneousValues: true,
         });
 
-        const result = await PostTenantUseCase({ tenantEntity });
+        const result = await dispatch(patchTenant({ tenantEntity }));
 
-        if (result instanceof Failure) {
-            toast.error(result.message);
+        if (result.payload === "UnhandledFailure") {
+            toast.error("Something went wrong");
             return;
         }
+
+        if (result.payload === "AlreadyExists") {
+            toast.error("Tenant already exists");
+            return;
+        }
+
         setOpen(false);
         toast.success("Save", { icon: "👏" });
         reset();
         fetchTenant();
     };
-    
+
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
@@ -144,7 +148,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
                                 <Select.Trigger placeholder="Select Type..." />
                                 <Select.Content>
                                     <Select.Group>
-                                      {renderStatusOptions()}
+                                        {renderStatusOptions()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>

@@ -2,22 +2,21 @@ import React from "react";
 import { motion } from "framer-motion"
 import { Box, Heading, Table } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import GetTenantListUseCase from "../domain/use_case/get_tenant_list.use_case";
 import PaginationEntity from "../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
 import TenantListEntity from "../domain/entity/tenant_list.entity";
 import TableHeaderComponent from "../../../components/table_header/table_header.component";
 import Pagination from "../../../components/pagination/pagination.component";
 import TableHeadComponent from "./component/table_head.component";
-import Failure from "../../../application/failure/failure";
-import TimeoutFailure from "../../../application/failure/timeout.failure";
-import { useNavigate } from "react-router-dom";
 import TableDataComponent from "./component/table_data.component";
 import TenantFilterComponent from "./component/tenant_filter.component";
 import TenantCreateComponent from "./component/tenant_create.component";
+import { AppDispatch } from "../../../infrastructure/redux/store.redux";
+import { useDispatch } from "react-redux";
+import { getTenantList } from "../../../infrastructure/api/slice/tenant/get_tenant_list_api.slice";
 
 export default function TenantContainer() {
-    const navigate = useNavigate();
+    const dispatch: AppDispatch = useDispatch();
     const queryPathParameters = new URLSearchParams(location.search);
     const sortBy = queryPathParameters.get("sortBy") ?? "id";
     const page = queryPathParameters.get("page") ?? "1";
@@ -37,18 +36,12 @@ export default function TenantContainer() {
             filters,
         });
 
-        const response = await GetTenantListUseCase({
-            paginationEntity
-        });
+        const response = await dispatch(getTenantList({ paginationEntity }));
 
-        if (response instanceof TimeoutFailure) {
-            alert("Your session has expired. Please login again.");
-            return navigate("/login");
-        }
 
-        if (response instanceof Failure) alert(response.message);
+        if (response.payload === "UnhandledFailure") alert("UnhandledFailure");
 
-        return response as TenantListEntity;
+        return response.payload as TenantListEntity;
     };
 
     const tenantListQuery = useQuery({
