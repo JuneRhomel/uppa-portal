@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import UnhandledFailure from "../../../application/failure/unhandled.failure";
-import DeletePropertyUseCase from "../module/property/domain/use_case/delete_property.use_case";
+import UnhandledFailure from "../../../../application/failure/unhandled.failure";
+import DeletePropertyUseCase from "../../module/property/domain/use_case/delete_property.use_case";
 
 
 interface apiStates {

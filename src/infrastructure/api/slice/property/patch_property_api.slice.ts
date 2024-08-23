@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import UnhandledFailure from "../../../application/failure/unhandled.failure";
-import PropertiesEntity from "../module/property/domain/entity/properties.entity";
-import PatchPropertyUseCaseParams from "../module/property/domain/use_case/interface/patch_property.use_case";
-import PatchPropertyUseCase from "../module/property/domain/use_case/patch_property.use_case";
+import UnhandledFailure from "../../../../application/failure/unhandled.failure";
+import PropertiesEntity from "../../module/property/domain/entity/properties.entity";
+import PatchPropertyUseCaseParams from "../../module/property/domain/use_case/interface/patch_property.use_case";
+import PatchPropertyUseCase from "../../module/property/domain/use_case/patch_property.use_case";
 
 
 

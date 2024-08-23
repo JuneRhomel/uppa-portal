@@ -10,13 +10,14 @@ import { plainToInstance } from "class-transformer";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
 
-import { getProperty } from "../../../../infrastructure/api/slice/get_property_api.slice";
-import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
-import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
-import { patchProperty } from "../../../../infrastructure/api/slice/patch_property_api.slice";
+
 import PropertiesEntity from "../../../../infrastructure/api/module/property/domain/entity/properties.entity";
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
+import { getProperty } from "../../../../infrastructure/api/slice/property/get_property_api.slice";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/property/get_property_status_api.slice";
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/property/get_property_types_api.slice";
+import { patchProperty } from "../../../../infrastructure/api/slice/property/patch_property_api.slice";
 
 
 

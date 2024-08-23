@@ -2,8 +2,7 @@ import { Cross2Icon, InfoCircledIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Dialog, Flex, IconButton, Separator, TextField, Tooltip, Select, Badge, Callout } from "@radix-ui/themes";
 import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
-import Failure from "../../../../application/failure/failure";
+import TenantStatusEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant_status.entity";
 import { useQuery } from "@tanstack/react-query";
 import { plainToInstance } from "class-transformer";
 import { useForm } from "react-hook-form";
@@ -32,7 +31,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
     }
 
     const tenantStatusesQuery = useQuery({
-        queryKey: ["tenant_statuses",open],
+        queryKey: ["tenant_statuses", open],
         queryFn: fetchTenantStatuses,
         retry: true,
         refetchOnWindowFocus: true,

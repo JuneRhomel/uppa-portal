@@ -6,7 +6,7 @@ import PropertyStatusEditParams from "../interface/property_status_edit.params";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
-import { patchPropertyStatus } from "../../../../infrastructure/api/slice/patch_property_status_api.slice";
+import { patchPropertyStatus } from "../../../../infrastructure/api/slice/property/patch_property_status_api.slice";
 
 export default function PropertyStatusEditComponent({
     isOpen,

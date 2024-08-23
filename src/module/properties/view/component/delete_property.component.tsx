@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Failure from '../../../../application/failure/failure';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../../infrastructure/redux/store.redux';
-import { deleteProperty } from '../../../../infrastructure/api/slice/delete_property_api.slice';
 
 export default function DeletePropertyComponent(
     { isOpen, handleClose }
@@ -51,4 +50,8 @@ export default function DeletePropertyComponent(
             </AlertDialog.Content>
         </AlertDialog.Root>
     )
+}
+
+function deleteProperty(arg0: number): any {
+    throw new Error('Function not implemented.');
 }

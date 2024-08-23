@@ -6,7 +6,7 @@ import PropertyTypeEditParams from "../interface/property_type_edit.params";
 import { toast } from 'react-hot-toast';
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
 import { useDispatch } from "react-redux";
-import { patchPropertyType } from "../../../../infrastructure/api/slice/patch_property_type_api.slice";
+import { patchPropertyType } from "../../../../infrastructure/api/slice/property/patch_property_type_api.slice";
 
 export default function PropertyTypeEditComponent({
     isOpen,

@@ -15,7 +15,7 @@ import TableDataComponent from './components/table_data.component';
 import ContentComponent from '../../../components/content/content.component';
 import { AppDispatch, RootState } from "../../../infrastructure/redux/store.redux";
 import { useDispatch, useSelector } from 'react-redux';
-import { getPropertyList } from '../../../infrastructure/api/slice/get_property_list_api.slice';
+import { getPropertyList } from '../../../infrastructure/api/slice/property/get_property_list_api.slice';
 import ListPropertiesEntity from '../../../infrastructure/api/module/property/domain/entity/list_properties.entity';
 import PropertiesEntity from '../../../infrastructure/api/module/property/domain/entity/properties.entity';
 import { useNavigate } from 'react-router-dom';
