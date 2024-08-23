@@ -2,8 +2,6 @@ import { Cross2Icon, InfoCircledIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Dialog, Flex, IconButton, Separator, TextField, Tooltip, Select, Badge, Callout } from "@radix-ui/themes";
 import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
-import Failure from "../../../../application/failure/failure";
 import { useQuery } from "@tanstack/react-query";
 import { plainToInstance } from "class-transformer";
 import { useForm } from "react-hook-form";
@@ -14,6 +12,7 @@ import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
 import { patchTenant } from "../../../../infrastructure/api/slice/tenant/patch_tenant_api.slice";
 import { getTenantStatusList } from "../../../../infrastructure/api/slice/tenant/get_tenant_status_list_ai.slice";
 import TenantEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant.entity";
+import TenantStatusEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant_status.entity";
 
 export default function TenantCreateComponent({ fetchTenant }: TenantCreateComponentParams) {
     const { register, handleSubmit, reset } = useForm();
@@ -32,7 +31,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
     }
 
     const tenantStatusesQuery = useQuery({
-        queryKey: ["tenant_statuses",open],
+        queryKey: ["tenant_statuses", open],
         queryFn: fetchTenantStatuses,
         retry: true,
         refetchOnWindowFocus: true,
