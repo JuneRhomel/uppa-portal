@@ -10,7 +10,8 @@ import Failure from "../../../../application/failure/failure";
 import MotherMeterWaterEntity from "../../mother_meter_water/domain/entity/mother_meter_water.entity";
 import GetMotherMeterWaterUseCase from "../../mother_meter_water/domain/use_case/get_mother_meter_water.use_case";
 import { useQuery } from "@tanstack/react-query";
-import DeleteMotherMeterWaterViewComponent from "./component/delete_mother_meter_water.view";
+import DeleteMotherMeterWaterViewComponent from "./component/delete_mother_meter_water.component";
+import EditMotherMeterWaterViewComponent from "./component/edit_mother_meter_water.component";
 
 export default function MotherMeterWaterView() {
     const { id } = useParams();
@@ -82,6 +83,7 @@ export default function MotherMeterWaterView() {
                 </DataList.Root>
             </ContentComponent>
             {isOpenDelete && <DeleteMotherMeterWaterViewComponent isOpen={isOpenDelete} handleClose={handelModelDelete} />}
+            {isOpenEdit && <EditMotherMeterWaterViewComponent isOpen={isOpenEdit} handleClose={handelModelEdit} />}
         </div>
 
     );

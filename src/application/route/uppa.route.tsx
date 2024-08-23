@@ -8,7 +8,7 @@ import TenantContainer from "../../module/tenant/page/tenent.container";
 import ManagePropertyContainer from "../../module/manage_properties/page/manage_property.container";
 import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_water/page/mother_meter_water.container";
 import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
-import PreopertyView from "../../module/properties/page/view/preoperty.view";
+import PreopertyView from "../../module/properties/view/preoperty.view";
 import TenantView from "../../module/tenant/page/view/tenant.vew";
 import MotherMeterWaterView from "../../module/mother_meter/view/mother_meter_water/mother_meter_water.view";
 

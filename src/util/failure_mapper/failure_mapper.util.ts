@@ -5,6 +5,7 @@ import AuthFailure from "../../application/failure/auth.failure";
 import DuplicatedFailure from "../../application/failure/duplicated.failure";
 import TimeoutFailure from "../../application/failure/timeout.failure";
 import UnhandledFailure from "../../application/failure/unhandled.failure";
+import ValidationFailure from "../../application/failure/validation.failure";
 import commonHttpClientFailureMapperHelper from "./helper/common_http_client_failure_mapper.helper";
 
 export default function FailureMapperUtil(exception: any) {
@@ -27,6 +28,9 @@ export default function FailureMapperUtil(exception: any) {
 
   if (exception instanceof TimeoutFailure) {
     return new TimeoutFailure();
+  }
+  if (exception instanceof ValidationFailure) {
+    return new ValidationFailure(exception.extra || []);
   }
 
   return new UnhandledFailure();

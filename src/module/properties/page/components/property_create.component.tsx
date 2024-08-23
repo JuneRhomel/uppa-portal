@@ -2,55 +2,57 @@ import * as Form from "@radix-ui/react-form";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Dialog, Flex, IconButton, Select, Separator, TextField, Tooltip } from "@radix-ui/themes";
 import React, { useState } from "react";
-import PropertyTypeEntity from "../../domain/entity/property_type.entity";
-import PropertyStatusEntity from "../../domain/entity/property_status.entity";
-import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
-import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_case";
-import Failure from "../../../../application/failure/failure";
 import { useQuery } from "@tanstack/react-query";
-import PropertiesEntity from "../../domain/entity/properties.entity";
 import { plainToInstance } from "class-transformer";
-import PostPropertyUseCase from "../../domain/use_case/post_property.use_case";
-import PropertyCreateParams from "../interface/property_create.params";
+import PropertyCreateParams from "../interface/property_create.params"
 import { toast } from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { postProperty } from "../../../../infrastructure/api/slice/post_property_api.slice";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
+import PropertiesEntity from "../../../../infrastructure/api/module/property/domain/entity/properties.entity";
+import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
+import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
 
 
 export default function PropertyCreateComponent({
     refetchProperties
 }: PropertyCreateParams) {
+    const dispatch: AppDispatch = useDispatch();
+
     const [form, setForm] = useState({
         unit_name: "",
         unit_type_id: 1,
         unit_status_id: 1,
     })
     const [open, setOpen] = useState(false);
-    const fetchPropertyTypesAndStatuses = async () => {
-        const [typesResponse, statusesResponse] = await Promise.all([
-            GetPropertyTypeUseCase(),
-            GetPropertyStatusUseCase()
+    const fetchPropertyTypesAndStatus = async () => {
+        const [typesResponse, statusResponse] = await Promise.all([
+            dispatch((getPropertyTypes())),
+            dispatch(getPropertyStatus())
         ]);
 
-        if (typesResponse instanceof Failure) {
+        if (typesResponse.payload === "UnhandledFailure") {
             console.error(typesResponse);
         }
 
-        if (statusesResponse instanceof Failure) {
-            console.error(statusesResponse);
+        if (statusResponse.payload === "UnhandledFailure") {
+            console.error(statusResponse);
         }
-
-        return { types: typesResponse, statuses: statusesResponse };
+        return { types: typesResponse.payload, status: statusResponse.payload };
     }
 
 
     const propertiesTypesAndStatusQuery = useQuery({
-        queryKey: ["properties_types_and_statuses"],
-        queryFn: fetchPropertyTypesAndStatuses,
+        queryKey: ["properties_types_and_Status"],
+        queryFn: fetchPropertyTypesAndStatus,
         retry: true,
         refetchOnWindowFocus: true,
     });
 
     const propertyTypes = propertiesTypesAndStatusQuery.data?.types as PropertyTypeEntity[] ?? [];
-    const propertyStatuses = propertiesTypesAndStatusQuery.data?.statuses as PropertyStatusEntity[] ?? [];
+    const propertyStatus = propertiesTypesAndStatusQuery.data?.status as PropertyStatusEntity[] ?? [];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -67,12 +69,15 @@ export default function PropertyCreateComponent({
             excludeExtraneousValues: true
         });
 
-        const response = await PostPropertyUseCase({
-            propertyEntity
-        });
+        const response = await dispatch(postProperty(propertyEntity));
 
-        if (response instanceof Failure) {
-            toast.error(response.message);
+        if (response.payload === "ValidationFailure") {
+            toast.error("Validation Failure");
+            return;
+        }
+
+        if (response.payload === "UnhandledFailure") {
+            toast.error("Unhandled Failure");
             return;
         }
 
@@ -90,11 +95,11 @@ export default function PropertyCreateComponent({
             <Select.Item key={propertyType.id} value={propertyType.id.toString()}>{propertyType.unit_type_name}</Select.Item>
         ))
     }
-    const renderPropertyStatuses = () => {
+    const renderPropertyStatus = () => {
         if (propertiesTypesAndStatusQuery.isLoading) {
             return <Select.Item value="1">Loading...</Select.Item>
         }
-        return propertyStatuses.map((propertyStatus) => (
+        return propertyStatus.map((propertyStatus) => (
             <Select.Item key={propertyStatus.id} value={propertyStatus.id.toString()}>{propertyStatus.unit_status_name}</Select.Item>
         ))
     }
@@ -149,7 +154,7 @@ export default function PropertyCreateComponent({
                                         <Select.Trigger placeholder="Select status..." />
                                         <Select.Content>
                                             <Select.Group>
-                                                {renderPropertyStatuses()}
+                                                {renderPropertyStatus()}
                                             </Select.Group>
                                         </Select.Content>
                                     </Select.Root>

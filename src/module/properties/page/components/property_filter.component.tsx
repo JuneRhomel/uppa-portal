@@ -1,47 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Flex, Separator, Table, TextField, Text, Popover, IconButton, Select, Tooltip } from '@radix-ui/themes';
-import { CheckIcon, ChevronDownIcon, Cross2Icon, MixerVerticalIcon } from '@radix-ui/react-icons';
-// import { StyledSelectContent, StyledSelectIcon, StyledSelectItem, StyledSelectItemIndicator, StyledSelectRoot, StyledSelectTrigger } from '../style/filter.style';
-import GetPropertyTypeUseCase from '../../domain/use_case/get_property_type.use_case';
-import GetPropertyStatusUseCase from '../../domain/use_case/get_property_status.use_case';
-import Failure from "../../../../application/failure/failure";
+import { Cross2Icon, MixerVerticalIcon } from '@radix-ui/react-icons';
 import PropertyTypeEntity from "../../domain/entity/property_type.entity";
 import PropertyStatusEntity from "../../domain/entity/property_status.entity";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
 
 export default function PropertyFilterComponent() {
+    const dispatch: AppDispatch = useDispatch();
+
     const navigate = useNavigate();
-    const location = useLocation();
     const [selectedType, setSelectedType] = useState('All');
     const [selectedStatus, setSelectedStatus] = useState('All');
 
-    const fetchPropertyTypesAndStatuses = async () => {
-        const [typesResponse, statusesResponse] = await Promise.all([
-            GetPropertyTypeUseCase(),
-            GetPropertyStatusUseCase()
+    const fetchPropertyTypesAndStatus = async () => {
+        const [typesResponse, statusResponse] = await Promise.all([
+            dispatch((getPropertyTypes())),
+            dispatch(getPropertyStatus())
         ]);
 
-        if (typesResponse instanceof Failure) {
+        if (typesResponse.payload === "UnhandledFailure") {
             console.error(typesResponse);
         }
 
-        if (statusesResponse instanceof Failure) {
-            console.error(statusesResponse);
+        if (statusResponse.payload === "UnhandledFailure") {
+            console.error(statusResponse);
         }
-
-        return { types: typesResponse, statuses: statusesResponse };
+        return { types: typesResponse.payload, status: statusResponse.payload };
     }
 
+
     const propertiesTypesAndStatusQuery = useQuery({
-        queryKey: ["properties_types_and_statuses"],
-        queryFn: fetchPropertyTypesAndStatuses,
+        queryKey: ["properties_types_and_Status"],
+        queryFn: fetchPropertyTypesAndStatus,
         retry: true,
         refetchOnWindowFocus: true,
     });
 
     const propertyTypes = propertiesTypesAndStatusQuery.data?.types as PropertyTypeEntity[] ?? [];
-    const propertyStatuses = propertiesTypesAndStatusQuery.data?.statuses as PropertyStatusEntity[] ?? [];
+    const propertyStatus = propertiesTypesAndStatusQuery.data?.status as PropertyStatusEntity[] ?? [];
 
 
     const handleFilterSubmit = () => {
@@ -67,11 +68,11 @@ export default function PropertyFilterComponent() {
         })
     }
 
-    const renderPropertyStatuses = () => {
-        if (!Array.isArray(propertyStatuses) || propertyStatuses.length === 0) {
+    const renderPropertyStatus = () => {
+        if (!Array.isArray(propertyStatus) || propertyStatus.length === 0) {
             return null;
         }
-        return propertyStatuses.map((item) => {
+        return propertyStatus.map((item) => {
             return (
                 <Select.Item key={item.id} value={item.unit_status_name}>{item.unit_status_name}</Select.Item>
             )
@@ -122,7 +123,7 @@ export default function PropertyFilterComponent() {
                                 <Select.Content>
                                     <Select.Group>
                                         <Select.Item value="All" >All</Select.Item>
-                                        {renderPropertyStatuses()}
+                                        {renderPropertyStatus()}
                                     </Select.Group>
                                 </Select.Content>
                             </Select.Root>

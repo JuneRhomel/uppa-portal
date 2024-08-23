@@ -3,9 +3,10 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { Box, Button, Dialog, Flex, Heading, IconButton, TextField } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import PropertyTypeEditParams from "../interface/property_type_edit.params";
-import PatchPropertyTypeUseCase from "../../domain/use_case/patch_property_type.use_case";
-import Failure from "../../../../application/failure/failure";
-import {toast} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch } from "react-redux";
+import { patchPropertyType } from "../../../../infrastructure/api/slice/patch_property_type_api.slice";
 
 export default function PropertyTypeEditComponent({
     isOpen,
@@ -14,6 +15,8 @@ export default function PropertyTypeEditComponent({
     refetchProperties,
     handelClose
 }: PropertyTypeEditParams) {
+    const dispatch = useDispatch<AppDispatch>();
+
     const [name, setName] = useState(propertyTypeEntity.unit_type_name);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -26,10 +29,9 @@ export default function PropertyTypeEditComponent({
         setIsLoading(true);
         propertyTypeEntity.unit_type_name = name;
 
-        const response = await PatchPropertyTypeUseCase({ propertyTypeEntity });
+        const response = await dispatch(patchPropertyType({ propertyTypeEntity }))
 
-        if (response instanceof Failure) {
-            console.log("patch Type failure");
+        if (response.payload === "UnhandledFailure") {
             toast.error('Something went wrong')
         }
 
