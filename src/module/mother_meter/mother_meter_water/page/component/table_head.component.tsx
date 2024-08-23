@@ -7,7 +7,7 @@ export default function TableHeadComponent() {
         <Table.Header>
             <Table.Row>
                 <Table.Cell>
-                    Id
+                    ID
                 </Table.Cell>
                 <Table.Cell>
                     Serial Number

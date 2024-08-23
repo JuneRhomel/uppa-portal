@@ -9,7 +9,8 @@ import "@radix-ui/themes/styles.css";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "styled-components";
 import { schemaThemeDark, schemaThemeLight } from "./application/theme/color.theme";
-
+import ReduxStore from "./infrastructure/redux/store.redux";
+import { Provider } from "react-redux";
 const queryClient = new QueryClient();
 const rootElement = document.getElementById("root") as HTMLElement;
 const theme = localStorage.getItem("theme");
@@ -17,14 +18,16 @@ const theme = localStorage.getItem("theme");
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <Toaster position="top-right" reverseOrder={false} />
-    <ThemeProvider theme={theme === "light" ? schemaThemeLight : schemaThemeDark}>
-      <Theme appearance={theme as "light" | "dark"}>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </Theme>
-    </ThemeProvider>
+    <Provider store={ReduxStore}>
+      <Toaster position="top-right" reverseOrder={false} />
+      <ThemeProvider theme={theme === "light" ? schemaThemeLight : schemaThemeDark}>
+        <Theme appearance={theme as "light" | "dark"}>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </Theme>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 );
 

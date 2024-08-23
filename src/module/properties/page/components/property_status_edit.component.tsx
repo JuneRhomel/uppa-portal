@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, Heading, IconButton, TextField } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, IconButton, TextField } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import PropertyStatusEditParams from "../interface/property_status_edit.params";
-import PatchPropertyStatusUseCase from "../../domain/use_case/patch_property_status.use_case";
-import Failure from "../../../../application/failure/failure";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { patchPropertyStatus } from "../../../../infrastructure/api/slice/patch_property_status_api.slice";
 
 export default function PropertyStatusEditComponent({
     isOpen,
@@ -14,6 +15,7 @@ export default function PropertyStatusEditComponent({
     refetchProperties,
     handelClose
 }: PropertyStatusEditParams) {
+    const dispatch = useDispatch<AppDispatch>();
     const [name, setName] = useState(propertyStatusEntity.unit_status_name);
     const [isLoading, setIsLoading] = useState(false);
     const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +27,9 @@ export default function PropertyStatusEditComponent({
         setIsLoading(true);
         propertyStatusEntity.unit_status_name = name;
 
-        const response = await PatchPropertyStatusUseCase({ propertyStatusEntity });
+        const response = await dispatch(patchPropertyStatus({ propertyStatusEntity }))
 
-        if (response instanceof Failure) {
+        if (response.payload === "UnhandledFailure") {
             toast.error('Something went wrong')
         }
 

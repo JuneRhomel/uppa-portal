@@ -1,4 +1,4 @@
-import PropertyStatusEntity from "../../domain/entity/property_status.entity";
+import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 
 export default interface PropertyStatusEditParams {
     isOpen: boolean,

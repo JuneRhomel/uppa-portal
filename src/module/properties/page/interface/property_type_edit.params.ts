@@ -1,4 +1,4 @@
-import PropertyTypeEntity from "../../domain/entity/property_type.entity";
+import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity"
 
 export default interface PropertyTypeEditParams {
     isOpen: boolean,

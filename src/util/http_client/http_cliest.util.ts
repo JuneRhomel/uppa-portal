@@ -25,6 +25,11 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
         return new TimeoutFailure()
     }
 
+    if (response.status === 401) {
+        location.href = '/login';
+        localStorage.removeItem('token');
+        return
+    }
     const data = await response.json();
 
     if (url === '/auth' && data.token) {

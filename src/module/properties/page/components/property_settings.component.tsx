@@ -1,49 +1,56 @@
-import React, { useEffect, useState } from "react";
-import GetPropertyTypeUseCase from "../../domain/use_case/get_property_type.use_case";
-import GetPropertyStatusUseCase from "../../domain/use_case/get_property_status.use_case";
+import React, { useState } from "react";
 import { Cross2Icon, GearIcon, InfoCircledIcon, Pencil1Icon } from "@radix-ui/react-icons";
-import { Box, Dialog, IconButton, Tabs, Text, Table, Flex, Tooltip, Callout } from "@radix-ui/themes";
-import PropertyTypeEntity from "../../domain/entity/property_type.entity";
-import PropertyStatusEntity from "../../domain/entity/property_status.entity";
-import Failure from "../../../../application/failure/failure";
+import { Box, Dialog, IconButton, Tabs, Table, Flex, Tooltip, Callout } from "@radix-ui/themes";
+
 import PropertyStatusEditComponent from "./property_status_edit.component";
 import { useQuery } from "@tanstack/react-query";
 import PropertySettingsComponentParams from "../interface/property_settings.params";
 import PropertyTypeEditComponent from "./property_type_edit.component";
+import { useDispatch } from "react-redux";
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
+import type { AppDispatch } from '../../../../infrastructure/redux/store.redux';
+import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
+import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
+import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
+
 export default function PropertySettingsComponent({
     refetchProperties,
 }: PropertySettingsComponentParams) {
+    const dispatch = useDispatch<AppDispatch>(); 
     const [EditStatus, setEditStatus] = useState(false);
     const [SelectedStatus, setSelectedStatus] = useState({} as PropertyStatusEntity);
     const [SelectedType, setSelectedType] = useState({} as PropertyTypeEntity);
     const [EditType, setEditType] = useState(false);
-    const fetchPropertyTypesAndStatuses = async () => {
-        const [typesResponse, statusesResponse] = await Promise.all([
-            GetPropertyTypeUseCase(),
-            GetPropertyStatusUseCase()
+    
+    const fetchPropertyTypesAndStatus = async () => {
+        const [typesResponse, statusResponse] = await Promise.all([
+            dispatch((getPropertyTypes())),
+            dispatch(getPropertyStatus())
         ]);
 
-        if (typesResponse instanceof Failure) {
+        if (typesResponse.payload === "UnhandledFailure") {
             console.error(typesResponse);
         }
 
-        if (statusesResponse instanceof Failure) {
-            console.error(statusesResponse);
+        if (statusResponse.payload === "UnhandledFailure") {
+            console.error(statusResponse);
         }
 
-        return { types: typesResponse, statuses: statusesResponse };
+        return { types: typesResponse.payload, status: statusResponse.payload };
     }
 
 
     const propertiesTypesAndStatusQuery = useQuery({
-        queryKey: ["properties_types_and_statuses"],
-        queryFn: fetchPropertyTypesAndStatuses,
+        queryKey: ["properties_types_and_status"],
+        queryFn: fetchPropertyTypesAndStatus,
         retry: true,
         refetchOnWindowFocus: true,
     });
 
+
+
     const propertyTypes = propertiesTypesAndStatusQuery.data?.types as PropertyTypeEntity[] ?? [];
-    const propertyStatuses = propertiesTypesAndStatusQuery.data?.statuses as PropertyStatusEntity[] ?? [];
+    const propertyStatus = propertiesTypesAndStatusQuery.data?.status as PropertyStatusEntity[] ?? [];
 
     const refetchpropertiesTypesAndStatus = () => {
         propertiesTypesAndStatusQuery.refetch();
@@ -84,11 +91,11 @@ export default function PropertySettingsComponent({
         }
         return null
     }
-    const renderPropertyStatuses = () => {
-        if (!Array.isArray(propertyStatuses) || propertyStatuses.length === 0) {
+    const renderPropertystatus = () => {
+        if (!Array.isArray(propertyStatus) || propertyStatus.length === 0) {
             return null;
         }
-        return propertyStatuses.map((status) => {
+        return propertyStatus.map((status) => {
             return (
                 <Table.Row key={status.id}>
                     <Table.Cell>{status.unit_status_name}</Table.Cell>
@@ -162,7 +169,7 @@ export default function PropertySettingsComponent({
                                                 <Table.ColumnHeaderCell>Action</Table.ColumnHeaderCell>
                                             </Table.Row>
                                         </Table.Header>
-                                        {renderPropertyStatuses()}
+                                        {renderPropertystatus()}
                                     </Table.Root>
                                 </Box>
                             </Tabs.Content>

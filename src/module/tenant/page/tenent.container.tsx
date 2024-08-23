@@ -1,11 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion"
-import { Badge, Box, Button, Heading, Table } from "@radix-ui/themes";
+import { Box, Heading, Table } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import GetTenantListUseCase from "../domain/use_case/get_tenant_list.use_case";
 import PaginationEntity from "../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
-import TenantEntity from "../domain/entity/tenant.entity";
 import TenantListEntity from "../domain/entity/tenant_list.entity";
 import TableHeaderComponent from "../../../components/table_header/table_header.component";
 import Pagination from "../../../components/pagination/pagination.component";
@@ -13,9 +12,7 @@ import TableHeadComponent from "./component/table_head.component";
 import Failure from "../../../application/failure/failure";
 import TimeoutFailure from "../../../application/failure/timeout.failure";
 import { useNavigate } from "react-router-dom";
-import TableLoadingComponent from "./component/table_loading.component";
 import TableDataComponent from "./component/table_data.component";
-import { MixerVerticalIcon } from "@radix-ui/react-icons";
 import TenantFilterComponent from "./component/tenant_filter.component";
 import TenantCreateComponent from "./component/tenant_create.component";
 
@@ -49,9 +46,7 @@ export default function TenantContainer() {
             return navigate("/login");
         }
 
-        if (response instanceof Failure) {
-            alert(response.message);
-        }
+        if (response instanceof Failure) alert(response.message);
 
         return response as TenantListEntity;
     };
@@ -65,20 +60,11 @@ export default function TenantContainer() {
 
     const totalRows = tenantListQuery.data?.totalRows as number;
 
-    const refetch = () => {
-        tenantListQuery.refetch();
-    }
+    const refetch = () => tenantListQuery.refetch();
 
-    const renderPrefix = () => {
-        return (
-            <TenantFilterComponent />
-        )
-    }
-    const renderCreateButton = () => {
-        return (
-            <TenantCreateComponent fetchTenant={refetch} />
-        )
-    }
+    const renderPrefix = () => <TenantFilterComponent />
+
+    const renderCreateButton = () => <TenantCreateComponent fetchTenant={refetch} />
 
     return (
         <div>
