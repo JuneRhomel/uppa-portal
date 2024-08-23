@@ -2,8 +2,8 @@ import { Avatar, Badge, Link, Table } from "@radix-ui/themes";
 import React from "react";
 import TableLoadingComponent from "./table_loading.component";
 import TableDataComponentParams from "../interface/table_data_component.params";
-import TenantEntity from "../../domain/entity/tenant.entity";
 import { useNavigate } from "react-router-dom";
+import TenantEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant.entity";
 
 
 export default function TableDataComponent({ tenantListQuery }: TableDataComponentParams) {

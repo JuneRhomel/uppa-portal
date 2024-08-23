@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button, Flex, Separator, Table, TextField, Text, Popover, IconButton, Select, Tooltip } from '@radix-ui/themes';
 import { Cross2Icon, MixerVerticalIcon } from '@radix-ui/react-icons';
-import PropertyTypeEntity from "../../domain/entity/property_type.entity";
-import PropertyStatusEntity from "../../domain/entity/property_status.entity";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPropertyTypes } from "../../../../infrastructure/api/slice/get_property_types_api.slice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
 import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
+import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
+import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
 
 export default function PropertyFilterComponent() {
     const dispatch: AppDispatch = useDispatch();

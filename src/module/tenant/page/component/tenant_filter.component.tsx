@@ -2,23 +2,28 @@ import { Cross2Icon, MixerVerticalIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, IconButton, Popover, Select, Separator, Text, Tooltip } from "@radix-ui/themes";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import GetTenantStatusUseCase from "../../domain/use_case/get_tenant_status.use_case";
-import Failure from "../../../../application/failure/failure";
 import { useQuery } from "@tanstack/react-query";
-import TenantStatusEntity from "../../domain/entity/tenant_status.entity";
 import { isArray } from "class-validator";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch } from "react-redux";
+import { getTenantStatusList } from "../../../../infrastructure/api/slice/tenant/get_tenant_status_list_ai.slice";
+import TenantStatusEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant_status.entity";
 
 export default function TenantFilterComponent() {
     const navigate = useNavigate();
     const [selectedStatus, setSelectedStatus] = useState('All');
+    const dispatch: AppDispatch = useDispatch();
 
 
     const fetchTenantStatuses = async () => {
-        const response = await GetTenantStatusUseCase() as TenantStatusEntity[] | Failure;
-        if (response instanceof Failure) {
+        const response = await dispatch(getTenantStatusList());
+
+        if (response.payload === "UnhandledFailure") {
             console.error(response);
+            return
         }
-        return response;
+
+        return tenantStatuses as TenantStatusEntity[];
     }
 
 
