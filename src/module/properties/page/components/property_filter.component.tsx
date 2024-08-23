@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { Box, Button, Flex, Separator, Table, TextField, Text, Popover, IconButton, Select, Tooltip } from '@radix-ui/themes';
 import { Cross2Icon, MixerVerticalIcon } from '@radix-ui/react-icons';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9cb80d5334b0e3226c0aeefd1ec9575ca16fc916
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPropertyTypes } from "../../../../infrastructure/api/slice/property/get_property_types_api.slice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+<<<<<<< HEAD
 import { getPropertyStatus } from "../../../../infrastructure/api/slice/property/get_property_status_api.slice";
+=======
+import { getPropertyStatus } from "../../../../infrastructure/api/slice/get_property_status_api.slice";
+>>>>>>> 9cb80d5334b0e3226c0aeefd1ec9575ca16fc916
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
 

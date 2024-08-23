@@ -16,7 +16,7 @@ const initialState: apiStates = {
 
 
 export const getTenantStatusList = createAsyncThunk<
-    TenantStatusEntity,
+    TenantStatusEntity[],
     void,
     {
         rejectValue: string;
@@ -32,7 +32,7 @@ export const getTenantStatusList = createAsyncThunk<
 
         const tenantStatusList = instanceToPlain(response)
 
-        return tenantStatusList as TenantStatusEntity
+        return tenantStatusList as TenantStatusEntity[]
 
     }
 
