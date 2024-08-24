@@ -10,7 +10,7 @@ import MotherMeterWaterContainer from "../../module/mother_meter/mother_meter_wa
 import MotherMeterElectricityContainer from "../../module/mother_meter/mother_meter_electricity/page/mother_meter_electricity.container";
 import PreopertyView from "../../module/properties/view/preoperty.view";
 import TenantView from "../../module/tenant/view/tenant.vew";
-import MotherMeterWaterView from "../../module/mother_meter/view/mother_meter_water/mother_meter_water.view";
+import MotherMeterWaterView from "../../module/mother_meter/mother_meter_water/view/mother_meter_water.view";
 
 
 const router = createBrowserRouter([

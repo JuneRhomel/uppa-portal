@@ -1,24 +1,25 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { Box, Heading, TabNav, Table, Tooltip } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
-import PaginationEntity from "../../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
-import toast from "react-hot-toast";
-import MotherMeterElectricityListEntity from "../domain/entity/mother_meter_electricity_list.entity";
-import TimeoutFailure from "../../../../application/failure/timeout.failure";
+import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
+import PaginationEntity from "../../../../application/entity/pagination.entity";
+import MotherMeterElectricityListEntity from "../domain/entity/mother_meter_electricity_list.entity";
 import MotherMeterElectricityEntity from "../domain/entity/mother_meter_electricity.entity";
 import TabelDataComponent from "./component/table_data.component";
 import TableLoadingComponent from "./component/table_loading.component";
-import { Box, Heading, TabNav, Table, Tooltip } from "@radix-ui/themes";
-import { motion } from "framer-motion";
 import Pagination from "../../../../components/pagination/pagination.component";
 import TableHeaderComponent from "../../../../components/table_header/table_header.component";
 import TableHeadComponent from "./component/table_head.component";
-import GetMotherMeterElectricityUseCase from "../domain/use_case/get_mother_meter_electricity.use_case"
 import MotherMeterElectricityCreateComponent from "./component/mother_meter_electricity_create.component";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { getMotherMeterElectricityList } from "../../../../infrastructure/api/slice/mother_meter_electricity/get_mother_meter_electricity_list_api.slice";
 
 
 export default function MotherMeterElectricityContainer() {
+    const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const queryPathParameters = new URLSearchParams(location.search);
     const sortBy = queryPathParameters.get("sortBy") ?? "id";
@@ -26,7 +27,6 @@ export default function MotherMeterElectricityContainer() {
     const search = queryPathParameters.get("search") ?? "";
     const sortOrder = queryPathParameters.get("sortOrder") ?? "DESC";
     const filters = queryPathParameters.get("filters") ?? "";
-
     const columns = "serial_number,created_at";
 
     const fetchMotherElectricity = async () => {
@@ -41,15 +41,12 @@ export default function MotherMeterElectricityContainer() {
             filters,
         });
 
-        const response = await GetMotherMeterElectricityUseCase({
-            paginationEntity
-        });
-        if (response instanceof TimeoutFailure) {
-            toast.error("Your session has expired. Please login again.");
-            return navigate("/login");
+        const response = await dispatch(getMotherMeterElectricityList({ paginationEntity }));
+        if (response.payload === "UnhandledFailure") {
+            return;
         }
 
-        return response as MotherMeterElectricityListEntity;
+        return response.payload as MotherMeterElectricityListEntity;
     }
 
     const motherMeterElectricityQuery = useQuery({

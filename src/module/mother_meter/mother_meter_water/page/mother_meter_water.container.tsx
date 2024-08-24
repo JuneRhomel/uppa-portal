@@ -1,24 +1,25 @@
 import { Box, Heading, Table, TabNav, Tabs, Tooltip } from "@radix-ui/themes";
 import { motion } from "framer-motion";
-import React from "react";
-import TableHeaderComponent from "../../../../components/table_header/table_header.component";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PaginationEntity from "../../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
-import GetMotherMeterWaterListUseCase from "../domain/use_case/get_mother_meter_water_list.use_case"
-import TimeoutFailure from "../../../../application/failure/timeout.failure";
-import toast from "react-hot-toast";
-import MotherMeterWaterListEntity from "../domain/entity/mother_meter_water_list.entity";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
+import TableHeaderComponent from "../../../../components/table_header/table_header.component";
+import MotherMeterWaterListEntity from "../domain/entity/mother_meter_water_list.entity";
 import Pagination from "../../../../components/pagination/pagination.component";
 import TabelDataComponent from "./component/tabel_data.component";
 import MotherMeterWaterEntity from "../domain/entity/mother_meter_water.entity";
 import TableHeadComponent from "./component/table_head.component";
 import TableLoadingComponent from "./component/table_loading.component";
 import MotherMeterWaterCreateComponent from "./component/mother_meter_water_create.component";
+import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { getMotherMeterWaterList } from "../../../../infrastructure/api/slice/mother_meter_water/get_mother_meter_water_list.slice";
+import PaginationEntity from "../../../../application/entity/pagination.entity";
 
 export default function MotherMeterWaterContainer() {
     const navigate = useNavigate();
+    const dispatch: AppDispatch = useDispatch();
     const queryPathParameters = new URLSearchParams(location.search);
     const sortBy = queryPathParameters.get("sortBy") ?? "id";
     const page = queryPathParameters.get("page") ?? "1";
@@ -39,16 +40,14 @@ export default function MotherMeterWaterContainer() {
             filters,
         });
 
-        const response = await GetMotherMeterWaterListUseCase({
-            paginationEntity
-        });
-        
-        if (response instanceof TimeoutFailure) {
-            toast.error("Your session has expired. Please login again.");
-            return navigate("/login");
+        const response = await dispatch(getMotherMeterWaterList({ paginationEntity }));
+
+        if (response.payload === "UnhandledFailure") {
+
+            return;
         }
 
-        return response as MotherMeterWaterListEntity;
+        return response.payload as MotherMeterWaterListEntity;
 
     }
 

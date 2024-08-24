@@ -1,26 +1,27 @@
 import React, { useState } from "react";
 import { Box, Button, Dialog, Flex, IconButton, Tooltip, Text, TextField, Separator } from "@radix-ui/themes";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import MotherMeterWaterEntity from "../../domain/entity/mother_meter_water.entity";
 import { plainToInstance } from "class-transformer";
-import Failure from "../../../../../application/failure/failure";
 import toast from "react-hot-toast";
-import PostMotherMeterWaterUseCase from "../../domain/use_case/post_mother_meter_water.use_case";
 import MotherMeterWaterComponentParams from "../interface/mother_meter_create_component.params";
+import { AppDispatch } from "../../../../../infrastructure/redux/store.redux";
+import { postMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/post_mother_meter_water.slice";
+import MotherMeterWaterEntity from "../../../../../infrastructure/api/module/mother_meter_water/domain/entity/mother_meter_water.entity";
 
 export default function MotherMeterWaterCreateComponent({ refetchMotherMetersWater }: MotherMeterWaterComponentParams) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const dispatch: AppDispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleSave = async (formData: MotherMeterWaterEntity) => {
         const motherMeterWaterEntity = plainToInstance(MotherMeterWaterEntity, formData, {
             excludeExtraneousValues: true,
         })
 
-        const response = await PostMotherMeterWaterUseCase({
-            motherMeterWaterEntity
-        });
-        if (response instanceof Failure) {
+        const response = await dispatch(postMotherMeterWater({ motherMeterWaterEntity }))
+
+        if (response.payload === "ValidationFailure") {
             return toast.error("Something went wrong, please try again later");
         }
 

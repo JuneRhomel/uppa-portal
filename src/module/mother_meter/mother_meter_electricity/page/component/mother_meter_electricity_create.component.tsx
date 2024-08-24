@@ -2,35 +2,39 @@ import React, { useState } from "react";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Dialog, Flex, IconButton, Separator, TextField, Tooltip, Text } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
-import MotherMeterElectricityEntity from "../../domain/entity/mother_meter_electricity.entity";
 import toast
     from "react-hot-toast";
 import { plainToInstance } from "class-transformer";
-import Failure from "../../../../../application/failure/failure";
-import ValidationFailure from "../../../../../application/failure/validation.failure";
-import PostMotherMeterElectricityUseCase from "../../domain/use_case/post_mother_meter_electricity.use_case.params";
 import MotherMeterCreateElectricityComponentParams from "../interface/mother_meter_create_electricity_component.params";
+import { AppDispatch } from "../../../../../infrastructure/redux/store.redux";
+import { useDispatch } from "react-redux";
+import { postMotherMeterElectricity } from "../../../../../infrastructure/api/slice/mother_meter_electricity/post_mother_meter_electricity_api.slice";
+import MotherMeterElectricityEntity from "../../../../../infrastructure/api/module/mother_meter_electricity/domain/entity/mother_meter_electricity.entity";
 
 export default function MotherMeterElectricityCreateComponent({ refetchList }: MotherMeterCreateElectricityComponentParams) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const dispatch: AppDispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
     const handleSave = async (formData: MotherMeterElectricityEntity) => {
         setIsLoading(true);
         const motherMeterElectricityEntity = plainToInstance(MotherMeterElectricityEntity, formData, {
             excludeExtraneousValues: true,
         })
 
-        const response = await PostMotherMeterElectricityUseCase({
-            motherMeterElectricityEntity
-        });
+        const response = await dispatch(postMotherMeterElectricity({ motherMeterElectricityEntity }))
 
-        if (response instanceof ValidationFailure) {
+        if (response.payload === "ValidationFailure") {
             return toast.error("Validation failed");
         }
 
-        if (response instanceof Failure) {
-            return toast.error("Something went wrong, please try again later");
+        if (response.payload === "AlreadyExist") {
+            return toast.error("Already Exist");
+        }
+
+        if (response.payload === "UnhandledFailure") {
+            return toast.error("Unhandled Failure");
         }
 
         reset();

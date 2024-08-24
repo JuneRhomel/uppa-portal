@@ -13,6 +13,12 @@ import getTenantApiSliceReducer from "../api/slice/tenant/get_tenant_api.slice";
 import patchTenantApiSliceReducer from "../api/slice/tenant/patch_tenant_api.slice";
 import getTenantListStatusApiSliceReducer from "../api/slice/tenant/get_tenant_status_list_ai.slice";
 import deleteTenantApiSliceReducer from "../api/slice/tenant/delete_tenant_api.slice";
+import getMotherMeterElectricityListApiSliceReducer from "../api/slice/mother_meter_electricity/get_mother_meter_electricity_list_api.slice";
+import postMotherMeterElectricityApiSliceReducer from "../api/slice/mother_meter_electricity/post_mother_meter_electricity_api.slice";
+import getMotherMeterWaterListApiSliceReducer from "../api/slice/mother_meter_water/get_mother_meter_water_list.slice";
+import getMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/get_mother_meter_water.slice";
+import postMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/post_mother_meter_water.slice";
+import deleteMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/delete_mother_meter_water.slice";
 
 
 const ReduxStore = configureStore({
@@ -30,7 +36,13 @@ const ReduxStore = configureStore({
         getTenantApi: getTenantApiSliceReducer,
         patchTenantApi: patchTenantApiSliceReducer,
         getTenantListStatusApi: getTenantListStatusApiSliceReducer,
-        deleteTenantApi: deleteTenantApiSliceReducer
+        deleteTenantApi: deleteTenantApiSliceReducer,
+        getMotherMeterElectricityListApiSliceReducer: getMotherMeterElectricityListApiSliceReducer,
+        postMotherMeterElectricityApi: postMotherMeterElectricityApiSliceReducer,
+        getMotherMeterWaterListApi: getMotherMeterWaterListApiSliceReducer,
+        getMotherMeterWaterApi: getMotherMeterWaterApiSliceReducer,
+        postMotherMeterWaterApi: postMotherMeterWaterApiSliceReducer,
+        deleteMotherMeterWaterApi: deleteMotherMeterWaterApiSliceReducer
     }
 })
 export default ReduxStore;
