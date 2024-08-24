@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import { Box, Flex, Heading, Text, Button, TextField, Checkbox, Link, IconButton } from '@radix-ui/themes';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import * as Form from '@radix-ui/react-form';
-import LoginUseCase from "../../domain/use_case/login.use_case";
-import LoginEntity from "../../domain/entity/login.entity";
-import LoginFailure from "../../domain/failure/login.failure";
-import Failure from "../../../../application/failure/failure";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loginCredential } from "../../../../infrastructure/api/slice/login/login_api.slice";
+import toast from "react-hot-toast";
+import LoginEntity from "../../../../infrastructure/api/module/login/domain/entity/login.entity";
+import { useForm } from "react-hook-form";
 export default function LoginFormComponent() {
+  const { register, handleSubmit,  formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const loginState = useSelector((state: RootState) => state.loginApi);
+  const dispatch: AppDispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [inputForm, setInputForm] = useState({
     email: "",
     password: "",
@@ -28,34 +32,32 @@ export default function LoginFormComponent() {
     return <EyeClosedIcon />
   }
 
-  function handelLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
-    setIsLoading(true);
-    event.preventDefault();
-    const response = LoginUseCase({ loginEntity: inputForm });
+  const handelLoginSubmit = async (data) => {
+    const inputForm = data as LoginEntity
 
-    if (response instanceof LoginFailure) {
-      console.log("login failure");
-      setIsLoading(false);
+    const response = await dispatch(loginCredential({ loginEntity: inputForm }));
+    if (response.payload === "IsLoginFailure") {
+      toast.error("Login Failure");
     }
 
-    if (response instanceof Failure) {
-      console.log("login failure");
-      setIsLoading(false);
+    if (response.payload === "InactiveAccountFailure") {
+      toast.error("Inactive Account");
     }
 
-    setIsLoading(false);
+    if (response.payload === "IsLockedAccountFailure") {
+      toast.error("Locked Account");
+    }
+
+    if (response.payload === "UnhandledFailure") {
+      toast.error("Something went wrong");
+    }
+
     navigate("/properties");
   }
 
 
-  const handelInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setInputForm({ ...inputForm, [name]: value });
-  }
-
-
   return (
-    <Form.Root onSubmit={handelLoginSubmit}>
+    <form onSubmit={handleSubmit(handelLoginSubmit)} >
       <Flex justify={"center"} align={"center"} width={"100lvw"} height={"100lvh"}>
         <Box width={"500px"} >
           <Box mb={"5"}>
@@ -70,59 +72,33 @@ export default function LoginFormComponent() {
           <Box>
             <Flex gap={"2"} direction={"column"} width={"100%"} >
               <Box>
-                <Form.Field className="FormField" name="email">
-                  <Form.Label >Email</Form.Label>
-
-
-                  <Form.Control asChild>
-                    <TextField.Root type="email" onChange={handelInputChange} size={"3"} name="email" placeholder="E.g. 5hDQH@example.com" required />
-                  </Form.Control>
-
-                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
-                    Please enter your email
-                  </Form.Message>
-
-                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="typeMismatch">
-                    Please provide a valid email
-                  </Form.Message>
-                </Form.Field>
+                <Text size={"2"}> Email</Text>
+                <TextField.Root  size={"3"} placeholder="E.g. 5hDQH@example.com"
+                  {...register("email", { required: "Email is required", pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" } })}
+                />
+                {errors.email && <Text color="red" size={"1"}>{errors.email.message?.toString()}</Text>}
               </Box>
 
               <Box>
-                <Form.Field className="FormField" name="password">
-
-
-                  <Text title="password" size={"2"} weight={"medium"}> Password</Text>
-
-                  <Form.Control asChild>
-                    <TextField.Root required onChange={handelInputChange} type={showPassword ? "text" : "password"} size={"3"} name="password" placeholder="Enter your password" >
-                      <TextField.Slot pr="3" side="right">
-                        <IconButton type="button" size="3" onClick={toggleShowPassword} variant="ghost">
-                          {renderShowPasswordIcon()}
-                        </IconButton>
-                      </TextField.Slot>
-                    </TextField.Root>
-                  </Form.Control>
-
-                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
-                    Please enter your password
-                  </Form.Message>
-                </Form.Field>
+                <Text title="password" size={"2"} weight={"medium"}> Password</Text>
+                <TextField.Root type={showPassword ? "text" : "password"} size={"3"} placeholder="Enter your password"
+                  {...register("password", { required: "Password is required" })}
+                >
+                  <TextField.Slot pr="3" side="right">
+                    <IconButton type="button" size="3" onClick={toggleShowPassword} variant="ghost">
+                      {renderShowPasswordIcon()}
+                    </IconButton>
+                  </TextField.Slot>
+                </TextField.Root>
+                {errors.password && <Text color="red" size={"1"}>{errors.password.message?.toString()}</Text>}
               </Box>
 
               <Box>
-                <Form.Field name="accountCode">
-
-                  <Text title="accountCode" size={"2"} weight={"medium"}> Account Code</Text>
-
-                  <Form.Control asChild>
-                    <TextField.Root required type="text" onChange={handelInputChange} size={"3"} name="accountCode" placeholder="E.g. uppa_admin" />
-                  </Form.Control>
-
-                  <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">
-                    Please enter your account code
-                  </Form.Message>
-                </Form.Field>
+                <Text title="accountCode" size={"2"} weight={"medium"}> Account Code</Text>
+                <TextField.Root type="text" size={"3"} placeholder="E.g. uppa_admin"
+                  {...register("accountCode", { required: "Account code is required" })}
+                />
+                {errors.accountCode && <Text color="red" size={"1"}>{errors.accountCode.message?.toString()}</Text>}
               </Box>
             </Flex>
           </Box >
@@ -139,9 +115,9 @@ export default function LoginFormComponent() {
             </Box>
           </Flex>
 
-          <Button type="submit" mt={"5"} loading={false} style={{ width: "100%" }} size={"3"} >Login</Button>
+          <Button type="submit" mt={"5"} loading={loginState.isLoading} style={{ width: "100%" }} size={"3"} >Login</Button>
         </Box >
       </Flex >
-    </Form.Root>
+    </form>
   );
 }
