@@ -20,6 +20,8 @@ import getMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/
 import postMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/post_mother_meter_water.slice";
 import deleteMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/delete_mother_meter_water.slice";
 import loginApiSliceReducer from "../api/slice/login/login_api.slice";
+import postTenantApiSliceReducer from "../api/slice/tenant/post_tenant_api.slice";
+import patchMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/patch_mother_meter_water.slice";
 
 
 const ReduxStore = configureStore({
@@ -44,7 +46,9 @@ const ReduxStore = configureStore({
         getMotherMeterWaterApi: getMotherMeterWaterApiSliceReducer,
         postMotherMeterWaterApi: postMotherMeterWaterApiSliceReducer,
         deleteMotherMeterWaterApi: deleteMotherMeterWaterApiSliceReducer,
-        loginApi: loginApiSliceReducer
+        loginApi: loginApiSliceReducer,
+        postTenantApi: postTenantApiSliceReducer,
+        patchMotherMeterWaterApi: patchMotherMeterWaterApiSliceReducer
     }
 })
 export default ReduxStore;

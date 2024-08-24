@@ -1,16 +1,14 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Dialog, Flex, IconButton, Separator, Tooltip, Text, TextField, Select, Box, Button } from "@radix-ui/themes";
-import React, { useState } from "react";
+import { Dialog, Flex, IconButton, Separator, Text, TextField, Select, Box, Button } from "@radix-ui/themes";
+import React from "react";
 import { useParams } from "react-router-dom";
-import Failure from "../../../../application/failure/failure";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import { plainToInstance } from "class-transformer";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
-
-
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
 import PropertiesEntity from "../../../../infrastructure/api/module/property/domain/entity/properties.entity";
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
@@ -26,9 +24,8 @@ export default function EditPropertyComponent({
     isOpen, handleClose, refetch
 }: { isOpen: boolean, handleClose: () => void, refetch: () => void }) {
     const dispatch: AppDispatch = useDispatch();
-
+    const patchPropertyState = useSelector((state: RootState) => state.patchPropertyApi)
     const { register, handleSubmit, control, formState: { errors } } = useForm();
-    const [isLoading, setIsLoading] = useState(false);
     const { id } = useParams();
     const fetchProperty = async () => {
         const response = await dispatch(getProperty(Number(id)));
@@ -99,20 +96,24 @@ export default function EditPropertyComponent({
     }
 
     const onSubmit = async (data) => {
-        setIsLoading(true)
+
         const property = data as PropertiesEntity
         property.id = Number(id)
         property.unit_status_id = Number(property.unit_status_id)
         property.unit_type_id = Number(property.unit_type_id)
         const propertyEntity = plainToInstance(PropertiesEntity, property, { excludeExtraneousValues: true });
         const response = await dispatch(patchProperty({ propertyEntity }));
-        if (response instanceof Failure) {
-            toast.error(response.message)
+        if (response.payload === "UnhandledFailure") {
+            toast.error("Unhandled Failure");
+            return
+        }
+
+        if (response.payload === "ValidationFailure") {
+            toast.error("Validation Failure");
             return
         }
 
         toast.success("Property updated successfully")
-        setIsLoading(false)
         handleClose()
         refetch()
     }
@@ -185,9 +186,9 @@ export default function EditPropertyComponent({
                     </Flex>
                     <Flex justify={"end"} mt="5" gap="2">
                         <Dialog.Close >
-                            <Button type="button" variant={"outline"} >Cancel</Button>
+                            <Button type="button" variant={"outline"} disabled={patchPropertyState.isLoading} >Cancel</Button>
                         </Dialog.Close>
-                        <Button loading={isLoading} type="submit" >Submit</Button>
+                        <Button loading={patchPropertyState.isLoading} type="submit" >Submit</Button>
                     </Flex>
                 </form>
             </Dialog.Content>

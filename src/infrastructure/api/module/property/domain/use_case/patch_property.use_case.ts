@@ -4,8 +4,7 @@ import { validate } from "class-validator";
 import PatchPropertyUseCaseParams from "./interface/patch_property.use_case";
 import Failure from "../../../../../../application/failure/failure";
 import FailureMapperUtil from "../../../../../../util/failure_mapper/failure_mapper.util";
-import ValidationFailure from "../failure/validation";
-
+import ValidationFailure from "../../../../../../application/failure/validation.failure";
 
 
 export default async function PatchPropertyUseCase({
@@ -15,7 +14,7 @@ export default async function PatchPropertyUseCase({
     const validateErrors = await validate(propertyEntity);
 
     if (validateErrors.length > 0) {
-      return new ValidationFailure({ extra: validateErrors });
+      return new ValidationFailure(validateErrors);
     }
     return await PatchPropertyRepository({ propertyEntity });
   } catch (error) {

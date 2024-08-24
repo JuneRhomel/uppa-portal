@@ -1,31 +1,29 @@
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, IconButton, Select, Separator, TextField, Tooltip } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, IconButton, Select, Separator, TextField, Tooltip, Text } from "@radix-ui/themes";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { plainToInstance } from "class-transformer";
 import PropertyCreateParams from "../interface/property_create.params"
 import { toast } from 'react-hot-toast';
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
 import { postProperty } from "../../../../infrastructure/api/slice/property/post_property_api.slice";
 import { getPropertyStatus } from "../../../../infrastructure/api/slice/property/get_property_status_api.slice";
 import { getPropertyTypes } from "../../../../infrastructure/api/slice/property/get_property_types_api.slice";
 import PropertiesEntity from "../../../../infrastructure/api/module/property/domain/entity/properties.entity";
 import PropertyStatusEntity from "../../../../infrastructure/api/module/property/domain/entity/property_status.entity";
 import PropertyTypeEntity from "../../../../infrastructure/api/module/property/domain/entity/property_type.entity";
+import { Controller, useForm } from "react-hook-form";
 
 
 export default function PropertyCreateComponent({
     refetchProperties
 }: PropertyCreateParams) {
     const dispatch: AppDispatch = useDispatch();
+    const postPropertyState = useSelector((state: RootState) => state.postPropertyApi)
+    const { register, handleSubmit, control, formState: { errors }, reset } = useForm();
 
-    const [form, setForm] = useState({
-        unit_name: "",
-        unit_type_id: 1,
-        unit_status_id: 1,
-    })
     const [open, setOpen] = useState(false);
     const fetchPropertyTypesAndStatus = async () => {
         const [typesResponse, statusResponse] = await Promise.all([
@@ -54,18 +52,13 @@ export default function PropertyCreateComponent({
     const propertyTypes = propertiesTypesAndStatusQuery.data?.types as PropertyTypeEntity[] ?? [];
     const propertyStatus = propertiesTypesAndStatusQuery.data?.status as PropertyStatusEntity[] ?? [];
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value })
-    }
+    const handleSave = async (data) => {
+        data.unit_type_id = Number(data.unit_type_id);
+        data.unit_status_id = Number(data.unit_status_id);
 
-    const handleSelectChange = (name, value) => {
-        setForm({ ...form, [name]: value })
-    }
+        const property = data as PropertiesEntity;
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const propertyEntity = plainToInstance(PropertiesEntity, form, {
+        const propertyEntity = plainToInstance(PropertiesEntity, property, {
             excludeExtraneousValues: true
         });
 
@@ -84,6 +77,7 @@ export default function PropertyCreateComponent({
         toast.success("Save", { icon: "👏" });
         propertiesTypesAndStatusQuery.refetch();
         refetchProperties();
+        reset();
         setOpen(false);
     }
 
@@ -122,54 +116,68 @@ export default function PropertyCreateComponent({
                 <Box>
                     <Dialog.Title size={"3"}>Create Property</Dialog.Title>
                     <Separator my="3" size="4" />
-                    <Form.Root onSubmit={handleSave}>
-                        <Form.Field name="unit_name">
-                            <Form.Label style={{ fontSize: "13px" }}>Property Name</Form.Label>
-                            <Form.Control asChild>
-                                <TextField.Root onChange={handleChange} type="text" name="unit_name" required />
-                            </Form.Control>
-                            <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter property name</Form.Message>
-
-                        </Form.Field>
+                    <form onSubmit={handleSubmit(handleSave)}>
+                        <Box>
+                            <Text size={"2"}>Property Name</Text>
+                            <TextField.Root   {
+                                ...register("unit_name", {
+                                    required: "Property name is required",
+                                    minLength: {
+                                        value: 3,
+                                        message: "Property name must be at least 3 characters"
+                                    }
+                                })
+                            } />
+                            {errors.unit_name && <Form.Message style={{ color: "red" }} match="valueMissing">Please enter property name</Form.Message>}
+                        </Box>
                         <Flex mt="2" gap={"8"}>
-                            <Form.Field name="unit_type_id"  >
-                                <Form.Label style={{ fontSize: "13px" }}>Property Type</Form.Label><br />
-                                <Form.Control asChild >
-                                    <Select.Root name="unit_type_id" required defaultValue="1" onValueChange={(e) => handleSelectChange("unit_type_id", parseInt(e))} >
-                                        <Select.Trigger placeholder="Select Type..." />
-                                        <Select.Content>
-                                            <Select.Group>
-                                                {renderPropertyTypes()}
-                                            </Select.Group>
-                                        </Select.Content>
-                                    </Select.Root>
-                                </Form.Control>
-                                <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter property type</Form.Message>
-                            </Form.Field>
-
-                            <Form.Field name="unit_status_id" onChange={handleChange}>
-                                <Form.Label style={{ fontSize: "13px" }}>Property status</Form.Label><br />
-                                <Form.Control asChild>
-                                    <Select.Root name="unit_status_id" required defaultValue="2" onValueChange={(e) => handleSelectChange("unit_status_id", parseInt(e))} >
-                                        <Select.Trigger placeholder="Select status..." />
-                                        <Select.Content>
-                                            <Select.Group>
-                                                {renderPropertyStatus()}
-                                            </Select.Group>
-                                        </Select.Content>
-                                    </Select.Root>
-                                </Form.Control>
-                                <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter property status</Form.Message>
-                            </Form.Field>
+                            <Box>
+                                <Text as="p" size={"2"}> Unit Type</Text>
+                                <Controller
+                                    name="unit_type_id"
+                                    control={control}
+                                    rules={{ required: "Property type is required" }}
+                                    render={({ field }) => (
+                                        <Select.Root name="unit_type_id" onValueChange={field.onChange}>
+                                            <Select.Trigger placeholder="Select Type..." />
+                                            <Select.Content >
+                                                <Select.Group >
+                                                    {renderPropertyTypes()}
+                                                </Select.Group>
+                                            </Select.Content>
+                                        </Select.Root>
+                                    )}
+                                />
+                                {errors.unit_type_id && <Text color="red" size={"1"}>{errors.unit_type_id.message?.toString()}</Text>}
+                            </Box>
+                            <Box>
+                                <Text as="p" size={"2"}> Unit Status</Text>
+                                <Controller
+                                    name="unit_status_id"
+                                    control={control}
+                                    rules={{ required: "Property status is required" }}
+                                    render={({ field }) => (
+                                        <Select.Root name="unit_status_id" onValueChange={field.onChange}  >
+                                            <Select.Trigger placeholder="Select status..." />
+                                            <Select.Content>
+                                                <Select.Group>
+                                                    {renderPropertyStatus()}
+                                                </Select.Group>
+                                            </Select.Content>
+                                        </Select.Root>
+                                    )}
+                                />
+                                {errors.unit_status_id && <Text color="red" size={"1"}>{errors.unit_status_id.message?.toString()}</Text>}
+                            </Box>
                         </Flex>
 
                         <Flex justify={"end"} mt="5" gap="2">
                             <Dialog.Close >
-                                <Button type="button" variant={"outline"} >Cancel</Button>
+                                <Button type="button" variant={"outline"} loading={postPropertyState.isLoading} >Cancel</Button>
                             </Dialog.Close>
-                            <Button type="submit" >Submit</Button>
+                            <Button type="submit" loading={postPropertyState.isLoading} >Submit</Button>
                         </Flex>
-                    </Form.Root>
+                    </form>
                 </Box>
             </Dialog.Content>
         </Dialog.Root >

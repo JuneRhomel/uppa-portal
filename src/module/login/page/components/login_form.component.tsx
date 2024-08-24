@@ -15,11 +15,6 @@ export default function LoginFormComponent() {
   const loginState = useSelector((state: RootState) => state.loginApi);
   const dispatch: AppDispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [inputForm, setInputForm] = useState({
-    email: "",
-    password: "",
-    accountCode: ""
-  } as LoginEntity)
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };

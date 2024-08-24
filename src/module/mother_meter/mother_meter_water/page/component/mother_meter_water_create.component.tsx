@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Box, Button, Dialog, Flex, IconButton, Tooltip, Text, TextField, Separator } from "@radix-ui/themes";
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { plainToInstance } from "class-transformer";
 import toast from "react-hot-toast";
 import MotherMeterWaterComponentParams from "../interface/mother_meter_create_component.params";
-import { AppDispatch } from "../../../../../infrastructure/redux/store.redux";
+import { AppDispatch, RootState } from "../../../../../infrastructure/redux/store.redux";
 import { postMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/post_mother_meter_water.slice";
 import MotherMeterWaterEntity from "../../../../../infrastructure/api/module/mother_meter_water/domain/entity/mother_meter_water.entity";
 
 export default function MotherMeterWaterCreateComponent({ refetchMotherMetersWater }: MotherMeterWaterComponentParams) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const dispatch: AppDispatch = useDispatch();
+    const postMotherMeterWaterState = useSelector((state: RootState) => state.postMotherMeterWaterApi)
+
     const [open, setOpen] = useState(false);
     const handleSave = async (formData: MotherMeterWaterEntity) => {
         const motherMeterWaterEntity = plainToInstance(MotherMeterWaterEntity, formData, {
@@ -69,9 +71,9 @@ export default function MotherMeterWaterCreateComponent({ refetchMotherMetersWat
                     </Box>
                     <Flex justify={"end"} gap={"2"}>
                         <Dialog.Trigger>
-                            <Button type="button" variant={"outline"}>Cancel</Button>
+                            <Button type="button" disabled={postMotherMeterWaterState.isLoading} variant={"outline"}>Cancel</Button>
                         </Dialog.Trigger>
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" loading={postMotherMeterWaterState.isLoading}>Save</Button>
                     </Flex>
                 </form>
             </Dialog.Content>

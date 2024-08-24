@@ -16,12 +16,7 @@ export default async function PostPropertyRepository({
       propertyEntity.unit_type_name,
       propertyEntity.unit_status_id,
       propertyEntity.unit_status_name,
-      propertyEntity.created_at,
-      propertyEntity.updated_at,
-      propertyEntity.deleted_at,
-      propertyEntity.created_by,
-      propertyEntity.deleted_by,
-      propertyEntity.updated_by
+
     );
 
     const response = await PostPropertyDataSource({

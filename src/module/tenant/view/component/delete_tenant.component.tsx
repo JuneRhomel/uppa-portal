@@ -2,14 +2,15 @@ import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import React from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteTenant } from "../../../../infrastructure/api/slice/tenant/delete_tenant_api.slice";
 
 export default function DeleteTenantComponent({ isOpen, handleClose }: { isOpen: boolean, handleClose: () => void }) {
     const dispatch: AppDispatch = useDispatch();
     const { id } = useParams();
     const navigate = useNavigate();
+    const deletePropertyState = useSelector((state: RootState) => state.deleteTenantApi)
 
     const handleDelete = async () => {
         const response = await dispatch(deleteTenant({ id: Number(id) }));
@@ -35,11 +36,11 @@ export default function DeleteTenantComponent({ isOpen, handleClose }: { isOpen:
 
                 <Flex gap="3" mt="4" justify="end">
                     <AlertDialog.Cancel>
-                        <Button onClick={handleClose} variant="soft" color="gray">
+                        <Button onClick={handleClose} disabled={deletePropertyState.isLoading} variant="soft" color="gray">
                             Cancel
                         </Button>
                     </AlertDialog.Cancel>
-                    <Button onClick={handleDelete} variant="solid" color="red">
+                    <Button onClick={handleDelete} loading={deletePropertyState.isLoading} variant="solid" color="red">
                         Delete
                     </Button>
                 </Flex>

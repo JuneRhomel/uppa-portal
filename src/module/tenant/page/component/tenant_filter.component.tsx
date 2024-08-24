@@ -23,7 +23,7 @@ export default function TenantFilterComponent() {
             return
         }
 
-        return tenantStatuses as TenantStatusEntity[];
+        return response.payload as TenantStatusEntity[];
     }
 
 

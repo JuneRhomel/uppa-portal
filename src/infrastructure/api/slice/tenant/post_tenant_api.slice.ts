@@ -98,3 +98,6 @@ const postTenantSlice = createSlice({
             })
     }
 })
+
+const postTenantApiSliceReducer = postTenantSlice.reducer
+export default postTenantApiSliceReducer
