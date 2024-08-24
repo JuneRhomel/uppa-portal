@@ -1,4 +1,4 @@
-import Failure from "../../../../application/failure/failure";
+import Failure from "../../../../../../application/failure/failure";
 import AuthCredentialsEntity from "../../domain/entity/auth_credential.entity";
 import LoginDataSource from "../data_source/login.data_source";
 import LoginFailureMapper from "../mapper/login_failure/login_failure.mapper";
@@ -24,7 +24,7 @@ export default async function LoginRepository({ loginEntity }: LoginRepositoryPa
             response.token
         );
     } catch (error) {
-        
+
         return LoginFailureMapper(error);
     }
 }
