@@ -1,9 +1,10 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AlreadyExistFailure from "../../../../application/failure/already_exist.failure";
 import UnhandledFailure from "../../../../application/failure/unhandled.failure";
 import ValidationFailure from "../../../../application/failure/validation.failure";
-import PostTenantUseCase from "../../module/tenant/domain/use_case/post_tenant.use_case";
-import PostTenantUseCaseParams from "../../module/tenant/domain/use_case/interface/post_tenant_use_case.params";
+import PatchMotherMeterWaterUseCase from "../../module/mother_meter_water/domain/use_case/patch_mother_meter_water.use_case";
+import MotherMeterWaterEntity from "../../module/mother_meter_water/domain/entity/mother_meter_water.entity";
+
 
 interface apiStates {
     isLoading: boolean,
@@ -11,7 +12,6 @@ interface apiStates {
     isAlreadyExists: boolean
     validationFailure: boolean
 }
-
 
 const initialState: apiStates = {
     isLoading: false,
@@ -21,16 +21,16 @@ const initialState: apiStates = {
 }
 
 
-export const postTenant = createAsyncThunk<
+export const patchMotherMeterWater = createAsyncThunk<
     boolean,
-    PostTenantUseCaseParams,
+    MotherMeterWaterEntity,
     {
         rejectValue: string;
     }
 >(
-    "tenant/postTenant",
-    async (params: PostTenantUseCaseParams, { rejectWithValue }) => {
-        const response = await PostTenantUseCase(params);
+    "moterMeterWater/patchMeterWater",
+    async (motherMeterWaterEntity: MotherMeterWaterEntity, { rejectWithValue }) => {
+        const response = await PatchMotherMeterWaterUseCase({ motherMeterWaterEntity });
 
         if (response instanceof UnhandledFailure) {
             return rejectWithValue("UnhandledFailure")
@@ -49,52 +49,55 @@ export const postTenant = createAsyncThunk<
 )
 
 
-const postTenantSlice = createSlice({
-    name: "postTenant",
+const patchMotherMeterWaterSlice = createSlice({
+    name: "patchMotherMeterWater",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(postTenant.pending, (state) => {
+            .addCase(patchMotherMeterWater.pending, (state) => {
                 return {
                     ...initialState,
-                    isLoading: true,
+                    isLoading: true
                 }
             })
-            .addCase(postTenant.fulfilled, (state) => {
-
+            .addCase(patchMotherMeterWater.fulfilled, (state, action) => {
                 return {
                     ...initialState,
-                    isLoading: false,
+                    isLoading: false
                 }
             })
-            .addCase(postTenant.rejected, (state, action) => {
+            .addCase(patchMotherMeterWater.rejected, (state, action) => {
 
                 if (action.payload === "UnhandledFailure") {
                     return {
                         ...initialState,
-                        isUnhandledFailure: true,
+                        isUnhandledFailure: true
                     }
                 }
 
                 if (action.payload === "AlreadyExistsFailure") {
                     return {
                         ...initialState,
-                        isAlreadyExists: true,
+                        isAlreadyExists: true
                     }
                 }
 
                 if (action.payload === "ValidationFailure") {
                     return {
                         ...initialState,
-                        validationFailure: true,
+                        validationFailure: true
                     }
                 }
 
                 return {
                     ...initialState,
-                    isLoading: false,
+                    isLoading: false
                 }
             })
     }
 })
+
+const patchMotherMeterWaterApiSliceReducer = patchMotherMeterWaterSlice.reducer
+
+export default patchMotherMeterWaterApiSliceReducer
