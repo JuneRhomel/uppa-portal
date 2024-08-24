@@ -3,8 +3,8 @@ import React from 'react'
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import Failure from '../../../../application/failure/failure';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../../infrastructure/redux/store.redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../../infrastructure/redux/store.redux';
 
 export default function DeletePropertyComponent(
     { isOpen, handleClose }
@@ -12,6 +12,7 @@ export default function DeletePropertyComponent(
         { isOpen: boolean, handleClose: () => void }
 ) {
     const { id } = useParams();
+    const deletePropertyState = useSelector((state: RootState) => state.deletePropertyApi)
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const handleDelete = async () => {
@@ -39,11 +40,11 @@ export default function DeletePropertyComponent(
 
                 <Flex gap="3" mt="4" justify="end">
                     <AlertDialog.Cancel>
-                        <Button onClick={handleClose} variant="soft" color="gray">
+                        <Button onClick={handleClose} disabled={deletePropertyState.isLoading} variant="soft" color="gray">
                             Cancel
                         </Button>
                     </AlertDialog.Cancel>
-                    <Button onClick={handleDelete} variant="solid" color="red">
+                    <Button onClick={handleDelete} loading={deletePropertyState.isLoading} variant="solid" color="red">
                         Delete
                     </Button>
                 </Flex>

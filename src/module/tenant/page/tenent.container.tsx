@@ -4,7 +4,6 @@ import { Box, Heading, Table } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import PaginationEntity from "../../../application/entity/pagination.entity";
 import { plainToInstance } from "class-transformer";
-import TenantListEntity from "../domain/entity/tenant_list.entity";
 import TableHeaderComponent from "../../../components/table_header/table_header.component";
 import Pagination from "../../../components/pagination/pagination.component";
 import TableHeadComponent from "./component/table_head.component";
@@ -14,6 +13,7 @@ import TenantCreateComponent from "./component/tenant_create.component";
 import { AppDispatch } from "../../../infrastructure/redux/store.redux";
 import { useDispatch } from "react-redux";
 import { getTenantList } from "../../../infrastructure/api/slice/tenant/get_tenant_list_api.slice";
+import TenantListEntity from "../../../infrastructure/api/module/tenant/domain/entity/tenant_list.entity";
 
 export default function TenantContainer() {
     const dispatch: AppDispatch = useDispatch();

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, IconButton, TextField } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, IconButton, TextField, Text } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import PropertyStatusEditParams from "../interface/property_status_edit.params";
 import { toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
 import { patchPropertyStatus } from "../../../../infrastructure/api/slice/property/patch_property_status_api.slice";
+import { useForm } from "react-hook-form";
 
 export default function PropertyStatusEditComponent({
     isOpen,
@@ -16,28 +17,26 @@ export default function PropertyStatusEditComponent({
     handelClose
 }: PropertyStatusEditParams) {
     const dispatch = useDispatch<AppDispatch>();
-    const [name, setName] = useState(propertyStatusEntity.unit_status_name);
-    const [isLoading, setIsLoading] = useState(false);
-    const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    }
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: {
+            unit_status_name: propertyStatusEntity.unit_status_name
+        }
+    });
+    const patchPropertyStatusState = useSelector((state: RootState) => state.patchPropertyStatusSliceApi)
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsLoading(true);
-        propertyStatusEntity.unit_status_name = name;
 
+    const handleSave = async (data) => {
+        propertyStatusEntity.unit_status_name = data.unit_status_name
         const response = await dispatch(patchPropertyStatus({ propertyStatusEntity }))
 
         if (response.payload === "UnhandledFailure") {
             toast.error('Something went wrong')
         }
 
-        setIsLoading(false);
-
         refetchpropertiesTypesAndStatus();
         refetchProperties()
         handelClose();
+        reset()
         toast.success('Save')
     }
 
@@ -51,23 +50,23 @@ export default function PropertyStatusEditComponent({
                 </Flex>
                 <Box>
                     <Dialog.Title size={"3"}>Edit Status</Dialog.Title>
-                    <Form.Root onSubmit={handleSubmit}>
-                        <Form.Field name="name">
-                            <Form.Label style={{ fontSize: "13px" }}>Status Name</Form.Label>
-                            <Form.Control asChild>
-                                <TextField.Root value={name} onChange={handleChangeName} type="text" required />
-                            </Form.Control>
+                    <form onSubmit={handleSubmit(handleSave)}>
+                        <Text size={"2"}>Status Name</Text>
+                        <TextField.Root {
+                            ...register("unit_status_name", {
+                                required: "Please enter status name",
+                            })
+                        } />
 
-                            <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter status name</Form.Message>
+                        {errors.unit_status_name && <Text color="red">{errors.unit_status_name.message}</Text>}
 
-                        </Form.Field>
                         <Flex justify={"end"} mt="5" gap="2">
                             <Dialog.Close >
-                                <Button type="button" variant={"outline"} >Cancel</Button>
+                                <Button type="button" disabled={patchPropertyStatusState.isLoading} variant={"outline"} >Cancel</Button>
                             </Dialog.Close>
-                            <Button loading={isLoading} type="submit" >Submit</Button>
+                            <Button loading={patchPropertyStatusState.isLoading} type="submit" >Submit</Button>
                         </Flex>
-                    </Form.Root>
+                    </form>
                 </Box>
             </Dialog.Content>
         </Dialog.Root>

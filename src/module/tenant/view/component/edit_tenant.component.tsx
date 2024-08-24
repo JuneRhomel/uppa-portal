@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { plainToInstance } from "class-transformer";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
 import { getTenant } from "../../../../infrastructure/api/slice/tenant/get_tenant_api.slice";
 import TenantEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant.entity";
 import { patchTenant } from "../../../../infrastructure/api/slice/tenant/patch_tenant_api.slice";
@@ -16,7 +16,7 @@ import { patchTenant } from "../../../../infrastructure/api/slice/tenant/patch_t
 export default function EditTenantComponent({ isOpen, handleClose, refetch }: { isOpen: boolean, handleClose: () => void, refetch: () => void }) {
     const { id } = useParams();
     const dispatch: AppDispatch = useDispatch();
-
+    const patchTenantState = useSelector((state: RootState) => state.patchTenantApi)
     const fetchTenant = async () => {
         const response = await dispatch(getTenant({
             id: Number(id)
@@ -155,9 +155,9 @@ export default function EditTenantComponent({ isOpen, handleClose, refetch }: { 
 
                     <Flex justify={"end"} mt="5" gap="2">
                         <Dialog.Close >
-                            <Button type="button" variant={"outline"} >Cancel</Button>
+                            <Button type="button" disabled={patchTenantState.isLoading} variant={"outline"} >Cancel</Button>
                         </Dialog.Close>
-                        <Button type="submit" >Submit</Button>
+                        <Button type="submit" loading={patchTenantState.isLoading}>Submit</Button>
                     </Flex>
                 </form>
 

@@ -6,8 +6,8 @@ import toast
     from "react-hot-toast";
 import { plainToInstance } from "class-transformer";
 import MotherMeterCreateElectricityComponentParams from "../interface/mother_meter_create_electricity_component.params";
-import { AppDispatch } from "../../../../../infrastructure/redux/store.redux";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postMotherMeterElectricity } from "../../../../../infrastructure/api/slice/mother_meter_electricity/post_mother_meter_electricity_api.slice";
 import MotherMeterElectricityEntity from "../../../../../infrastructure/api/module/mother_meter_electricity/domain/entity/mother_meter_electricity.entity";
 
@@ -15,10 +15,10 @@ export default function MotherMeterElectricityCreateComponent({ refetchList }: M
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const dispatch: AppDispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const postMotherMeterElectricityState = useSelector((state: RootState) => state.postMotherMeterElectricityApi)
+
 
     const handleSave = async (formData: MotherMeterElectricityEntity) => {
-        setIsLoading(true);
         const motherMeterElectricityEntity = plainToInstance(MotherMeterElectricityEntity, formData, {
             excludeExtraneousValues: true,
         })
@@ -39,7 +39,6 @@ export default function MotherMeterElectricityCreateComponent({ refetchList }: M
 
         reset();
         setOpen(false);
-        setIsLoading(false);
         refetchList()
         toast.success("Save successfully");
     }
@@ -82,9 +81,9 @@ export default function MotherMeterElectricityCreateComponent({ refetchList }: M
                     </Box>
                     <Flex justify={"end"} gap={"2"}>
                         <Dialog.Trigger>
-                            <Button type="button" variant={"outline"}>Cancel</Button>
+                            <Button type="button" disabled={postMotherMeterElectricityState.isLoading} variant={"outline"}>Cancel</Button>
                         </Dialog.Trigger>
-                        <Button loading={isLoading} type="submit">Save</Button>
+                        <Button loading={postMotherMeterElectricityState.isLoading} type="submit">Save</Button>
                     </Flex>
                 </form>
             </Dialog.Content>

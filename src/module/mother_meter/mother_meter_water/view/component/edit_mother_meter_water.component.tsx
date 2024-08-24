@@ -6,8 +6,8 @@ import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../../infrastructure/redux/store.redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../infrastructure/redux/store.redux";
 import { getMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/get_mother_meter_water.slice";
 import { patchMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/patch_mother_meter_water.slice";
 import MotherMeterWaterEntity from "../../../../../infrastructure/api/module/mother_meter_water/domain/entity/mother_meter_water.entity";
@@ -15,8 +15,9 @@ import MotherMeterWaterEntity from "../../../../../infrastructure/api/module/mot
 export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose }: { isOpen: boolean, handleClose: () => void }) {
     const dispatch: AppDispatch = useDispatch();
     const { id } = useParams();
+    const patchMotherMeterWaterState = useSelector((state: RootState) => state.patchMotherMeterWaterApi)
+
     const { register, handleSubmit, control, formState: { errors } } = useForm();
-    const [isLoading, setIsLoading] = useState(false);
 
     const fetchMotherMeterWater = async () => {
         const response = await dispatch(getMotherMeterWater(Number(id)));
@@ -47,7 +48,7 @@ export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose 
     const motherMeter = motherMeterWaterQuery.data as MotherMeterWaterEntity || {}
 
     const handleSubmitForm = async (data) => {
-        setIsLoading(true);
+
         const motherMeterWater = data as MotherMeterWaterEntity;
         const motherMeterWaterEntity = plainToInstance(MotherMeterWaterEntity, motherMeterWater, { excludeExtraneousValues: true });
         motherMeterWaterEntity.id = Number(id);
@@ -56,17 +57,16 @@ export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose 
 
         if (response.payload === "ValidationFailure") {
             toast.error("Validation failed");
-            setIsLoading(false);
+
             return response
         }
 
         if (response.payload === "UnhandledFailure") {
             toast.error("Something went wrong");
-            setIsLoading(false);
             return response
         }
         toast.success("Update successfully");
-        setIsLoading(false);
+
         motherMeterWaterQuery.refetch();
         handleClose();
     }
@@ -98,9 +98,9 @@ export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose 
                     {errors.serial_number && <Text color="red" size={"1"}>{errors.serial_number.message?.toString()}</Text>}
                     <Flex justify={"end"} mt="5" gap="2">
                         <Dialog.Close >
-                            <Button type="button" variant={"outline"} >Cancel</Button>
+                            <Button type="button" disabled={patchMotherMeterWaterState.isLoading} variant={"outline"} >Cancel</Button>
                         </Dialog.Close>
-                        <Button loading={isLoading} type="submit" >Submit</Button>
+                        <Button loading={patchMotherMeterWaterState.isLoading} type="submit" >Submit</Button>
                     </Flex>
                 </form>
             </Dialog.Content>

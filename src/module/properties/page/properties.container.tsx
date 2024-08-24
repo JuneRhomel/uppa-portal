@@ -98,10 +98,12 @@ export default function PropertiesContainer() {
           <Table.Root variant="surface">
             <TableHeadComponent />
             <Table.Body>
-              {propertyListState.isLoading && <PropertyTableLoading />}
-              {propertiesQuery.data?.properties && (
-                <TableDataComponent propertyEntity={propertiesQuery.data.properties as PropertiesEntity[]} />
-              )}
+              {propertyListState.isLoading ? <PropertyTableLoading />
+                :
+                propertiesQuery.data?.properties && (
+                  <TableDataComponent propertyEntity={propertiesQuery.data.properties as PropertiesEntity[]} />
+                )
+              }
             </Table.Body>
           </Table.Root>
         </motion.div>

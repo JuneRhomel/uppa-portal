@@ -1,23 +1,24 @@
 import { Cross2Icon, InfoCircledIcon, PlusIcon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, IconButton, Separator, TextField, Tooltip, Select, Badge, Callout } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, IconButton, Separator, TextField, Tooltip, Select, Badge, Callout, Text } from "@radix-ui/themes";
 import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { plainToInstance } from "class-transformer";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import TenantCreateComponentParams from "../interface/tenant_create_component.params";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
-import { patchTenant } from "../../../../infrastructure/api/slice/tenant/patch_tenant_api.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../infrastructure/redux/store.redux";
 import { getTenantStatusList } from "../../../../infrastructure/api/slice/tenant/get_tenant_status_list_ai.slice";
 import TenantEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant.entity";
 import TenantStatusEntity from "../../../../infrastructure/api/module/tenant/domain/entity/tenant_status.entity";
+import { postTenant } from "../../../../infrastructure/api/slice/tenant/post_tenant_api.slice";
 
 export default function TenantCreateComponent({ fetchTenant }: TenantCreateComponentParams) {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
     const dispatch: AppDispatch = useDispatch();
     const [open, setOpen] = useState(false);
+    const postTenantState = useSelector((state: RootState) => state.postTenantApi)
 
     const fetchTenantStatuses = async () => {
         const response = await dispatch(getTenantStatusList());
@@ -65,7 +66,7 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
             excludeExtraneousValues: true,
         });
 
-        const result = await dispatch(patchTenant({ tenantEntity }));
+        const result = await dispatch(postTenant({ tenantEntity }));
 
         if (result.payload === "UnhandledFailure") {
             toast.error("Something went wrong");
@@ -109,58 +110,85 @@ export default function TenantCreateComponent({ fetchTenant }: TenantCreateCompo
                         </Callout.Text>
                     </Callout.Root>
 
-                    <Form.Root onSubmit={handleSubmit(handleSave)} >
-                        <Form.Field name="first_name">
-                            <Form.Label style={{ fontSize: "13px" }}>First Name</Form.Label>
-                            <Form.Control asChild>
-                                <TextField.Root {...register("first_name")} type="text" name="first_name" required />
-                            </Form.Control>
-                            <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter tenant name</Form.Message>
-                        </Form.Field>
-                        <Form.Field name="last_name">
-                            <Form.Label style={{ fontSize: "13px" }}>Last Name</Form.Label>
-                            <Form.Control asChild>
-                                <TextField.Root {...register("last_name")} type="text" name="last_name" required />
-                            </Form.Control>
-                            <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter tenant name</Form.Message>
-                        </Form.Field>
+                    <form onSubmit={handleSubmit(handleSave)} >
+
+                        <Text size={"2"}>First Name</Text>
+
+                        <TextField.Root {
+                            ...register("first_name",
+                                {
+                                    required: "Please enter tenant name",
+                                    minLength:
+                                    {
+                                        value: 3,
+                                        message: "Please enter tenant name"
+                                    }
+                                })} />
+                        {errors.first_name && <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter tenant name</Form.Message>}
+
+                        <Text size={"2"}>Last Name</Text>
+
+                        <TextField.Root {...register("last_name",
+                            {
+                                required: "Please enter last name",
+                                minLength:
+                                {
+                                    value: 3,
+                                    message: "Please enter last name"
+                                }
+                            }
+                        )} />
+
+                        {errors.last_name && <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter last name</Form.Message>}
+
                         <Flex mt="2" mb={"2"} gap={"2"} >
-                            <Form.Field style={{ width: "100%" }} name="email">
-                                <Form.Label style={{ fontSize: "13px" }}>Email</Form.Label>
-                                <Form.Control asChild>
-                                    <TextField.Root {...register("email")} type="email" name="email" required />
-                                </Form.Control>
-                                <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter email</Form.Message>
-                            </Form.Field>
-                            <Form.Field style={{ width: "100%" }} name="contact_number">
-                                <Form.Label style={{ fontSize: "13px" }}>Contact Number</Form.Label>
-                                <Form.Control asChild>
-                                    <TextField.Root {...register("contact_number")} type="number" name="contact_number" required />
-                                </Form.Control>
-                                <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter contact number</Form.Message>
-                                <Form.Message style={{ color: "red", fontSize: "10px" }} match={(value) => value.length > 11 || value.length < 11} >Please enter valid contact number</Form.Message>
-                            </Form.Field>
+                            <Box width={"100%"}>
+                                <Text size={"2"}>Email</Text>
+                                <TextField.Root {...register("email", { required: "Please enter email", pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: "Please enter valid email" } })} />
+                                {errors.email && <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter email</Form.Message>}
+                            </Box>
+                            <Box width={"100%"}>
+                                <Text size={"2"}>Contact Number</Text>
+                                <TextField.Root {...register("contact_number", {
+                                    required: "Please enter contact number",
+                                    minLength:
+                                    {
+                                        value: 11,
+                                        message: "Please enter valid contact number"
+                                    },
+                                    maxLength:
+                                    {
+                                        value: 11,
+                                        message: "Please enter valid contact number"
+                                    }
+                                })} />
+                                {errors.contact_number && <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please enter contact number</Form.Message>}
+                            </Box>
                         </Flex>
-                        <Form.Field name="status_id"  >
-                            <Form.Label style={{ fontSize: "13px" }}>Status</Form.Label><br />
-                            <Select.Root name="status_id" required defaultValue="2" value="2" >
-                                <Select.Trigger placeholder="Select Type..." />
-                                <Select.Content>
-                                    <Select.Group>
-                                        {renderStatusOptions()}
-                                    </Select.Group>
-                                </Select.Content>
-                            </Select.Root>
-                        </Form.Field>
 
-
+                        <Text size={"2"}>Status</Text><br />
+                        <Controller
+                            name="status_id"
+                            control={control}
+                            render={({ field }) => (
+                                <Select.Root name="status_id" onValueChange={field.onChange} defaultValue="2" value="2" >
+                                    <Select.Trigger placeholder="Select Type..." />
+                                    <Select.Content>
+                                        <Select.Group>
+                                            {renderStatusOptions()}
+                                        </Select.Group>
+                                    </Select.Content>
+                                </Select.Root>
+                            )}
+                        />
+                        {errors.status_id && <Form.Message style={{ color: "red", fontSize: "10px" }} match="valueMissing">Please select status</Form.Message>}
                         <Flex justify={"end"} mt="5" gap="2">
                             <Dialog.Close >
-                                <Button type="button" variant={"outline"} >Cancel</Button>
+                                <Button type="button" disabled={postTenantState.isLoading} variant={"outline"} >Cancel</Button>
                             </Dialog.Close>
-                            <Button type="submit" >Submit</Button>
+                            <Button type="submit" loading={postTenantState.isLoading} >Submit</Button>
                         </Flex>
-                    </Form.Root>
+                    </form>
                 </Box>
             </Dialog.Content>
         </Dialog.Root >
