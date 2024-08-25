@@ -6,8 +6,6 @@ import { plainToInstance } from "class-transformer";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import PaginationEntity from "../../../../application/entity/pagination.entity";
-import MotherMeterElectricityListEntity from "../domain/entity/mother_meter_electricity_list.entity";
-import MotherMeterElectricityEntity from "../domain/entity/mother_meter_electricity.entity";
 import TabelDataComponent from "./component/table_data.component";
 import TableLoadingComponent from "./component/table_loading.component";
 import Pagination from "../../../../components/pagination/pagination.component";
@@ -16,6 +14,8 @@ import TableHeadComponent from "./component/table_head.component";
 import MotherMeterElectricityCreateComponent from "./component/mother_meter_electricity_create.component";
 import { AppDispatch } from "../../../../infrastructure/redux/store.redux";
 import { getMotherMeterElectricityList } from "../../../../infrastructure/api/slice/mother_meter_electricity/get_mother_meter_electricity_list_api.slice";
+import MotherMeterElectricityListEntity from "../../../../infrastructure/api/module/mother_meter_electricity/domain/entity/mother_meter_electricity_list.entity";
+import MotherMeterElectricityEntity from "../../../../infrastructure/api/module/mother_meter_electricity/domain/entity/mother_meter_electricity.entity";
 
 
 export default function MotherMeterElectricityContainer() {
@@ -66,8 +66,8 @@ export default function MotherMeterElectricityContainer() {
             return <TableLoadingComponent />
         }
 
-        if (motherMeterElectricityQuery.isError) {
-            return <div>Error</div>
+        if (motherMeterElectricityEntity.length === 0) {
+            return <div>No Data</div>
         }
 
         return <TabelDataComponent motherMeterElectricityEntity={motherMeterElectricityEntity} />
