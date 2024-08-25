@@ -22,6 +22,9 @@ import deleteMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_wat
 import loginApiSliceReducer from "../api/slice/login/login_api.slice";
 import postTenantApiSliceReducer from "../api/slice/tenant/post_tenant_api.slice";
 import patchMotherMeterWaterApiSliceReducer from "../api/slice/mother_meter_water/patch_mother_meter_water.slice";
+import patchMotherMeterElectricityApiSliceReducer from "../api/slice/mother_meter_electricity/patch_mother_meter_electricity_api.slice";
+import getMotherMeterElectricityApiSliceReducer from "../api/slice/mother_meter_electricity/get_mother_meter_electricity_api.slice";
+import deleteMotherMeterElectricityApiSliceReducer from "../api/slice/mother_meter_electricity/delete_mother_meter_electricity_api.slice";
 
 
 const ReduxStore = configureStore({
@@ -48,7 +51,10 @@ const ReduxStore = configureStore({
         deleteMotherMeterWaterApi: deleteMotherMeterWaterApiSliceReducer,
         loginApi: loginApiSliceReducer,
         postTenantApi: postTenantApiSliceReducer,
-        patchMotherMeterWaterApi: patchMotherMeterWaterApiSliceReducer
+        patchMotherMeterWaterApi: patchMotherMeterWaterApiSliceReducer,
+        getMotherMeterElectricityApi: getMotherMeterElectricityApiSliceReducer,
+        patchMotherMeterElectricityApi: patchMotherMeterElectricityApiSliceReducer,
+        deleteMotherMeterElectricityApi: deleteMotherMeterElectricityApiSliceReducer
     }
 })
 export default ReduxStore;

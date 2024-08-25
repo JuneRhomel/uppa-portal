@@ -9,7 +9,7 @@ interface apiStates {
 }
 
 
-const initialState = {
+const initialState: apiStates = {
     isLoading: false,
     isUnhandledFailure: false
 }
