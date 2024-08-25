@@ -1,26 +1,25 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex, IconButton, Separator, Text, TextField } from "@radix-ui/themes";
-import { plainToInstance } from "class-transformer";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { AppDispatch, RootState } from "../../../../../infrastructure/redux/store.redux";
-import { getMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/get_mother_meter_water.slice";
-import { patchMotherMeterWater } from "../../../../../infrastructure/api/slice/mother_meter_water/patch_mother_meter_water.slice";
-import MotherMeterWaterEntity from "../../../../../infrastructure/api/module/mother_meter_water/domain/entity/mother_meter_water.entity";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { getMotherMeterElectricity } from "../../../../../infrastructure/api/slice/mother_meter_electricity/get_mother_meter_electricity_api.slice";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import MotherMeterElectricityEntity from "../../../../../infrastructure/api/module/mother_meter_electricity/domain/entity/mother_meter_electricity.entity";
+import { useQuery } from "@tanstack/react-query";
+import { plainToInstance } from "class-transformer";
+import { patchMotherMeterElectricity } from "../../../../../infrastructure/api/slice/mother_meter_electricity/patch_mother_meter_electricity_api.slice";
 
-export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose }: { isOpen: boolean, handleClose: () => void }) {
+export default function EditMotherMeterElectricityComponent({ isOpen, handleClose, refetch }: { isOpen: boolean, handleClose: () => void, refetch: () => void }) {
     const dispatch: AppDispatch = useDispatch();
     const { id } = useParams();
-    const patchMotherMeterWaterState = useSelector((state: RootState) => state.patchMotherMeterWaterApi)
+    const patchMotherMeterElectricityState = useSelector((state: RootState) => state.patchMotherMeterElectricityApi)
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm();
-
-    const fetchMotherMeterWater = async () => {
-        const response = await dispatch(getMotherMeterWater(Number(id)));
+    const fetchMotherMeterElectricity = async () => {
+        const response = await dispatch(getMotherMeterElectricity(Number(id)));
 
         if (response.payload === "UnhandledFailure") {
             toast.error("Something went wrong");
@@ -37,42 +36,42 @@ export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose 
             return response
         }
 
-        return response.payload as MotherMeterWaterEntity
+        return response.payload as MotherMeterElectricityEntity
     }
 
-    const motherMeterWaterQuery = useQuery({
-        queryKey: ["mother_meter_view"],
-        queryFn: fetchMotherMeterWater,
+    const motherMeterElectricityQuery = useQuery({
+        queryKey: ["mother_meter_electricity_view"],
+        queryFn: fetchMotherMeterElectricity,
         retry: true,
     })
-    const motherMeter = motherMeterWaterQuery.data as MotherMeterWaterEntity || {}
+    const motherMeter = motherMeterElectricityQuery.data as MotherMeterElectricityEntity || {}
 
     const handleSubmitForm = async (data) => {
 
-        const motherMeterWater = data as MotherMeterWaterEntity;
-        const motherMeterWaterEntity = plainToInstance(MotherMeterWaterEntity, motherMeterWater, { excludeExtraneousValues: true });
-        motherMeterWaterEntity.id = Number(id);
+        const motherMeterElectricity = data as MotherMeterElectricityEntity;
+        const motherMeterElectricityEntity = plainToInstance(MotherMeterElectricityEntity, motherMeterElectricity, { excludeExtraneousValues: true });
+        motherMeterElectricityEntity.id = Number(id);
 
-        const response = await dispatch(patchMotherMeterWater(motherMeterWaterEntity));
+        const response = await dispatch(patchMotherMeterElectricity(motherMeterElectricityEntity));
 
         if (response.payload === "ValidationFailure") {
             toast.error("Validation failed");
 
+            return response
         }
 
         if (response.payload === "UnhandledFailure") {
             toast.error("Something went wrong");
+            return response
         }
-
-        if (response.payload === "AlreadyExistsFailure") {
-            return toast.error("Serial number already exist");
-        }
-
         toast.success("Update successfully");
 
-        motherMeterWaterQuery.refetch();
+        motherMeterElectricityQuery.refetch();
         handleClose();
+        reset();
+        refetch();
     }
+
     return (
         <Dialog.Root open={isOpen} onOpenChange={handleClose}>
             <Dialog.Content maxWidth="450px">
@@ -101,9 +100,9 @@ export default function EditMotherMeterWaterViewComponent({ isOpen, handleClose 
                     {errors.serial_number && <Text color="red" size={"1"}>{errors.serial_number.message?.toString()}</Text>}
                     <Flex justify={"end"} mt="5" gap="2">
                         <Dialog.Close >
-                            <Button type="button" disabled={patchMotherMeterWaterState.isLoading} variant={"outline"} >Cancel</Button>
+                            <Button type="button" disabled={patchMotherMeterElectricityState.isLoading} variant={"outline"} >Cancel</Button>
                         </Dialog.Close>
-                        <Button loading={patchMotherMeterWaterState.isLoading} type="submit" >Submit</Button>
+                        <Button loading={patchMotherMeterElectricityState.isLoading} type="submit" >Submit</Button>
                     </Flex>
                 </form>
             </Dialog.Content>

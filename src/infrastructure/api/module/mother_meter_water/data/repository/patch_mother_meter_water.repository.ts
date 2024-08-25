@@ -3,6 +3,7 @@ import MotherMeterWaterEntity from "../../domain/entity/mother_meter_water.entit
 import PatchMotherMeterWaterDataSource from "../data_source/patch_mother_meter_water.data_source";
 import MotherMeterWaterModel from "../model/mother_meter_water.model";
 import Failure from "../../../../../../application/failure/failure";
+import FailureMapperUtil from "../../../../../../util/failure_mapper/failure_mapper.util";
 
 export default async function PatchMotherMeterWaterRepository({ motherMeterWaterEntity }: {
     motherMeterWaterEntity: MotherMeterWaterEntity
@@ -12,9 +13,11 @@ export default async function PatchMotherMeterWaterRepository({ motherMeterWater
     })
 
     const response = await PatchMotherMeterWaterDataSource({ motherMeterWaterModel });
+    
     if (response instanceof Failure) {
-        return response
+       return FailureMapperUtil(response);
     }
+    
     return response
 
 }

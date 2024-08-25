@@ -6,17 +6,16 @@ import MotherMeterElectricityModel from "../model/mother_meter_electricity.model
 import PatchMotherMeterElectricityDataSource from "../data_source/patch_mother_meter_electricity.data-source";
 
 export default async function PatchMotherMeterElectricityRepository({ motherMeterElectricityEntity }: { motherMeterElectricityEntity: MotherMeterElectricityEntity }): Promise<Failure | void> {
-    try {
-        const motherMeterElectricityModel = plainToInstance(MotherMeterElectricityModel, motherMeterElectricityEntity, {
-            excludeExtraneousValues: true
-        })
-        const response = await PatchMotherMeterElectricityDataSource({ motherMeterElectricityModel });
 
-        return response;
+    const motherMeterElectricityModel = plainToInstance(MotherMeterElectricityModel, motherMeterElectricityEntity, {
+        excludeExtraneousValues: true
+    })
+    const response = await PatchMotherMeterElectricityDataSource({ motherMeterElectricityModel });
+
+    if (response instanceof Failure) {
+        return FailureMapperUtil(response);
     }
 
-    catch (error) {
-        return FailureMapperUtil(error);
-    }
-
+    return response;
 }
+

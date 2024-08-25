@@ -11,6 +11,7 @@ import MotherMeterElectricityContainer from "../../module/mother_meter/mother_me
 import PreopertyView from "../../module/properties/view/preoperty.view";
 import TenantView from "../../module/tenant/view/tenant.vew";
 import MotherMeterWaterView from "../../module/mother_meter/mother_meter_water/view/mother_meter_water.view";
+import MotherMeterElectricityView from "../../module/mother_meter/mother_meter_electricity/view/mother_meter_electricity.view";
 
 
 const router = createBrowserRouter([
@@ -74,7 +75,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":id",
-            element: <MotherMeterElectricityContainer />,
+            element: <MotherMeterElectricityView />,
           },
         ]
       }

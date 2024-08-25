@@ -8,15 +8,16 @@ import PostMotherMeterWaterDataSourceParams from "./interface/post_meter_meter_w
 export default async function PostMotherMeterWaterDataSource({
     motherMeterWaterModel
 }: PostMotherMeterWaterDataSourceParams): Promise<Failure | String> {
-    try {
-        const response = await HttpCliestUtil({
-            method: "POST",
-            url: ApiConstant.MOTHER_METER_WATER,
-            body: classToPlain(motherMeterWaterModel)
-        });
 
+    const response = await HttpCliestUtil({
+        method: "POST",
+        url: ApiConstant.MOTHER_METER_WATER,
+        body: classToPlain(motherMeterWaterModel)
+    });
+
+    if (response instanceof Failure) {
         return response;
-    } catch (error) {
-        return FailureMapperUtil(error);
     }
+    return "success";
+
 }

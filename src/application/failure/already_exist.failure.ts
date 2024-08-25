@@ -1,10 +1,12 @@
 import Failure from "./failure";
 
 export default class AlreadyExistFailure extends Failure {
-    constructor() {
+    public extra: any[] | undefined;
+    constructor(extra: any[]) {
         super({
-            code: 2002,
-            message: "Already Exist Failure",
+            code: 400,
+            message: "Validation Failure",
+            extra: extra,
         });
     }
 }

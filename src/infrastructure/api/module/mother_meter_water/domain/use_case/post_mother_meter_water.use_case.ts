@@ -13,7 +13,9 @@ export default async function PostMotherMeterWaterUseCase({ motherMeterWaterEnti
             return new ValidationFailure(validateErrors);
         }
 
-        return await PostMotherMeterWaterRepository({ motherMeterWaterEntity });
+        const response = await PostMotherMeterWaterRepository({ motherMeterWaterEntity });
+
+        return response
 
     } catch (error) {
         return FailureMapperUtil(error);

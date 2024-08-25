@@ -10,13 +10,19 @@ export default async function PostMotherMeterWaterRepository({
     motherMeterWaterEntity
 }: PostMotherMeterWaterRepositoryParams): Promise<Failure | String> {
     try {
-        const motherMeterWaterModel = plainToClass(MotherMeterWaterModel, motherMeterWaterEntity,{
+        const motherMeterWaterModel = plainToClass(MotherMeterWaterModel, motherMeterWaterEntity, {
             excludeExtraneousValues: true
         });
 
-        return await PostMotherMeterWaterDataSource({
+        const response = await PostMotherMeterWaterDataSource({
             motherMeterWaterModel
         });
+
+        if (response instanceof Failure) {
+            return FailureMapperUtil(response);
+        }
+
+        return response;
 
     } catch (error) {
         return FailureMapperUtil(error);

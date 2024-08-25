@@ -27,6 +27,14 @@ export default function MotherMeterWaterCreateComponent({ refetchMotherMetersWat
             return toast.error("Something went wrong, please try again later");
         }
 
+        if (response.payload === "UnhandledFailure") {
+            return toast.error("Something went wrong, please try again later");
+        }
+
+        if (response.payload === "AlreadyExistsFailure") {
+            return toast.error("Serial number already exist");
+        }
+
         reset();
         setOpen(false);
         toast.success("Save successfully");

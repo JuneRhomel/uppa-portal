@@ -1,6 +1,7 @@
 import AuthException from "../../application/exception/auth.exception";
 import HttpClientException from "../../application/exception/http_client.exception";
 import HttpClientTimeoutException from "../../application/exception/http_client_timeout.exception";
+import AlreadyExistFailure from "../../application/failure/already_exist.failure";
 import AuthFailure from "../../application/failure/auth.failure";
 import DuplicatedFailure from "../../application/failure/duplicated.failure";
 import TimeoutFailure from "../../application/failure/timeout.failure";
@@ -23,15 +24,13 @@ export default function FailureMapperUtil(exception: any) {
   }
 
   if (exception.message === "DuplicateFailure") {
-    return new DuplicatedFailure(exception.extra);
+    return new AlreadyExistFailure(exception.extra);
   }
 
   if (exception instanceof TimeoutFailure) {
     return new TimeoutFailure();
   }
-  if (exception instanceof ValidationFailure) {
-    return new ValidationFailure(exception.extra || []);
-  }
+
 
   return new UnhandledFailure();
 }
