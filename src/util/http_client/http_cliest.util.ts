@@ -2,6 +2,7 @@ import HttpCliestUtilParams from "./interface/http_cliest_util.params";
 import ApiConstant from "../../application/constant/api.constant";
 import Failure from "../../application/failure/failure";
 import TimeoutFailure from "../../application/failure/timeout.failure";
+import FailureMapperUtil from "../failure_mapper/failure_mapper.util";
 
 export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
     const { url, method, body } = params;
@@ -37,7 +38,7 @@ export default async function HttpCliestUtil(params: HttpCliestUtilParams) {
     }
 
     if (response.status >= 400) {
-        return new Failure(data);
+        return FailureMapperUtil(data);
     }
     return data;
 }
